@@ -10,6 +10,8 @@ Current contents (incompleted):
 
     MD5 historic cryptographic hashing algorithm
 
+    charmed.hpp file to host miscellaneous helper functions
+
 
 
 Current contents (completed):
