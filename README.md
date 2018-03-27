@@ -6,28 +6,28 @@ Inspiration drawn by the contents of the Crypto++ library available online at ww
 
 
 
-Current contents (incompleted):
+##Current contents (incompleted):
 
-    MD5 historic cryptographic hashing algorithm
+MD5 historic cryptographic hashing algorithm
 
-    charmed.hpp file to host miscellaneous helper functions
-
-
-
-Current contents (completed):
-
-    none yet
+charmed.hpp file to host miscellaneous helper functions
 
 
 
-Planned additions:
+##Current contents (completed):
 
-    SHA-2
+none yet
 
-    RSA & DSA Public-key Encryption
 
-    Blake2b Hash Function
 
-    IDEA & RC5 Block Ciphers
+##Planned additions:
 
-    Something about lossless data compression
+SHA-2
+
+RSA & DSA Public-key Encryption
+
+Blake2b Hash Function
+
+IDEA & RC5 Block Ciphers
+
+Something about lossless data compression
