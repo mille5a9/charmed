@@ -6,7 +6,7 @@ Inspiration drawn by the contents of the Crypto++ library available online at ww
 
 
 
-##Current contents (incompleted):
+## Current contents (incompleted):
 
 MD5 historic cryptographic hashing algorithm
 
@@ -14,13 +14,13 @@ charmed.hpp file to host miscellaneous helper functions
 
 
 
-##Current contents (completed):
+## Current contents (completed):
 
 none yet
 
 
 
-##Planned additions:
+## Planned additions:
 
 SHA-2
 
