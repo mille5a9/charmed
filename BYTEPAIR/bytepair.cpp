@@ -84,8 +84,17 @@ int main() {
             pairs.getItem(i));
         occurences.insert(occurences.itemcount, 1);
     }
+    int maxindex = 0;
+    for (int i = 0; i < occurences.itemcount; i++) {
+        if(occurences.getItem(i) >
+            occurences.getItem(maxindex))
+            maxindex = i;
+    }
+    //max appearing pair is now stored in uniquepairs.
+    //getItem(maxindex) and  occurences.getItem(maxindex)
+    //is the number of times it appears
 
-    //find a byte that does not appear in the data
+    //now find a byte that does not appear in the data
 
     return 0;
 }
