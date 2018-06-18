@@ -7,8 +7,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <vector>
 #include <math.h>
+#include "linkedlist.cpp"
 
 int bstr_t_d(std::string input) {
     //values range from 0 to 255
@@ -42,39 +42,47 @@ std::string d_t_bstr(int input) {
 
 int main() {
     std::fstream file;
-    std::vector<std::string> data, pairs, uniquepairs;
+    mille5a9::Linkedlist<std::string> data, pairs, uniquepairs;
     std::string currentbyte = "";
     file.open("bytes.txt");
 
     if (!file) throw "The data file is not there!";
 
     //parses text file with byte data
+    int line = 0;
     while (std::getline(file, currentbyte)) {
-        data.push_back(currentbyte);
+        data.insert(line, currentbyte);
+        line++;
     }
     file.close();
 
     std::cout << "Initial data consists of "
-    << data.size() << " bytes of data, uncompressed.\n";
+    << data.itemcount 
+    << " bytes of data, uncompressed.\n";
     
     //populates list of pairs
-    for (int i = 0; i < data.size() - 1; i++) {
-        pairs.push_back(data[i] + data[i - 1]);
+    for (int i = 0; i < data.itemcount - 1; i++) {
+        pairs.insert(pairs.itemcount, 
+            data.getItem(i) + data.getItem(i + 1));
     }
 
     //find which pair appears the most
-    std::vector<int> occurences;
-    for (int i = 0; i < pairs.size(); i++) {
-        for (int j = 0; j < uniquepairs.size(); j++) {
-            if (uniquepairs.size() == 0) break;
-            if (pairs[i] == uniquepairs[j]) {
-                occurences[j]++;
+    mille5a9::Linkedlist<int> occurences;
+    for (int i = 0; i < pairs.itemcount; i++) {
+        for (int j = 0; j < uniquepairs.itemcount; j++) {
+            if (uniquepairs.itemcount == 0) break;
+            if (pairs.getItem(i) == 
+                    uniquepairs.getItem(j)) {
+                occurences.setItem(j, occurences.getItem(j) + 1);
                 j = 0;
                 i++;
+                if (i >= pairs.itemcount) break;
             }
         }
-        uniquepairs.push_back(pairs[i]);
-        occurences.push_back(1);
+        if (i >= pairs.itemcount) break;
+        uniquepairs.insert(uniquepairs.itemcount,
+            pairs.getItem(i));
+        occurences.insert(occurences.itemcount, 1);
     }
 
     //find a byte that does not appear in the data
