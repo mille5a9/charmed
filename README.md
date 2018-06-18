@@ -1,14 +1,21 @@
 # charmed
 
-Collection of cryptography-related code written independently by a Computer Engineering student.
+Collection of C++ code written independently by a Computer Engineering student.
 
-Inspiration drawn by the contents of the Crypto++ library available online at www.cryptopp.com as well as documentation provided by wikipedia.
+Inspiration drawn by documentation provided by wikipedia.
 
+## Current contents:
 
+The ADT folder contains files that store self-written
+Abstract Data Types. Some of the ADTs were written for
+my classes at the University of Cincinnati. The files in
+this directory are copied into other projects in this
+repository as needed.
 
-## Current contents (incompleted):
-
-MD5 historic cryptographic hashing algorithm
+MD5 historic cryptographic hashing algorithm. A very old
+algorithm used to turn strings of undefined length into
+a 128-bit number. Project has been sidelined in favor of
+other activities. May be continued at a later date.
 
 Implementation of Byte-Pair Encoding concept. Takes an
 input text file of bytes that are separated by newlines,
@@ -16,21 +23,6 @@ and compresses the bytes using byte-pair encoding.
 Displays the new compressed number of bytes and the
 compression ratio.
 
-
-## Current contents (completed):
-
-none yet
-
-
-
 ## Planned additions:
 
-SHA-2
-
-RSA & DSA Public-key Encryption
-
-Blake2b Hash Function
-
-IDEA & RC5 Block Ciphers
-
-Something about lossless data compression
+In the future, other projects of interest may be added.
