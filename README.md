@@ -10,8 +10,11 @@ Inspiration drawn by the contents of the Crypto++ library available online at ww
 
 MD5 historic cryptographic hashing algorithm
 
-charmed.hpp file to host miscellaneous helper functions
-
+Implementation of Byte-Pair Encoding concept. Takes an
+input text file of bytes that are separated by newlines,
+and compresses the bytes using byte-pair encoding.
+Displays the new compressed number of bytes and the
+compression ratio.
 
 
 ## Current contents (completed):
