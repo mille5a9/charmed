@@ -191,5 +191,6 @@ void Linkedlist<T>::clear() {
         temp2 = temp;
     }
     head = nullptr;
+    itemcount = 0;
 }
 }
