@@ -1,9 +1,10 @@
 //linkedlist derived class
 #include <iostream>
 #include "list.h"
+#include "linkedstack.h"
 
 namespace mille5a9 {
-
+/*
 //node class from the pointer-based Stack assignment
 template<class T>
 class Node {
@@ -21,7 +22,7 @@ private:
     T item;
     Node<T>* next;
 };
-
+*/
 //linked list derived from List base class
 template<class T>
 class Linkedlist : public List<T> {

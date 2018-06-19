@@ -8,8 +8,10 @@
 #include <fstream>
 #include <string>
 #include <math.h>
+#include "linkedstack.h"
 #include "linkedlist.cpp"
 
+//binary string to decimal
 int bstr_t_d(std::string input) {
     //values range from 0 to 255
     int total = 0;
@@ -22,6 +24,7 @@ int bstr_t_d(std::string input) {
     return total;
 }
 
+//decimal to binary string
 std::string d_t_bstr(int input) {
     std::string out = "00000000";
     int accountedfor = 0;
@@ -83,6 +86,7 @@ int main() {
         uniquepairs.insert(uniquepairs.itemcount,
             pairs.getItem(i));
         occurences.insert(occurences.itemcount, 1);
+        i++; //extra increment to prevent overlapping pairs
     }
     int maxindex = 0;
     for (int i = 0; i < occurences.itemcount; i++) {
@@ -95,6 +99,47 @@ int main() {
     //is the number of times it appears
 
     //now find a byte that does not appear in the data
+    std::string freebie = "";
+    for (int i = 0; i < 256; i++) {
+        freebie = d_t_bstr(i);
+        for (int j = 0; j < data.itemcount; j++) {
+            if (data.getItem(j) == freebie) {
+                break;
+            } else if (j == data.itemcount - 1) {
+                i = 256;
+            }
+        }
+    }
+    //condition to catch if the system didn't find
+    //an appropriately unused byte
+    if (freebie == "11111111")
+        throw "Probable Error: Data has no unused bytes";
+
+    //instantiaing stack to hold the substitute byte,
+    //and the two bytes it replaces
+    mille5a9::Stack<std::string> keybyte,
+        pairbyte1, pairbyte2;
+    std::string one, two;
+    for (int i = 0; i < 8; i++) {
+        if (i < 4) one += uniquepairs.getItem(maxindex)[i];
+        else two += uniquepairs.getItem(maxindex)[i];
+    }
+    keybyte.push(freebie);
+    pairbyte1.push(one);
+    pairbyte2.push(two);
+
+    //iterate through the pairs list, and edit
+    //the data list accordingly
+    for (int i = 0; i < pairs.itemcount; i++) {
+        if (pairs.getItem(i) == 
+            uniquepairs.getItem(maxindex)) {
+            data.remove(i);
+            data.setItem(i, freebie);
+        }
+    }
+
+    std::cout << "The data is now of length "
+        << data.itemcount << std::endl;
 
     return 0;
 }
