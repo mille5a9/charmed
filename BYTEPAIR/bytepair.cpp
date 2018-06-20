@@ -11,19 +11,6 @@
 #include "linkedstack.h"
 #include "linkedlist.cpp"
 
-/*/binary string to decimal
-int bstr_t_d(std::string input) {
-    //values range from 0 to 255
-    int total = 0;
-    if (input[7] == 1) total++;
-    for (int i = 1; i < 8; i++) {
-        if (input[7 - i] == 1) {
-            total += pow(2, i);
-        }
-    }
-    return total;
-}*/
-
 //decimal to binary string
 std::string d_t_bstr(int input) {
     std::string out = "00000000";
@@ -105,27 +92,6 @@ int main() {
                 }
             }
         }
-/*
-        //find which pair appears the most
-        for (int i = 0; i < pairs.itemcount; i++) {
-            for (int j = 0; j < uniquepairs.itemcount; j++) {
-                if (uniquepairs.itemcount == 0) break;
-                if (pairs.getItem(i) == 
-                        uniquepairs.getItem(j)) {
-                    occurences.setItem(j,
-                        occurences.getItem(j) + 1);
-                    j = -1;
-                    i++;
-                    if (i >= pairs.itemcount) break;
-                }
-            }
-            if (i >= pairs.itemcount) break;
-            uniquepairs.insert(uniquepairs.itemcount,
-                pairs.getItem(i));
-            occurences.insert(occurences.itemcount, 1);
-            i++; //increment to prevent overlapping pairs
-        }
-*/
         for (int i = 0; i < occurences.itemcount; i++) {
             if(occurences.getItem(i) >
                 occurences.getItem(maxindex))
