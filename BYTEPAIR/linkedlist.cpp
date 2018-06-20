@@ -74,7 +74,7 @@ void Linkedlist<T>::insert(int position, T item) {
             temp2->setNext(temp);
         }
     }catch(const Invalid& a) {
-        std::cout << a.what();
+        std::cout << a.what() << "insert";
     }
 }
 
@@ -112,7 +112,7 @@ void Linkedlist<T>::remove(int position) {
             itemcount--;
         }
     }catch(const Invalid& a) {
-        std::cout << a.what();
+        std::cout << a.what() << "remove";
     }
 }
 
@@ -144,7 +144,7 @@ T Linkedlist<T>::getItem(int position) {
             return thing;
         }
     }catch(const Invalid& a) {
-        std::cout << a.what();
+        std::cout << a.what() << "Get Item";
     }
 }
 
@@ -176,7 +176,7 @@ void Linkedlist<T>::setItem(int position, T item) {
             return;
         }
     }catch(const Invalid& a) {
-        std::cout << a.what();
+        std::cout << a.what() << "Set Item";
     }
 }
 

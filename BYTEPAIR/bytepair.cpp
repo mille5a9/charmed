@@ -11,7 +11,7 @@
 #include "linkedstack.h"
 #include "linkedlist.cpp"
 
-//binary string to decimal
+/*/binary string to decimal
 int bstr_t_d(std::string input) {
     //values range from 0 to 255
     int total = 0;
@@ -22,7 +22,7 @@ int bstr_t_d(std::string input) {
         }
     }
     return total;
-}
+}*/
 
 //decimal to binary string
 std::string d_t_bstr(int input) {
@@ -80,8 +80,32 @@ int main() {
         for (int i = 0; i < data.itemcount - 1; i++) {
             pairs.insert(pairs.itemcount, 
                 data.getItem(i) + data.getItem(i + 1));
+            i++;
         }
 
+        mille5a9::Linkedlist<std::string> pairsdummy;
+        for(int l = 0; l < pairs.itemcount; l++) {
+            pairsdummy.insert(l, pairs.getItem(l));
+        }
+
+        while (pairsdummy.itemcount > 0) {
+
+            int j = 0;
+            uniquepairs.insert(uniquepairs.itemcount, 
+                pairsdummy.getItem(0));
+            occurences.insert(uniquepairs.itemcount - 1, 1);
+            for (int k = 0; k - j < pairsdummy.itemcount; k++) {
+                if (pairsdummy.getItem(k - j) ==
+                    uniquepairs.getItem(
+                    uniquepairs.itemcount - 1)) {
+                    pairsdummy.remove(k - j);
+                    j++;
+                    occurences.setItem(uniquepairs.itemcount - 1,
+                        occurences.getItem(uniquepairs.itemcount - 1) + 1);
+                }
+            }
+        }
+/*
         //find which pair appears the most
         for (int i = 0; i < pairs.itemcount; i++) {
             for (int j = 0; j < uniquepairs.itemcount; j++) {
@@ -101,7 +125,7 @@ int main() {
             occurences.insert(occurences.itemcount, 1);
             i++; //increment to prevent overlapping pairs
         }
-
+*/
         for (int i = 0; i < occurences.itemcount; i++) {
             if(occurences.getItem(i) >
                 occurences.getItem(maxindex))
