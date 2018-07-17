@@ -34,7 +34,7 @@ compression ratio.
 First exploration of a sort of base-level machine 
 learning. NUM is a script in Python (not my strongest
 language) that uses an input file to teach itself
-how to spell numbers.
+how to spell numbers. Also included is an attempt using C++.
 
 ## Planned additions:
 
