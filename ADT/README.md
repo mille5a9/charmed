@@ -13,16 +13,16 @@ unique (ex. treebinarysearch.h). The actual ADTs in the files
 follow a naming structure of full Capitalization and proper word
 ordering (ex. BinarySearchTree or ArrayList).
 
-Currently included:
-stackarray.h
-stacklinked.h
-queuearray.h
-queuelinked.h
-queuepriority.h
-listarray.h
-listlinked.h
-treebinarysearch.h
-treeavl.h
-heapmin.h
-graph.h
-hashtable.h
+Currently included:  
+stackarray.h  
+stacklinked.h  
+queuearray.h  
+queuelinked.h  
+queuepriority.h  
+listarray.h  
+listlinked.h  
+treebinarysearch.h  
+treeavl.h  
+heapmin.h  
+graph.h  
+hashtable.h  
