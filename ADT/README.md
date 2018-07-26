@@ -24,3 +24,5 @@ listlinked.h
 treebinarysearch.h
 treeavl.h
 heapmin.h
+graph.h
+hashtable.h

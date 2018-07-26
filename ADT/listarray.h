@@ -15,31 +15,23 @@ private:
     const char* msg;
 };
 
-template <class T>
+template <class T, size_t max = 100>
 class ArrayList {
 public:
-    bool isEmpty();
+    bool isEmpty() { return (itemcount == 0); }
     void insert(int position, T item);
     void remove(int position);
     T getItem(int position);
     void setItem(int position, T item);
     void clear() { itemcount = 0; }
 private:
-    T items[1000];
+    T items[max];
     int itemcount = 0;
 };
 
-//used to detect if the list is empty, which
-//prevents other functions from working properly
-template <class T>
-bool ArrayList<T>::isEmpty() {
-    if(itemcount == 0) return true;
-    return false;
-}
-
 //Inserts an item into a position, capable of increasing
 //the size of the list
-template <class T>
+template <class T, size_t max>
 void ArrayList<T>::insert(int position, T item) {
     try {
         if(position > itemcount || position < 0) throw Invalid();
@@ -60,7 +52,7 @@ void ArrayList<T>::insert(int position, T item) {
 
 //removes an item and scoots any later items over
 //to fill in the gap. shrinks the size of the list
-template <class T>
+template <class T, size_t max>
 void ArrayList<T>::remove(int position) {
     try {
         if(position >= itemcount) throw Invalid();
@@ -76,7 +68,7 @@ void ArrayList<T>::remove(int position) {
 }
 
 //returns the item at a certain position
-template <class T>
+template <class T, size_t max>
 T ArrayList<T>::getItem(int position) {
     try {
         if(position < 0 || position >= itemcount) throw Invalid();
@@ -88,7 +80,7 @@ T ArrayList<T>::getItem(int position) {
 
 //overwrites the item in a position that is already
 //a part of the list
-template <class T>
+template <class T, size_t max>
 void ArrayList<T>::setItem(int position, T item) {
     try {
         if(position < 0 || position >= itemcount) throw Invalid();
