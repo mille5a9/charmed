@@ -1,8 +1,7 @@
 //graph ADT for lab 9
 #ifndef GRAPH_H
 #define GRAPH_H
-#include <iostream>
-#include "linkedlist.h"
+#include "listlinked.h"
 
 namespace mille5a9 {
 
@@ -18,7 +17,7 @@ public:
 
     //vertex management
     bool hasVertex(T item);
-    int hasVertex(Linkedlist<T> *temp, T item);
+    int hasVertex(LinkedList<T> *temp, T item);
     bool addVertex(T item);
     bool removeVertex(T item);
 
@@ -27,16 +26,19 @@ public:
     bool addEdge(T from, T towards);
     bool removeEdge(T from, T towards);
 
-    Linkedlist<T>* getAdjacentVertices(T from);
+    LinkedList<T>* getAdjacentVertices(T from);
 
     //task 3 (bonus)
-    Linkedlist<T>* depthFirstSearch(T from, Linkedlist<T> *temp);
-    Linkedlist<T>* breadthFirstSearch(T from, Linkedlist<T> *temp);
+    LinkedList<T>* depthFirstSearch(T from, LinkedList<T> *temp);
+    LinkedList<T>* breadthFirstSearch(T from, LinkedList<T> *temp);
+
+    //maze-solving function
+    LinkedList<T>* shortestPath(T from, T towards);
 
 private:
     typedef std::pair<T, T> U;
-    Linkedlist<T>* vertices = new Linkedlist<T>();
-    Linkedlist<U>* edges = new Linkedlist<U>();
+    LinkedList<T>* vertices = new LinkedList<T>();
+    LinkedList<U>* edges = new LinkedList<U>();
 };
 
 //tests to see if a given item exists in the graph
@@ -51,7 +53,7 @@ bool Graph<T>::hasVertex(T item) {
 
 //returns position of vertex or -1 if it doesn't exist
 template <class T>
-int Graph<T>::hasVertex(Linkedlist<T> *temp, T item) {
+int Graph<T>::hasVertex(LinkedList<T> *temp, T item) {
     int size = temp->getSize();
     for (int i = 0; i < size; i++)
         if (temp->getItem(i) == item) return i;
@@ -126,8 +128,8 @@ bool Graph<T>::removeEdge(T from, T towards) {
 //returns a list of vertices that the given point
 //has an edge toward
 template <class T>
-Linkedlist<T>* Graph<T>::getAdjacentVertices(T from) {
-    Linkedlist<T> *out = new Linkedlist<T>();
+LinkedList<T>* Graph<T>::getAdjacentVertices(T from) {
+    LinkedList<T> *out = new LinkedList<T>();
     if (!hasVertex(from)) return out;
 
     //iterates through the edges list
@@ -147,22 +149,22 @@ Linkedlist<T>* Graph<T>::getAdjacentVertices(T from) {
 //temp argument should first be given as the list of vertices,
 //temp should be removed from during recursion
 template <class T>
-Linkedlist<T>* Graph<T>::depthFirstSearch(T from, Linkedlist<T>* temp) {
+LinkedList<T>* Graph<T>::depthFirstSearch(T from, LinkedList<T>* temp) {
     try {
         if (!temp && !hasVertex(from)) throw Invalid();
     } catch (const Invalid& a) {
         std::cout << a.what(); 
     }//throw error if the vertex doesn't exist
 
-    Linkedlist<T> *out = new Linkedlist<T>(),
-                  *adj = new Linkedlist<T>(),
-                  *recur = new Linkedlist<T>();
+    LinkedList<T> *out = new LinkedList<T>(),
+                  *adj = new LinkedList<T>(),
+                  *recur = new LinkedList<T>();
 
     //populates a copy of the list of vertices in the graph
     //but only if this is the very first iteration and not
     //a recursive call
     if (!temp) {
-        temp = new Linkedlist<T>();
+        temp = new LinkedList<T>();
         int vertsize = vertices->getSize();
         for (int i = 0; i < vertsize; i++) {
             temp->insert(temp->getSize(), vertices->getItem(i));
@@ -199,18 +201,18 @@ Linkedlist<T>* Graph<T>::depthFirstSearch(T from, Linkedlist<T>* temp) {
 }
 
 template <class T>
-Linkedlist<T>* Graph<T>::breadthFirstSearch(T from, Linkedlist<T> *temp) {
+LinkedList<T>* Graph<T>::breadthFirstSearch(T from, LinkedList<T> *temp) {
     try {
         if (!temp && !hasVertex(from)) throw Invalid();
     } catch (const Invalid& a) {
         std::cout << a.what(); 
     }//throw error if the vertex doesn't exist
-    Linkedlist<T> *out = new Linkedlist<T>(),
-                  *adj = new Linkedlist<T>();
+    LinkedList<T> *out = new LinkedList<T>(),
+                  *adj = new LinkedList<T>();
 
     //populates a copy of the list of vertices in the graph
     if (!temp) {
-        temp = new Linkedlist<T>();
+        temp = new LinkedList<T>();
         int vertsize = vertices->getSize();
         for (int i = 0; i < vertsize; i++) {
             temp->insert(temp->getSize(), vertices->getItem(i));
@@ -238,6 +240,33 @@ Linkedlist<T>* Graph<T>::breadthFirstSearch(T from, Linkedlist<T> *temp) {
                 temp->remove(hasvert);
             }
         }
+    }
+    return out;
+}
+
+template <class T>
+LinkedList<T>* Graph<T>::shortestPath(T from, T towards) {
+    try {
+        //if (!temp && (!hasVertex(from) || !hasVertex(towards))) throw Invalid();
+    } catch (const Invalid& a) {
+        std::cout << a.what(); 
+    }
+    LinkedList<T> *bfs = breadthFirstSearch(from, nullptr);
+    LinkedList<T> *out = new LinkedList<T>();
+    int size = bfs->getSize();
+    out->insert(0, towards);
+
+    for (int i = 0; i < size; i++) {
+        if (bfs->getItem(i) == towards) {
+            int spot = hasVertex(bfs, out->getItem(0));
+            bfs->remove(spot);
+            out->remove(0);
+            i = -1;
+        } else if (hasEdge(bfs->getItem(i), out->getItem(0))) {
+            out->insert(0, bfs->getItem(i));
+            i = -1;
+        }
+        if (out->getItem(0) == from) break;
     }
     return out;
 }

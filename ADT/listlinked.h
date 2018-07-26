@@ -44,9 +44,10 @@ public:
     T getItem(int position);
     void setItem(int position, T item);
     void clear();
-    int itemcount = 0;
+    int getSize() { return itemcount; }
 
 private:
+    int itemcount = 0;
     Node<T>* head = nullptr;
 };
 
