@@ -57,7 +57,11 @@ int main() {
         printout[ans->getItem(i).y][ans->getItem(i).x] = 'x';
     }
     for (int i = 0; i < 400; i++) {
-        std::cout << printout[(int)(i / 20)][i % 20] << std::flush;
+        char out = '\0';
+        if (printout[(int)(i / 20)][i % 20] == '1') out = ' ';
+        else if (printout[(int)(i / 20)][i % 20] == '2') out = 'T';
+        else out = 'x';
+        std::cout << out << std::flush;
         if (i % 20 == 19) std::cout << std::endl;
     }
     return 0;
