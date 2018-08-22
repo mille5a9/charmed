@@ -43,7 +43,7 @@ public:
     void setRight(BinaryNode *temp) { right = temp; }
 
     //Comparator operators for nodes
-  bool operator<(const BinaryNode *two) {
+	bool operator<(const BinaryNode *two) {
         if (this->data < two->data) return true;
         else return false;
     }
@@ -51,7 +51,7 @@ public:
         if (this->data > two->data) return true;
         else return false;
     }
-    bool operator==(BinaryNode *two) {
+    bool operator==(const BinaryNode *two) {
         if (this->data == two->data) return true;
         else return false;
     }
