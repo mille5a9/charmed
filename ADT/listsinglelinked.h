@@ -1,5 +1,5 @@
-#ifndef LLIST_H
-#define LLIST_H
+#ifndef SLLIST_H
+#define SLLIST_H
 #include <iostream>
 
 namespace mille5a9 {
@@ -35,7 +35,7 @@ private:
 
 //linked list derived from List base class
 template<class T>
-class LinkedList {
+class SingleLinkedList {
 
 public:
     bool isEmpty() { return !head; }
@@ -54,7 +54,7 @@ private:
 //puts a new value at a valid point in the list, thereby
 //increasing the size of the list
 template<class T>
-void LinkedList<T>::insert(int position, T item) {
+void SingleLinkedList<T>::insert(int position, T item) {
     try {
 
         //checking the validity of position parameter
@@ -88,7 +88,7 @@ void LinkedList<T>::insert(int position, T item) {
 //removes an item from the list, and reconnects the links,
 //reducing the size of the list by one
 template<class T>
-void LinkedList<T>::remove(int position) {
+void SingleLinkedList<T>::remove(int position) {
     try {
 
         //throw custom exception if position is too big or small
@@ -126,7 +126,7 @@ void LinkedList<T>::remove(int position) {
 //returns an item at a certain position, without changing
 //the list
 template<class T>
-T LinkedList<T>::getItem(int position) {
+T SingleLinkedList<T>::getItem(int position) {
     T thing;
     try {
 
@@ -158,7 +158,7 @@ T LinkedList<T>::getItem(int position) {
 //changes an item that already exists in the list without
 //altering the size of the list
 template<class T>
-void LinkedList<T>::setItem(int position, T item) {
+void SingleLinkedList<T>::setItem(int position, T item) {
     try {
 
         //throw custom exception if position is too high or low
@@ -190,7 +190,7 @@ void LinkedList<T>::setItem(int position, T item) {
 //empties the list by deleting all references to each of the
 //nodes, and then setting head to null
 template<class T>
-void LinkedList<T>::clear() {
+void SingleLinkedList<T>::clear() {
     Node<T>* temp, *temp2 = head;
     while(temp2) {
         temp = temp2->getNext();
