@@ -20,7 +20,8 @@ queuearray.h
 queuelinked.h  
 queuepriority.h  
 listarray.h  
-listlinked.h  
+listsinglelinked.h
+listdoublelinked.h
 treebinarysearch.h  
 treeavl.h  
 heapmin.h  
