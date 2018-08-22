@@ -54,12 +54,12 @@ int main() {
         board->shortestPath(Tile(0, 0), Tile(19, 19));
     int size = ans->getSize();
     for (int i = 0; i < size; i++) {
-        printout[ans->getItem(i).y][ans->getItem(i).x] = 'x';
+        printout[ans->getItem(i).y][ans->getItem(i).x] = '.';
     }
     for (int i = 0; i < 400; i++) {
         char out = '\0';
         if (printout[(int)(i / 20)][i % 20] == '1') out = ' ';
-        else if (printout[(int)(i / 20)][i % 20] == '2') out = 'T';
+        else if (printout[(int)(i / 20)][i % 20] == '2') out = '|';
         else out = 'x';
         std::cout << out << std::flush;
         if (i % 20 == 19) std::cout << std::endl;
