@@ -4,6 +4,39 @@
 namespace mille5a9 {
 
 template <class T>
+class BinaryNode {
+public:
+	BinaryNode(T data) : item(data) {};
+
+	//Accessor functions
+	T get() { return item; }
+	BinaryNode* getLeft() { return left; }
+	BinaryNode* getRight() { return right; }
+
+	//Mutator functions
+	void set(T data) { item = data; }
+	void setLeft(BinaryNode *temp) { left = temp; }
+	void setRight(BinaryNode *temp) { right = temp; }
+
+	//Comparator operators for nodes
+	bool operator<(const BinaryNode *two) {
+		if (this->data < two->data) return true;
+		else return false;
+	}
+	bool operator>(const BinaryNode *two) {
+		if (this->data > two->data) return true;
+		else return false;
+	}
+	bool operator==(const BinaryNode *two) {
+		if (this->data == two->data) return true;
+		else return false;
+	}
+private:
+	T item;
+	BinaryNode *left = nullptr, *right = nullptr;
+};
+
+template <class T>
 class BinarySearchTree {
 public:
     BinarySearchTree() = default;
