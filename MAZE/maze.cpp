@@ -50,7 +50,7 @@ int main() {
     file.close();
 
     std::cout << "Solving Maze...\n";
-    mille5a9::LinkedList<Tile>* ans = 
+    mille5a9::SingleLinkedList<Tile>* ans = 
         board->shortestPath(Tile(0, 0), Tile(19, 19));
     int size = ans->getSize();
     for (int i = 0; i < size; i++) {
