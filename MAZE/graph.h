@@ -1,7 +1,7 @@
 //graph ADT for lab 9
 #ifndef GRAPH_H
 #define GRAPH_H
-#include "listsinglelinked.h"
+#include "listdoublelinked.h"
 
 namespace mille5a9 {
 
@@ -17,7 +17,7 @@ public:
 
     //vertex management
     bool hasVertex(T item);
-    int hasVertex(SingleLinkedList<T> *temp, T item);
+    int hasVertex(DoubleLinkedList<T> *temp, T item);
     bool addVertex(T item);
     bool removeVertex(T item);
 
@@ -26,19 +26,19 @@ public:
     bool addEdge(T from, T towards);
     bool removeEdge(T from, T towards);
 
-    SingleLinkedList<T>* getAdjacentVertices(T from);
+    DoubleLinkedList<T>* getAdjacentVertices(T from);
 
     //task 3 (bonus)
-    SingleLinkedList<T>* depthFirstSearch(T from, SingleLinkedList<T> *temp);
-    SingleLinkedList<T>* breadthFirstSearch(T from, SingleLinkedList<T> *temp);
+    DoubleLinkedList<T>* depthFirstSearch(T from, DoubleLinkedList<T> *temp);
+    DoubleLinkedList<T>* breadthFirstSearch(T from, DoubleLinkedList<T> *temp);
 
     //maze-solving function
-    SingleLinkedList<T>* shortestPath(T from, T towards);
+    DoubleLinkedList<T>* shortestPath(T from, T towards);
 
 private:
     typedef std::pair<T, T> U;
-    SingleLinkedList<T>* vertices = new SingleLinkedList<T>();
-    SingleLinkedList<U>* edges = new SingleLinkedList<U>();
+    DoubleLinkedList<T>* vertices = new DoubleLinkedList<T>();
+    DoubleLinkedList<U>* edges = new DoubleLinkedList<U>();
 };
 
 //tests to see if a given item exists in the graph
@@ -53,7 +53,7 @@ bool Graph<T>::hasVertex(T item) {
 
 //returns position of vertex or -1 if it doesn't exist
 template <class T>
-int Graph<T>::hasVertex(SingleLinkedList<T> *temp, T item) {
+int Graph<T>::hasVertex(DoubleLinkedList<T> *temp, T item) {
     int size = temp->getSize();
     for (int i = 0; i < size; i++)
         if (temp->getItem(i) == item) return i;
@@ -128,8 +128,8 @@ bool Graph<T>::removeEdge(T from, T towards) {
 //returns a list of vertices that the given point
 //has an edge toward
 template <class T>
-SingleLinkedList<T>* Graph<T>::getAdjacentVertices(T from) {
-    SingleLinkedList<T> *out = new SingleLinkedList<T>();
+DoubleLinkedList<T>* Graph<T>::getAdjacentVertices(T from) {
+    DoubleLinkedList<T> *out = new DoubleLinkedList<T>();
     if (!hasVertex(from)) return out;
 
     //iterates through the edges list
@@ -149,22 +149,22 @@ SingleLinkedList<T>* Graph<T>::getAdjacentVertices(T from) {
 //temp argument should first be given as the list of vertices,
 //temp should be removed from during recursion
 template <class T>
-SingleLinkedList<T>* Graph<T>::depthFirstSearch(T from, SingleLinkedList<T>* temp) {
+DoubleLinkedList<T>* Graph<T>::depthFirstSearch(T from, DoubleLinkedList<T>* temp) {
     try {
         if (!temp && !hasVertex(from)) throw Invalid();
     } catch (const Invalid& a) {
         std::cout << a.what(); 
     }//throw error if the vertex doesn't exist
 
-    SingleLinkedList<T> *out = new SingleLinkedList<T>(),
-                  *adj = new SingleLinkedList<T>(),
-                  *recur = new SingleLinkedList<T>();
+    DoubleLinkedList<T> *out = new DoubleLinkedList<T>(),
+                  *adj = new DoubleLinkedList<T>(),
+                  *recur = new DoubleLinkedList<T>();
 
     //populates a copy of the list of vertices in the graph
     //but only if this is the very first iteration and not
     //a recursive call
     if (!temp) {
-        temp = new SingleLinkedList<T>();
+        temp = new DoubleLinkedList<T>();
         int vertsize = vertices->getSize();
         for (int i = 0; i < vertsize; i++) {
             temp->insert(temp->getSize(), vertices->getItem(i));
@@ -201,18 +201,18 @@ SingleLinkedList<T>* Graph<T>::depthFirstSearch(T from, SingleLinkedList<T>* tem
 }
 
 template <class T>
-SingleLinkedList<T>* Graph<T>::breadthFirstSearch(T from, SingleLinkedList<T> *temp) {
+DoubleLinkedList<T>* Graph<T>::breadthFirstSearch(T from, DoubleLinkedList<T> *temp) {
     try {
         if (!temp && !hasVertex(from)) throw Invalid();
     } catch (const Invalid& a) {
         std::cout << a.what(); 
     }//throw error if the vertex doesn't exist
-    SingleLinkedList<T> *out = new SingleLinkedList<T>(),
-                  *adj = new SingleLinkedList<T>();
+    DoubleLinkedList<T> *out = new DoubleLinkedList<T>(),
+                  *adj = new DoubleLinkedList<T>();
 
     //populates a copy of the list of vertices in the graph
     if (!temp) {
-        temp = new SingleLinkedList<T>();
+        temp = new DoubleLinkedList<T>();
         int vertsize = vertices->getSize();
         for (int i = 0; i < vertsize; i++) {
             temp->insert(temp->getSize(), vertices->getItem(i));
@@ -245,14 +245,14 @@ SingleLinkedList<T>* Graph<T>::breadthFirstSearch(T from, SingleLinkedList<T> *t
 }
 
 template <class T>
-SingleLinkedList<T>* Graph<T>::shortestPath(T from, T towards) {
+DoubleLinkedList<T>* Graph<T>::shortestPath(T from, T towards) {
     try {
         //if (!temp && (!hasVertex(from) || !hasVertex(towards))) throw Invalid();
     } catch (const Invalid& a) {
         std::cout << a.what(); 
     }
-    SingleLinkedList<T> *bfs = breadthFirstSearch(from, nullptr);
-    SingleLinkedList<T> *out = new SingleLinkedList<T>();
+    DoubleLinkedList<T> *bfs = breadthFirstSearch(from, nullptr);
+    DoubleLinkedList<T> *out = new DoubleLinkedList<T>();
     int size = bfs->getSize();
     out->insert(0, towards);
 

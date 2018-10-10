@@ -1,6 +1,7 @@
 //solves the maze in maze.txt
 #include <fstream>
 #include <iostream>
+#include <string>
 #include "graph.h"
 
 class Tile {
@@ -29,6 +30,7 @@ int main() {
     while (!file.eof()) {//hardcoded for 20x20 here
         std::string line = "";
         for (int y = 0; getline(file, line); y++) {
+			std::cout << "Reading line...\n";
             for (int x = 0; x < 20; x++) {
                 printout[y][x] = line[x];
                 if (line[x] == '2') continue;
@@ -50,7 +52,7 @@ int main() {
     file.close();
 
     std::cout << "Solving Maze...\n";
-    mille5a9::SingleLinkedList<Tile>* ans = 
+    mille5a9::DoubleLinkedList<Tile>* ans = 
         board->shortestPath(Tile(0, 0), Tile(19, 19));
     int size = ans->getSize();
     for (int i = 0; i < size; i++) {
@@ -64,5 +66,6 @@ int main() {
         std::cout << out << std::flush;
         if (i % 20 == 19) std::cout << std::endl;
     }
+	system("pause");
     return 0;
 }
