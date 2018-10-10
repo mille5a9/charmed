@@ -19,9 +19,9 @@ to the <input> element that lies within.
 
 - format:
 
-	* Percent
+	* percent
 
-	* String
+	* string
 
 The format attribute controls the way that the text should be
 permitted into the box.
