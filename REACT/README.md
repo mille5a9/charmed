@@ -12,8 +12,10 @@ Attributes:
 
 - type:
 
-:  Giving TextInput a type attribute directly applies the given type
+Giving TextInput a type attribute directly applies the given type
 to the <input> element that lies within.
+
+---
 
 - format:
 
@@ -21,5 +23,7 @@ to the <input> element that lies within.
 
 	* String
 
-:  The format attribute controls the way that the text should be
+The format attribute controls the way that the text should be
 permitted into the box.
+
+---
