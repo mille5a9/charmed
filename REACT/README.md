@@ -27,3 +27,13 @@ The format attribute controls the way that the text should be
 permitted into the box.
 
 ---
+
+### SelectDateRange
+
+ - usage:
+
+ SelectDateRange creates two input boxes that allow date selection,
+ and a button that can be used to register changes to the rest of the
+ page when the user has finished changing the date boxes. An onClick
+ function must be made in the parent component of the SelectDateRange
+ to determine this behavior.
