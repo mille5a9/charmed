@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -43,8 +44,51 @@ namespace mille5a9lib
         }
     }
 
-    public class ArrayList<T> : IList<T>
+    public class ArrayListEnum<T> : IEnumerator<T>
     {
+        public ArrayList<T> list;
+        private int _pos = -1;
+
+        public ArrayListEnum(ArrayList<T> input) { list = input; }
+        public bool MoveNext() { return (_pos++ < list.Size()); }
+        public void Reset() { _pos = -1; }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
+        object IEnumerator.Current
+        {
+            get
+            {
+                return Current;
+            }
+        }
+
+        public T Current
+        {
+            get
+            {
+                return list.GetItem(_pos);
+            }
+        }
+    }
+
+    public class ArrayList<T> : IList<T>, IEnumerable<T>
+    {
+        public ArrayListEnum<T> GetEnumerator()
+        {
+            return new ArrayListEnum<T>(this);
+        }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
         public ArrayList(int maxsize)
         {
             _items = new T[maxsize];
@@ -127,8 +171,52 @@ namespace mille5a9lib
         private T[] _items;
         private int _count = 0;
     }
-    public class LinkedList<T> : IList<T>
+
+    public class LinkedListEnum<T> : IEnumerator<T>
     {
+        public LinkedList<T> list;
+        private int _pos = -1;
+
+        public LinkedListEnum(LinkedList<T> input) { list = input; }
+        public bool MoveNext() { return (_pos++ < list.Size()); }
+        public void Reset() { _pos = -1; }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
+        object IEnumerator.Current
+        {
+            get
+            {
+                return Current;
+            }
+        }
+
+        public T Current
+        {
+            get
+            {
+                return list.GetItem(_pos);
+            }
+        }
+    }
+
+    public class LinkedList<T> : IList<T>, IEnumerable<T>
+    {
+        public LinkedListEnum<T> GetEnumerator()
+        {
+            return new LinkedListEnum<T>(this);
+        }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
         public bool Insert(int pos, T item)
         {
             try
