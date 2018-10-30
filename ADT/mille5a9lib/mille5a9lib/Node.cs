@@ -33,10 +33,12 @@ namespace mille5a9lib
         public T Get() { return _item; }
         public DoubleNode<T> GetNext() { return _next; }
         public DoubleNode<T> GetPrev() { return _prev; }
+        public void SetNext(DoubleNode<T> next) { _next = next; }
+        public void SetPrev(DoubleNode<T> prev) { _prev = prev; }
 
         private readonly T _item;
-        private readonly DoubleNode<T> _next;
-        private readonly DoubleNode<T> _prev;
+        private DoubleNode<T> _next;
+        private DoubleNode<T> _prev;
     }
 
     public class BinaryNode<T>

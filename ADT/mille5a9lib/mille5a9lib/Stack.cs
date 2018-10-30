@@ -31,7 +31,7 @@ namespace mille5a9lib
     {
         public ArrayStack(int maxsize)
         {
-            T[] _items = new T[maxsize];
+            _items = new T[maxsize];
             _maxsize = maxsize;
         }
 
@@ -80,8 +80,8 @@ namespace mille5a9lib
 
         public int Size() { return _size; }
 
-        private T[] _items;
         private readonly int _maxsize;
+        private T[] _items;
         private int _top = -1;
         private int _size = 0;
     }
