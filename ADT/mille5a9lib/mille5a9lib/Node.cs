@@ -33,10 +33,11 @@ namespace mille5a9lib
         public T Get() { return _item; }
         public DoubleNode<T> GetNext() { return _next; }
         public DoubleNode<T> GetPrev() { return _prev; }
+        public void SetItem(T item) { _item = item; }
         public void SetNext(DoubleNode<T> next) { _next = next; }
         public void SetPrev(DoubleNode<T> prev) { _prev = prev; }
 
-        private readonly T _item;
+        private T _item;
         private DoubleNode<T> _next;
         private DoubleNode<T> _prev;
     }
@@ -47,9 +48,8 @@ namespace mille5a9lib
         public T Get() { return _item; }
         public BinaryNode<T> GetLeft() { return _left; }
         public BinaryNode<T> GetRight() { return _right; }
-        void SetItem(T item) { _item = item; }
-        void SetLeft(BinaryNode<T> temp) { _left = temp; }
-        void SetRight(BinaryNode<T> temp) { _right = temp; }
+        public void SetLeft(BinaryNode<T> temp) { _left = temp; }
+        public void SetRight(BinaryNode<T> temp) { _right = temp; }
 
         private T _item;
         private BinaryNode<T> _left = null;

@@ -1,0 +1,243 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace mille5a9lib
+{
+    class InvalidPositionException : Exception
+    {
+        public InvalidPositionException(int pos, int count)
+        {
+            _position = pos;
+            _count = count;
+        }
+        public new string Message()
+        {
+            return "\nThis position is not valid in this list! pos was " + _position + " but _count was " + _count + ".\n";
+        }
+        private int _position, _count;
+    }
+
+    public interface IList<T>
+    {
+        bool Insert(int pos, T item);
+        bool Remove(int pos);
+        bool SetItem(int pos, T item);
+        T GetItem(int pos);
+        int Size();
+        void Clear();
+    }
+
+    public class List<T>
+    {
+        public static IList<T> Create()
+        {
+            return new LinkedList<T>();
+        }
+
+        public static IList<T> Create(int maxsize)
+        {
+            return new ArrayList<T>(maxsize);
+        }
+    }
+
+    public class ArrayList<T> : IList<T>
+    {
+        public ArrayList(int maxsize)
+        {
+            _items = new T[maxsize];
+            _maxsize = maxsize;
+        }
+
+        public bool Insert(int pos, T item)
+        {
+            try
+            {
+                if (pos > _count || pos < 0) throw new InvalidPositionException(pos, _count);
+            }
+            catch (InvalidPositionException e)
+            {
+                Console.Write(e.Message());
+                return false;
+            }
+            for (int i = _count; i >= pos; i--)
+            {
+                _items[i + 1] = _items[i];
+            }
+            _items[pos] = item;
+            _count++;
+            return true;
+        }
+
+        public bool Remove(int pos)
+        {
+            try
+            {
+                if (pos >= _count || pos < 0) throw new InvalidPositionException(pos, _count);
+            }
+            catch (InvalidPositionException e)
+            {
+                Console.Write(e.Message());
+                return false;
+            }
+            for (int i = pos; i < _count; i++)
+            {
+                _items[i] = _items[i + 1];
+            }
+            _count--;
+            return true;
+        }
+
+        public bool SetItem(int pos, T item)
+        {
+            try
+            {
+                if (pos < 0 || pos >= _count) throw new InvalidPositionException(pos, _count);
+            }
+            catch (InvalidPositionException e)
+            {
+                Console.Write(e.Message());
+                return false;
+            }
+            _items[pos] = item;
+            return true;
+        }
+
+        public T GetItem(int pos)
+        {
+            try
+            {
+                if (pos < 0 || pos >= _count) throw new InvalidPositionException(pos, _count);
+            }
+            catch (InvalidPositionException e)
+            {
+                Console.Write(e.Message());
+                return default(T);
+            }
+            return _items[pos];
+        }
+
+        public int Size() { return _count; }
+
+        public void Clear() { _count = 0; }
+
+        private readonly int _maxsize;
+        private T[] _items;
+        private int _count = 0;
+    }
+    public class LinkedList<T> : IList<T>
+    {
+        public bool Insert(int pos, T item)
+        {
+            try
+            {
+                if (pos > _count || pos < 0) throw new InvalidPositionException(pos, _count);
+            }
+            catch (InvalidPositionException e)
+            {
+                Console.Write(e.Message());
+                return false;
+            }
+            if (_head == null || pos == _count)
+            {
+                _head = new DoubleNode<T>(item, _head, null);
+                if (_head.GetNext() != null) _head.GetNext().SetPrev(_head);
+                _count++;
+                return true;
+            }
+            DoubleNode<T> temp = _head;
+            for (int i = 1; i < _count - pos; i++)
+            {
+                temp = temp.GetNext();
+            }
+            _count++;
+            temp.SetNext(new DoubleNode<T>(item, temp.GetNext(), temp));
+            return true;
+        }
+
+        public bool Remove(int pos)
+        {
+            Console.Write("\n" + _count + "\n");
+            try
+            {
+                if (pos > _count || pos < 0) throw new InvalidPositionException(pos, _count);
+            }
+            catch (InvalidPositionException e)
+            {
+                Console.Write(e.Message());
+                return false;
+            }
+            if (pos == _count - 1)
+            {
+                _head = _head.GetNext();
+                _count--;
+                return true;
+            }
+            DoubleNode<T> temp = _head;
+            for (int i = 1; i < _count - pos; i++) temp = temp.GetNext();
+            if (temp.GetNext() != null) temp.GetNext().SetPrev(temp.GetPrev());
+            if (temp.GetPrev() != null) temp.GetPrev().SetNext(temp.GetNext());
+            _count--;
+            return true;
+        }
+
+        public bool SetItem(int pos, T item)
+        {
+            try
+            {
+                if (pos < 0 || pos >= _count) throw new InvalidPositionException(pos, _count);
+            }
+            catch (InvalidPositionException e)
+            {
+                Console.Write(e.Message());
+                return false;
+            }
+            if (pos == _count - 1)
+            {
+                _head.SetItem(item);
+                return true;
+            }
+            DoubleNode<T> temp = _head;
+            for (int i = 1; i < _count - pos; i++) temp = temp.GetNext();
+            temp.SetItem(item);
+            temp = null;
+            return true;
+        }
+
+        public T GetItem(int pos)
+        {
+            try
+            {
+                if (pos < 0 || pos >= _count) throw new InvalidPositionException(pos, _count);
+            }
+            catch (InvalidPositionException e)
+            {
+                Console.Write(e.Message());
+                return default(T);
+            }
+            if (pos == _count - 1) return _head.Get();
+            DoubleNode<T> temp = _head;
+            for (int i = 1; i < _count - pos; i++) temp = temp.GetNext();
+            T output = temp.Get();
+            temp = null;
+            return output;
+        }
+
+        public int Size() { return _count; }
+
+        public void Clear()
+        {
+            while (_head != null)
+            {
+                DoubleNode<T> temp = _head.GetNext();
+                _head = temp;
+            }
+            _count = 0;
+        }
+
+        private DoubleNode<T> _head = null;
+        private int _count = 0;
+    }
+}
