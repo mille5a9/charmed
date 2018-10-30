@@ -18,7 +18,7 @@ namespace mille5a9lib
         {
             return "\nThis position is not valid in this list! pos was " + _position + " but _count was " + _count + ".\n";
         }
-        private int _position, _count;
+        private readonly int _position, _count;
     }
 
     public interface IList<T>

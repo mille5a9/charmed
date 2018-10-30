@@ -42,7 +42,7 @@ namespace mille5a9lib
         private DoubleNode<T> _prev;
     }
 
-    public class BinaryNode<T>
+    public class BinaryNode<T> where T : IComparable<T>
     {
         public BinaryNode(T item) { _item = item; }
         public T Get() { return _item; }
@@ -50,6 +50,12 @@ namespace mille5a9lib
         public BinaryNode<T> GetRight() { return _right; }
         public void SetLeft(BinaryNode<T> temp) { _left = temp; }
         public void SetRight(BinaryNode<T> temp) { _right = temp; }
+
+        public int CompareTo(BinaryNode<T> other)
+        {
+            if (other == null) return 1;
+            return Get().CompareTo(other.Get());
+        }
 
         private T _item;
         private BinaryNode<T> _left = null;

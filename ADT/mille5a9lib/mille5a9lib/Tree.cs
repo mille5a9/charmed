@@ -21,10 +21,10 @@ namespace mille5a9lib
 
     class Tree<T>
     {
-        public static ITree<T> Create(string type)
+        public static ITree<T> Create(bool balances)
         {
-            if (type == "BST") return new BinarySearchTree<T>();
-            else return new AVLTree<T>();
+            if (balances) return new AVLTree<T>();
+            else return new BinarySearchTree<T>();
         }
     }
 
@@ -58,7 +58,25 @@ namespace mille5a9lib
         }
         public bool Insert(T item)
         {
-
+            if (root == null)
+            {
+                root = new BinaryNode<T>(item);
+                return true;
+            }
+            if (Contains(item)) return false;
+            BinaryNode<T> temp = root;
+            while (temp != null)
+            {
+                if (item > temp.Get())
+                {
+                    if (temp.GetRight() == null)
+                    {
+                        temp.SetRight(new BinaryNode<T>(item));
+                        return true;
+                    }
+                    temp = temp.GetRight()
+                }
+            }
         }
         public bool Remove(T item)
         {
@@ -71,7 +89,7 @@ namespace mille5a9lib
         public ArrayList<T> PreorderTraversal(BinaryNode<T> temp)
         {
             ArrayList<T> output = new ArrayList<T>(Size(temp));
-            if (temp == null) return null;
+            if (temp == null) return output;
             output.Insert(output.Size(), temp.Get());
             ArrayList<T> left = PreorderTraversal(temp.GetLeft());
             foreach (T x in left) output.Insert(output.Size(), x);
@@ -81,11 +99,25 @@ namespace mille5a9lib
         }
         public ArrayList<T> InorderTraversal(BinaryNode<T> temp)
         {
-
+            ArrayList<T> output = new ArrayList<T>(Size(temp));
+            if (temp == null) return output;
+            ArrayList<T> left = PreorderTraversal(temp.GetLeft());
+            foreach (T x in left) output.Insert(output.Size(), x);
+            output.Insert(output.Size(), temp.Get());
+            ArrayList<T> right = PreorderTraversal(temp.GetRight());
+            foreach (T x in right) output.Insert(output.Size(), x);
+            return output;
         }
         public ArrayList<T> PostorderTraversal(BinaryNode<T> temp)
         {
-
+            ArrayList<T> output = new ArrayList<T>(Size(temp));
+            if (temp == null) return output;
+            ArrayList<T> left = PreorderTraversal(temp.GetLeft());
+            foreach (T x in left) output.Insert(output.Size(), x);
+            ArrayList<T> right = PreorderTraversal(temp.GetRight());
+            foreach (T x in right) output.Insert(output.Size(), x);
+            output.Insert(output.Size(), temp.Get());
+            return output;
         }
         public void Clear(BinaryNode<T> temp)
         {
