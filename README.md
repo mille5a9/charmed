@@ -1,6 +1,8 @@
 # charmed
 
-Collection of C++ code written independently by a Computer Engineering student.
+Collection of C++ code written independently by a
+Computer Engineering student. Currently a 3rd-year
+undergraduate at the University of Cincinnati.
 
 Inspiration drawn by documentation provided by wikipedia.
 
@@ -14,6 +16,11 @@ my classes at the University of Cincinnati. The files in
 this directory are copied into other projects in this
 repository as needed.
 
+The mille5a9lib project is a C# implementation of the
+types in this folder. They were written during my time
+studying for Microsoft's Exam 70-483 for certification
+in C#.
+
 ### BYTEPAIR
 
 Implementation of the Byte-Pair Encoding concept. Takes an
@@ -22,7 +29,7 @@ and compresses the bytes using byte-pair encoding.
 Displays the new compressed number of bytes and the
 compression ratio.
 
-###MAZE
+### MAZE
 
 New attempt of Lab 3 from a Data Structures course. Lab 3
 presented the task to solve a maze using stacks. Now
@@ -36,12 +43,6 @@ MD5 historic cryptographic hashing algorithm. A very old
 algorithm used to turn strings of undefined length into
 a 128-bit number. Project has been sidelined in favor of
 other activities. May be continued at a later date.
-
-### NUM
-
-First exploration of a sort of base-level machine 
-learning. Uses an input file to teach itself
-how to spell numbers.
 
 ### REACT
 
