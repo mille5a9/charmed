@@ -41,113 +41,202 @@ namespace ConsoleApp1
                         break;
 
                     case 1:
-                        var arrstackimp = mille5a9lib.Stack<int>.Create(100000000); //Array Stack init
-                        Timer arrTimer = new Timer(10);
-                        DateTime now = DateTime.Now;
-                        arrTimer.Elapsed += (sender, e) => OnTimedEvent(sender, e, now);
-                        arrTimer.Start();
-
-                        for (int i = 0; i < 100000000; i++) //100 million items
+                        //Array and Linked Stacks
+                        Console.Write("Would you like to make an Array Stack (0), or a Linked Stack (1)?: \n");
+                        ConsoleKeyInfo c = Console.ReadKey();
+                        if (c.KeyChar == '0')
                         {
-                            bool success = arrstackimp.Push(i);
+                            // Array Stack Menu
+                            Console.Write("\nCreating Array Stack...\n");
+                            var arrStack = mille5a9lib.Stack<int>.Create(10); //Array Stack init
+                            bool innerexit = false;
+                            while (!innerexit)
+                            {
+                                Console.Write("\nOptions:\n");
+                                Console.Write("1. Push\n");
+                                Console.Write("2. Pop\n");
+                                Console.Write("3. Peek\n");
+                                Console.Write("4. Size\n");
+                                Console.Write("0. Exit to Main Menu\n");
+                                ConsoleKeyInfo x = Console.ReadKey();
+                                if (x.KeyChar == '1')
+                                {
+                                    Console.Write("\nPlease type a number to push to the Stack:\n");
+                                    ConsoleKeyInfo input = Console.ReadKey();
+                                    Console.Write("\n");
+                                    int num = input.KeyChar - 48;
+                                    bool success = arrStack.Push(num);
+                                }
+                                else if (x.KeyChar == '2')
+                                {
+                                    int output = arrStack.Pop();
+                                    Console.Write("\nOut popped a: " + output + "\n");
+                                }
+                                else if (x.KeyChar == '3')
+                                {
+                                    Console.Write("\n");
+                                    int item = arrStack.Peek();
+                                    Console.Write("The item at the top is: " + item + "\n");
+                                }
+                                else if (x.KeyChar == '4')
+                                {
+                                    Console.Write("\n");
+                                    int num = arrStack.Size();
+                                    Console.Write("The Stack is of size: " + num + "\n");
+                                }
+                                else if (x.KeyChar == '0')
+                                {
+                                    innerexit = true;
+                                    Console.Write("\n");
+                                }
+                            }
                         }
-
-                        int peeked = arrstackimp.Peek();
-                        Console.Write("Top Item: " + peeked + "\n");
-                        int sized = arrstackimp.Size();
-                        Console.Write("Stack Size: " + sized + "\n");
-
-                        for (int i = 0; i < 100000000; i++)
+                        else if (c.KeyChar == '1')
                         {
-                            int itemout = arrstackimp.Pop();
+                            Console.Write("\nCreating linked Stack...\n");
+                            var linStack = mille5a9lib.Stack<int>.Create(); //Linked Stack init
+                            bool innerexit = false;
+                            while (!innerexit)
+                            {
+                                Console.Write("\nOptions:\n");
+                                Console.Write("1. Push\n");
+                                Console.Write("2. Pop\n");
+                                Console.Write("3. Peek\n");
+                                Console.Write("4. Size\n");
+                                Console.Write("0. Exit to Main Menu\n");
+                                ConsoleKeyInfo x = Console.ReadKey();
+                                if (x.KeyChar == '1')
+                                {
+                                    Console.Write("\nPlease type a number to push to the Stack:\n");
+                                    ConsoleKeyInfo input = Console.ReadKey();
+                                    Console.Write("\n");
+                                    int num = input.KeyChar - 48;
+                                    bool success = linStack.Push(num);
+                                }
+                                else if (x.KeyChar == '2')
+                                {
+                                    int output = linStack.Pop();
+                                    Console.Write("\nOut popped a: " + output + "\n");
+                                }
+                                else if (x.KeyChar == '3')
+                                {
+                                    Console.Write("\n");
+                                    int item = linStack.Peek();
+                                    Console.Write("The item at the top is: " + item + "\n");
+                                }
+                                else if (x.KeyChar == '4')
+                                {
+                                    Console.Write("\n");
+                                    int num = linStack.Size();
+                                    Console.Write("The Stack is of size: " + num + "\n");
+                                }
+                                else if (x.KeyChar == '0')
+                                {
+                                    innerexit = true;
+                                    Console.Write("\n");
+                                }
+                            }
                         }
-
-                        arrTimer.Stop();
-                        arrTimer.Dispose();
-
-                        var linstackimp = mille5a9lib.Stack<string>.Create(); //Linked Stack init
-
-                        Timer linTimer = new Timer(10);
-                        now = DateTime.Now;
-                        linTimer.Elapsed += (sender, e) => OnTimedEvent(sender, e, now);
-                        linTimer.Start();
-
-                        for (int i = 0; i < 1000000; i++) //1 million items (for reasonable runtime)
-                        {
-                            bool success = linstackimp.Push("item " + i);
-                            //System.Threading.Thread.Sleep(10);
-                        }
-
-                        string peekedagain = linstackimp.Peek();
-                        Console.Write("Top Item: " + peekedagain + "\n");
-                        sized = linstackimp.Size();
-                        Console.Write("Stack Size: " + sized + "\n");
-
-                        for (int i = 0; i < 1000000; i++)
-                        {
-                            string itemout = linstackimp.Pop();
-                        }
-
-                        linTimer.Stop();
-                        linTimer.Dispose();
                         break;
-
                     case 2:
-                        //Circular Array and Linked Queues
-                        //var arrqueueimp = mille5a9lib.Queue<int>.Create(100000000); //Array Stack init
-                        //arrTimer = new Timer(10);
-                        //now = DateTime.Now;
-                        //arrTimer.Elapsed += (sender, e) => OnTimedEvent(sender, e, now);
-                        //arrTimer.Start();
-
-                        //for (int i = 0; i < 100000000; i++) //100 million items
-                        //{
-                        //    bool success = arrqueueimp.Enqueue(i);
-                        //}
-
-                        //peeked = arrqueueimp.Peek();
-                        //Console.Write("Front Item: " + peeked + "\n");
-                        //sized = arrqueueimp.Size();
-                        //Console.Write("Queue Size: " + sized + "\n");
-
-                        //for (int i = 0; i < 100000000; i++)
-                        //{
-                        //    int itemout = arrqueueimp.Dequeue();
-                        //}
-
-                        //arrTimer.Stop();
-                        //arrTimer.Dispose();
-
-                        //var linqueueimp = mille5a9lib.Queue<string>.Create(); //Linked Stack init
-
-                        //linTimer = new Timer(10);
-                        //now = DateTime.Now;
-                        //linTimer.Elapsed += (sender, e) => OnTimedEvent(sender, e, now);
-                        //linTimer.Start();
-
-                        //for (int i = 0; i < 10000; i++) //1 million items (for reasonable runtime)
-                        //{
-                        //    bool success = linqueueimp.Enqueue("item " + i);
-                        //    //System.Threading.Thread.Sleep(10);
-                        //}
-
-                        //peekedagain = linqueueimp.Peek();
-                        //Console.Write("Front Item: " + peekedagain + "\n");
-                        //sized = linqueueimp.Size();
-                        //Console.Write("Queue Size: " + sized + "\n");
-
-                        //for (int i = 0; i < 10000; i++)
-                        //{
-                        //    string itemout = linqueueimp.Dequeue();
-                        //}
-
-                        //linTimer.Stop();
-                        //linTimer.Dispose();
+                        //Array and Linked Queues
+                        Console.Write("Would you like to make an Array Queue (0), or a Linked Queue (1)?: \n");
+                        c = Console.ReadKey();
+                        if (c.KeyChar == '0')
+                        {
+                            // Array Queue Menu
+                            Console.Write("\nCreating Array Queue...\n");
+                            var arrqueue = mille5a9lib.Queue<int>.Create(10); //Array Queue init
+                            bool innerexit = false;
+                            while (!innerexit)
+                            {
+                                Console.Write("\nOptions:\n");
+                                Console.Write("1. Enqueue\n");
+                                Console.Write("2. Dequeue\n");
+                                Console.Write("3. Peek\n");
+                                Console.Write("4. Size\n");
+                                Console.Write("0. Exit to Main Menu\n");
+                                ConsoleKeyInfo x = Console.ReadKey();
+                                if (x.KeyChar == '1')
+                                {
+                                    Console.Write("\nPlease type a number to put in the queue:\n");
+                                    ConsoleKeyInfo input = Console.ReadKey();
+                                    Console.Write("\n");
+                                    int num = input.KeyChar - 48;
+                                    bool success = arrqueue.Enqueue(num);
+                                }
+                                else if (x.KeyChar == '2')
+                                {
+                                    int output = arrqueue.Dequeue();
+                                    Console.Write("\nYou have dequeued a " + output + "\n");
+                                }
+                                else if (x.KeyChar == '3')
+                                { 
+                                    int item = arrqueue.Peek();
+                                    Console.Write("\nThe item in question is: " + item + "\n");
+                                }
+                                else if (x.KeyChar == '4')
+                                {
+                                    int num = arrqueue.Size();
+                                    Console.Write("\nThe queue is of size: " + num + "\n");
+                                }
+                                else if (x.KeyChar == '0')
+                                {
+                                    innerexit = true;
+                                    Console.Write("\n");
+                                }
+                            }
+                        }
+                        else if (c.KeyChar == '1')
+                        {
+                            // Linked Queue Menu
+                            Console.Write("\nCreating Linked Queue...(dequeue is broken)\n");
+                            var linqueue = mille5a9lib.Queue<int>.Create(); //Linked Queue init
+                            bool innerexit = false;
+                            while (!innerexit)
+                            {
+                                Console.Write("\nOptions:\n");
+                                Console.Write("1. Enqueue\n");
+                                Console.Write("2. Dequeue\n");
+                                Console.Write("3. Peek\n");
+                                Console.Write("4. Size\n");
+                                Console.Write("0. Exit to Main Menu\n");
+                                ConsoleKeyInfo x = Console.ReadKey();
+                                if (x.KeyChar == '1')
+                                {
+                                    Console.Write("\nPlease type a number to put in the queue:\n");
+                                    ConsoleKeyInfo input = Console.ReadKey();
+                                    Console.Write("\n");
+                                    int num = input.KeyChar - 48;
+                                    bool success = linqueue.Enqueue(num);
+                                }
+                                else if (x.KeyChar == '2')
+                                {
+                                    int output = linqueue.Dequeue();
+                                    Console.Write("\nYou have dequeued a " + output + "\n");
+                                }
+                                else if (x.KeyChar == '3')
+                                {
+                                    int item = linqueue.Peek();
+                                    Console.Write("\nThe item in question is: " + item + "\n");
+                                }
+                                else if (x.KeyChar == '4')
+                                {
+                                    int num = linqueue.Size();
+                                    Console.Write("\nThe queue is of size: " + num + "\n");
+                                }
+                                else if (x.KeyChar == '0')
+                                {
+                                    innerexit = true;
+                                    Console.Write("\n");
+                                }
+                            }
+                        }
                         break;
                     case 3:
                         //Array and Linked Lists
                         Console.Write("Would you like to make an Array List (0), or a Linked List (1)?: \n");
-                        ConsoleKeyInfo c = Console.ReadKey();
+                        c = Console.ReadKey();
                         if (c.KeyChar == '0')
                         {
                             // Array List Menu
@@ -294,13 +383,13 @@ namespace ConsoleApp1
                         //AVL Tree
                         break;
                     case 6:
-                        //Hash table
+                        //Heap
                         break;
                     case 7:
                         //Graph
                         break;
                     case 8:
-                        //Heap
+                        //Hash table
                         break;
                 }
             }

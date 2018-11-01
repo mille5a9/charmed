@@ -110,11 +110,11 @@ namespace mille5a9lib
             }
             else
             {
-                temp = _rear;
-                while (temp.GetNext() != _front) temp = temp.GetNext();
-                temp = new SingleNode<T>(temp.Get(), null);
+                _front = _rear;
+                while (_front.GetNext() != temp) _front = _front.GetNext();
                 _size--;
             }
+            temp = null;
             return data;
         }
 
