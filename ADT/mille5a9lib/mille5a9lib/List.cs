@@ -53,11 +53,6 @@ namespace mille5a9lib
         public bool MoveNext() { return (_pos++ < list.Size()); }
         public void Reset() { _pos = -1; }
 
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-
         object IEnumerator.Current
         {
             get
@@ -73,6 +68,41 @@ namespace mille5a9lib
                 return list.GetItem(_pos);
             }
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects).
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+        // ~ArrayListEnum() {
+        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        //   Dispose(false);
+        // }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            // GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 
     public class ArrayList<T> : IList<T>, IEnumerable<T>
@@ -106,13 +136,22 @@ namespace mille5a9lib
                 Console.Write(e.Message());
                 return false;
             }
-            for (int i = _count; i >= pos; i--)
+            if (_count == 0)
             {
-                _items[i + 1] = _items[i];
+                _items[0] = item;
+                _count++;
+                return true;
             }
-            _items[pos] = item;
-            _count++;
-            return true;
+            else
+            {
+                for (int i = _count; i >= pos; i--)
+                {
+                    _items[i] = _items[i - 1];
+                }
+                _items[pos] = item;
+                _count++;
+                return true;
+            }
         }
 
         public bool Remove(int pos)
@@ -181,11 +220,6 @@ namespace mille5a9lib
         public bool MoveNext() { return (_pos++ < list.Size()); }
         public void Reset() { _pos = -1; }
 
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-
         object IEnumerator.Current
         {
             get
@@ -201,6 +235,41 @@ namespace mille5a9lib
                 return list.GetItem(_pos);
             }
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects).
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+        // ~LinkedListEnum() {
+        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        //   Dispose(false);
+        // }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            // GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 
     public class LinkedList<T> : IList<T>, IEnumerable<T>

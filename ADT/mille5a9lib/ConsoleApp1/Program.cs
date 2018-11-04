@@ -10,11 +10,6 @@ namespace ConsoleApp1
     class Program
     {
 
-        public static void OnTimedEvent(Object source, ElapsedEventArgs e, DateTime now)
-        {
-            Console.Write("Elapsed time is: {0:HH:mm:ss.fff}\n", (e.SignalTime - now).ToString());
-        }
-
         static void Main(string[] args)
         {
             Console.Write("Welcome to the mille5a9lib tester!\n");
@@ -25,11 +20,10 @@ namespace ConsoleApp1
                 Console.Write("1. Stack\n");
                 Console.Write("2. Queue\n");
                 Console.Write("3. List\n");
-                Console.Write("4. Binary Search Tree\n");
-                Console.Write("5. AVL Tree\n");
-                Console.Write("6. Hash Table\n");
-                Console.Write("7. Graph\n");
-                Console.Write("8. Heap\n");
+                Console.Write("4. Tree\n");
+                Console.Write("5. Heap\n");
+                Console.Write("6. Graph\n");
+                Console.Write("7. Hash Table\n");
                 Console.Write("0. Exit\n");
                 ConsoleKeyInfo choicekey = Console.ReadKey();
                 int choice = choicekey.KeyChar - 48; //ascii 0 is 48
@@ -378,17 +372,274 @@ namespace ConsoleApp1
                         break;
                     case 4:
                         //Binary Search Tree
+                        Console.Write("Would you like to make a Binary Search Tree (0), or an AVL Tree (1)?: \n");
+                        c = Console.ReadKey();
+                        if (c.KeyChar == '0')
+                        {
+                            // BST Menu
+                            Console.Write("\nCreating Binary Search Tree...\n");
+                            var bst = mille5a9lib.Tree<int>.Create(false); //BST init
+                            bool innerexit = false;
+                            while (!innerexit)
+                            {
+                                Console.Write("Tree contents are: ");
+                                var contents = mille5a9lib.List<int>.Create();
+                                contents = bst.GetPreorder();
+                                Console.Write("\nPreorder: ");
+                                for (int i = 0; i < contents.Size(); i++) Console.Write(contents.GetItem(i) + " ");
+                                contents = bst.GetInorder();
+                                Console.Write("\nInorder: ");
+                                for (int i = 0; i < contents.Size(); i++) Console.Write(contents.GetItem(i) + " ");
+                                contents = bst.GetPostorder();
+                                Console.Write("\nPostorder: ");
+                                for (int i = 0; i < contents.Size(); i++) Console.Write(contents.GetItem(i) + " ");
+                                Console.Write("\nOptions:\n");
+                                Console.Write("1. Insert\n");
+                                Console.Write("2. Remove\n");
+                                Console.Write("3. Contains\n");
+                                Console.Write("4. Clear Tree\n");
+                                Console.Write("0. Exit to Main Menu\n");
+                                ConsoleKeyInfo x = Console.ReadKey();
+                                if (x.KeyChar == '1')
+                                {
+                                    Console.Write("\nPlease type a number to add to the tree:\n");
+                                    ConsoleKeyInfo input = Console.ReadKey();
+                                    Console.Write("\n");
+                                    int num = input.KeyChar - 48;
+                                    bool success = bst.Insert(num);
+                                }
+                                else if (x.KeyChar == '2')
+                                {
+                                    Console.Write("\nPlease type a number to remove from the tree:\n");
+                                    ConsoleKeyInfo poskey = Console.ReadKey();
+                                    int num = poskey.KeyChar - 48;
+                                    Console.Write("\n");
+                                    bool success = bst.Remove(num);
+                                    if (success == false) Console.Write("Removal failed: Number is not in the tree.\n");
+                                    else Console.Write("Removal success!\n");
+                                }
+                                else if (x.KeyChar == '3')
+                                {
+                                    Console.Write("\nPlease type a position to observe in the list:\n");
+                                    ConsoleKeyInfo poskey = Console.ReadKey();
+                                    int pos = poskey.KeyChar - 48;
+                                    Console.Write("\n");
+                                    bool success = bst.Contains(pos);
+                                    if (success) Console.Write("The item in question is definitely there.\n");
+                                    else Console.Write("The item in question does not exist in the tree.\n");
+                                }
+                                else if (x.KeyChar == '4')
+                                {
+                                    Console.Write("\nClearing list...\n");
+                                    bst.Clear(bst.GetRoot());
+                                }
+                                else if (x.KeyChar == '0')
+                                {
+                                    innerexit = true;
+                                    Console.Write("\n");
+                                }
+                            }
+                        }
+                        else if (c.KeyChar == '1')
+                        {
+                            // AVLT Menu
+                            Console.Write("\nCreating Binary Search Tree...\n");
+                            var avl = mille5a9lib.Tree<int>.Create(true); //AVLT init
+                            bool innerexit = false;
+                            while (!innerexit)
+                            {
+                                Console.Write("Tree contents are: ");
+                                var contents = mille5a9lib.List<int>.Create();
+                                contents = avl.GetPreorder();
+                                Console.Write("\nPreorder: ");
+                                for (int i = 0; i < contents.Size(); i++) Console.Write(contents.GetItem(i) + " ");
+                                contents = avl.GetInorder();
+                                Console.Write("\nInorder: ");
+                                for (int i = 0; i < contents.Size(); i++) Console.Write(contents.GetItem(i) + " ");
+                                contents = avl.GetPostorder();
+                                Console.Write("\nPostorder: ");
+                                for (int i = 0; i < contents.Size(); i++) Console.Write(contents.GetItem(i) + " ");
+                                Console.Write("\nOptions:\n");
+                                Console.Write("1. Insert\n");
+                                Console.Write("2. Remove\n");
+                                Console.Write("3. Contains\n");
+                                Console.Write("4. Clear Tree\n");
+                                Console.Write("0. Exit to Main Menu\n");
+                                ConsoleKeyInfo x = Console.ReadKey();
+                                if (x.KeyChar == '1')
+                                {
+                                    Console.Write("\nPlease type a number to add to the tree:\n");
+                                    ConsoleKeyInfo input = Console.ReadKey();
+                                    Console.Write("\n");
+                                    int num = input.KeyChar - 48;
+                                    bool success = avl.Insert(num);
+                                }
+                                else if (x.KeyChar == '2')
+                                {
+                                    Console.Write("\nPlease type a number to remove from the tree:\n");
+                                    ConsoleKeyInfo poskey = Console.ReadKey();
+                                    int num = poskey.KeyChar - 48;
+                                    Console.Write("\n");
+                                    bool success = avl.Remove(num);
+                                    if (success == false) Console.Write("Removal failed: Number is not in the tree.\n");
+                                    else Console.Write("Removal success!\n");
+                                }
+                                else if (x.KeyChar == '3')
+                                {
+                                    Console.Write("\nPlease type a position to observe in the list:\n");
+                                    ConsoleKeyInfo poskey = Console.ReadKey();
+                                    int pos = poskey.KeyChar - 48;
+                                    Console.Write("\n");
+                                    bool success = avl.Contains(pos);
+                                    if (success) Console.Write("The item in question is definitely there.\n");
+                                    else Console.Write("The item in question does not exist in the tree.\n");
+                                }
+                                else if (x.KeyChar == '4')
+                                {
+                                    Console.Write("\nClearing list...\n");
+                                    avl.Clear(avl.GetRoot());
+                                }
+                                else if (x.KeyChar == '0')
+                                {
+                                    innerexit = true;
+                                    Console.Write("\n");
+                                }
+                            }
+                        }
                         break;
                     case 5:
-                        //AVL Tree
+                        //Heap
+                        Console.Write("Would you like to make a Min Heap (0), or a Max Heap (1)?: \n");
+                        c = Console.ReadKey();
+                        if (c.KeyChar == '0')
+                        {
+                            // Minheap Menu
+                            Console.Write("\nCreating Min Heap...\n");
+                            mille5a9lib.MinHeap<int> min = new mille5a9lib.MinHeap<int>(); //Minheap init
+                            bool innerexit = false;
+                            while (!innerexit)
+                            {
+                                Console.Write("Tree contents are: ");
+                                var contents = mille5a9lib.List<int>.Create();
+                                contents = min.GetPreorder();
+                                Console.Write("\nPreorder: ");
+                                for (int i = 0; i < contents.Size(); i++) Console.Write(contents.GetItem(i) + " ");
+                                contents = min.GetInorder();
+                                Console.Write("\nInorder: ");
+                                for (int i = 0; i < contents.Size(); i++) Console.Write(contents.GetItem(i) + " ");
+                                contents = min.GetPostorder();
+                                Console.Write("\nPostorder: ");
+                                for (int i = 0; i < contents.Size(); i++) Console.Write(contents.GetItem(i) + " ");
+                                Console.Write("\nOptions:\n");
+                                Console.Write("1. Insert\n");
+                                Console.Write("2. Extract\n");
+                                Console.Write("3. Contains\n");
+                                Console.Write("4. Clear Minheap\n");
+                                Console.Write("0. Exit to Main Menu\n");
+                                ConsoleKeyInfo x = Console.ReadKey();
+                                if (x.KeyChar == '1')
+                                {
+                                    Console.Write("\nPlease type a number to add to the heap:\n");
+                                    ConsoleKeyInfo input = Console.ReadKey();
+                                    Console.Write("\n");
+                                    int num = input.KeyChar - 48;
+                                    bool success = min.Insert(num, min.GetRoot(), null);
+                                }
+                                else if (x.KeyChar == '2')
+                                {
+                                    Console.Write("\nRemoving the minimum value from the heap:\n");
+                                    int success = min.Extract(min.GetRoot(), null);
+                                    Console.Write("You found a " + success + "\n");
+                                }
+                                else if (x.KeyChar == '3')
+                                {
+                                    Console.Write("\nPlease type a number to check for:\n");
+                                    ConsoleKeyInfo poskey = Console.ReadKey();
+                                    int pos = poskey.KeyChar - 48;
+                                    Console.Write("\n");
+                                    bool success = min.Contains(pos, min.GetRoot());
+                                    if (success) Console.Write("The item in question is definitely there.\n");
+                                    else Console.Write("The item in question does not exist in the tree.\n");
+                                }
+                                else if (x.KeyChar == '4')
+                                {
+                                    Console.Write("\nClearing heap...\n");
+                                    min.Clear(min.GetRoot());
+                                }
+                                else if (x.KeyChar == '0')
+                                {
+                                    innerexit = true;
+                                    Console.Write("\n");
+                                }
+                            }
+                        }
+                        else if (c.KeyChar == '1')
+                        {
+                            // Maxheap Menu
+                            Console.Write("\nCreating Max Heap...\n");
+                            mille5a9lib.MaxHeap<int> max = new mille5a9lib.MaxHeap<int>(); //Maxheap init
+                            bool innerexit = false;
+                            while (!innerexit)
+                            {
+                                Console.Write("Tree contents are: ");
+                                var contents = mille5a9lib.List<int>.Create();
+                                contents = max.GetPreorder();
+                                Console.Write("\nPreorder: ");
+                                for (int i = 0; i < contents.Size(); i++) Console.Write(contents.GetItem(i) + " ");
+                                contents = max.GetInorder();
+                                Console.Write("\nInorder: ");
+                                for (int i = 0; i < contents.Size(); i++) Console.Write(contents.GetItem(i) + " ");
+                                contents = max.GetPostorder();
+                                Console.Write("\nPostorder: ");
+                                for (int i = 0; i < contents.Size(); i++) Console.Write(contents.GetItem(i) + " ");
+                                Console.Write("\nOptions:\n");
+                                Console.Write("1. Insert\n");
+                                Console.Write("2. Extract\n");
+                                Console.Write("3. Contains\n");
+                                Console.Write("4. Clear Minheap\n");
+                                Console.Write("0. Exit to Main Menu\n");
+                                ConsoleKeyInfo x = Console.ReadKey();
+                                if (x.KeyChar == '1')
+                                {
+                                    Console.Write("\nPlease type a number to add to the heap:\n");
+                                    ConsoleKeyInfo input = Console.ReadKey();
+                                    Console.Write("\n");
+                                    int num = input.KeyChar - 48;
+                                    bool success = max.Insert(num, max.GetRoot(), null);
+                                }
+                                else if (x.KeyChar == '2')
+                                {
+                                    Console.Write("\nRemoving the maximum value from the heap:\n");
+                                    int success = max.Extract(max.GetRoot(), null);
+                                    Console.Write("You found a " + success + "\n");
+                                }
+                                else if (x.KeyChar == '3')
+                                {
+                                    Console.Write("\nPlease type a number to check for:\n");
+                                    ConsoleKeyInfo poskey = Console.ReadKey();
+                                    int pos = poskey.KeyChar - 48;
+                                    Console.Write("\n");
+                                    bool success = max.Contains(pos, max.GetRoot());
+                                    if (success) Console.Write("The item in question is definitely there.\n");
+                                    else Console.Write("The item in question does not exist in the tree.\n");
+                                }
+                                else if (x.KeyChar == '4')
+                                {
+                                    Console.Write("\nClearing heap...\n");
+                                    max.Clear(max.GetRoot());
+                                }
+                                else if (x.KeyChar == '0')
+                                {
+                                    innerexit = true;
+                                    Console.Write("\n");
+                                }
+                            }
+                        }
                         break;
                     case 6:
-                        //Heap
-                        break;
-                    case 7:
                         //Graph
                         break;
-                    case 8:
+                    case 7:
                         //Hash table
                         break;
                 }
