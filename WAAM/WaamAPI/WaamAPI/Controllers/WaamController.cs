@@ -13,7 +13,6 @@ namespace WaamAPI.Controllers
     public class WaamController : ControllerBase
     {
         static volatile public Blockchain master = new Blockchain();
-        string node_identifier = Guid.NewGuid().ToString();
         // GET api/values
         [HttpGet("mine")]
         public ActionResult<Block> Mine()
@@ -22,17 +21,19 @@ namespace WaamAPI.Controllers
             uint lastproof = lastblock.GetProof();
             uint proof = master.ProofOfWork(lastproof);
 
-            master.NewTransaction(new Transaction("0", node_identifier, 1)); //this second argument is where accounts should go once implemented
+            master.NewTransaction(new Transaction("0", "5", 1)); //this second argument is where accounts should go once implemented
             string previoushash = Blockchain.Hash(lastblock);
             master.NewBlock(proof, previoushash);
+
             return master.LastBlock();
-            //return new string[] { "value1", "value2" };
         }
 
         // GET api/values/5
         [HttpGet("chain")]
         public ActionResult<Blockchain> Chain()
         {
+            //master.RegisterNode();
+            //master.ResolveConflicts();
             return master;
         }
 
@@ -43,6 +44,22 @@ namespace WaamAPI.Controllers
             if (trans.GetSender() == null || trans.GetRecipient() == null || trans.GetAmount() == 0 ) return StatusCode(400);
             master.NewTransaction(trans);
             return StatusCode(202);
+        }
+
+        [HttpPost("register")]
+        public IActionResult Register(string node_identifier)
+        {
+            DoubleLinkedList<string> list = master.GetNodes();
+            foreach (string node in list) master.RegisterNode(node);
+            master.RegisterNode(node_identifier);
+            return StatusCode(202);
+        }
+
+        [HttpGet("resolve")]
+        public ActionResult<Blockchain> Resolve()
+        {
+            master.ResolveConflicts();
+            return master;
         }
 
         //// PUT api/values/5

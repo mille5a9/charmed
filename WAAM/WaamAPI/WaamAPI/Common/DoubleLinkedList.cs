@@ -21,7 +21,7 @@ namespace WaamAPI.Common
         private readonly uint _count;
     }
     [Serializable]
-    public class DoubleNode<T>
+    public class DoubleNode<T> where T : IComparable
     {
         public DoubleNode(T item, DoubleNode<T> next, DoubleNode<T> prev)
         {
@@ -42,13 +42,13 @@ namespace WaamAPI.Common
         private DoubleNode<T> _prev;
     }
 
-    public class LinkedListEnum<T> : IEnumerator<T>
+    public class LinkedListEnum<T> : IEnumerator<T> where T : IComparable
     {
         public DoubleLinkedList<T> list;
         private int _pos = -1;
 
         public LinkedListEnum(DoubleLinkedList<T> input) { list = input; }
-        public bool MoveNext() { return (_pos++ < list.Size()); }
+        public bool MoveNext() { return (++_pos < list.Size()); }
         public void Reset() { _pos = -1; }
 
         object IEnumerator.Current
@@ -103,7 +103,7 @@ namespace WaamAPI.Common
         #endregion
     }
     [Serializable]
-    public class DoubleLinkedList<T> : IEnumerable<T>
+    public class DoubleLinkedList<T> : IEnumerable<T> where T : IComparable
     {
         public LinkedListEnum<T> GetEnumerator()
         {
@@ -148,6 +148,17 @@ namespace WaamAPI.Common
             _head = new DoubleNode<T>(item, _head, null);
             if (_head.GetNext() != null) _head.GetNext().SetPrev(_head);
             _count++;
+        }
+
+        public bool Contains(T item)
+        {
+            DoubleNode<T> temp = _head;
+            while (temp != null)
+            {
+                if (temp.Get().CompareTo(item) == 0) return true;
+                temp = temp.GetNext();
+            }
+            return false;
         }
 
         public bool Remove(uint pos)
