@@ -12,20 +12,28 @@ namespace WaamAPI.Controllers
     [ApiController]
     public class WaamController : ControllerBase
     {
-        Blockchain master = new Blockchain();
+        static volatile public Blockchain master = new Blockchain();
+        string node_identifier = Guid.NewGuid().ToString();
         // GET api/values
         [HttpGet("mine")]
-        public ActionResult<string> Mine()
+        public ActionResult<Block> Mine()
         {
-            return "This API URL will mine a new Block for the chain";
+            Block lastblock = master.LastBlock();
+            uint lastproof = lastblock.GetProof();
+            uint proof = master.ProofOfWork(lastproof);
+
+            master.NewTransaction(new Transaction("0", node_identifier, 1)); //this second argument is where accounts should go once implemented
+            string previoushash = Blockchain.Hash(lastblock);
+            master.NewBlock(proof, previoushash);
+            return master.LastBlock();
             //return new string[] { "value1", "value2" };
         }
 
         // GET api/values/5
         [HttpGet("chain")]
-        public ActionResult<string> Chain()
+        public ActionResult<Blockchain> Chain()
         {
-            return "This API URL will return the current chain";
+            return master;
         }
 
         // POST api/values

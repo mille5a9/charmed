@@ -34,11 +34,14 @@ namespace WaamAPI.Common
             bf.Serialize(memStream, block);
             byte[] blockbytes = memStream.ToArray();
             SHA256 mySHA256 = SHA256.Create();
-            return mySHA256.ComputeHash(blockbytes).ToString();
+            byte[] answer = mySHA256.ComputeHash(blockbytes);
+            string guesshash = string.Empty;
+            foreach (byte x in answer) guesshash += String.Format("{0:x2}", x);
+            return guesshash;
         }
         public Block LastBlock()
         {
-            return _chain.GetItem(_chain.Size());
+            return _chain.GetItem(_chain.Size() - 1);
         }
         public uint ProofOfWork(uint lastproof)
         {
@@ -58,13 +61,16 @@ namespace WaamAPI.Common
             Buffer.BlockCopy(lprf, 0, guess, 0, lprf.Length);
             Buffer.BlockCopy(prf, 0, guess, lprf.Length, prf.Length);
             SHA256 mySHA256 = SHA256.Create();
-            string guesshash = mySHA256.ComputeHash(guess).ToString();
+            byte[] answer = mySHA256.ComputeHash(guess);
+            string guesshash = string.Empty;
+            foreach (byte x in answer) guesshash += String.Format("{0:x2}", x);
             return (guesshash.Substring(Math.Max(0, guesshash.Length - 4)) == "0000");
         }
         private DoubleLinkedList<Block> _chain = new DoubleLinkedList<Block>();
         private DoubleLinkedList<Transaction> _currenttransactions = new DoubleLinkedList<Transaction>();
     }
 
+    [Serializable]
     public struct Block
     {
         public Block(uint index, DoubleLinkedList<Transaction> transactions, uint proof, string previoushash = null)
@@ -89,7 +95,7 @@ namespace WaamAPI.Common
         private readonly uint _proof;
         private readonly string _previoushash; 
     }
-
+    [Serializable]
     public struct Transaction
     {
         public Transaction(string sender, string recipient, decimal amount)

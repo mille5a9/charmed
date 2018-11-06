@@ -20,6 +20,7 @@ namespace WaamAPI.Common
         private readonly uint _position;
         private readonly uint _count;
     }
+    [Serializable]
     public class DoubleNode<T>
     {
         public DoubleNode(T item, DoubleNode<T> next, DoubleNode<T> prev)
@@ -101,6 +102,7 @@ namespace WaamAPI.Common
         }
         #endregion
     }
+    [Serializable]
     public class DoubleLinkedList<T> : IEnumerable<T>
     {
         public LinkedListEnum<T> GetEnumerator()
