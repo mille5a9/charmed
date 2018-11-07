@@ -1,0 +1,7 @@
+﻿CREATE TABLE [dbo].[TeamGames]
+(
+	[Id] INT NOT NULL PRIMARY KEY,
+	[TeamID] INT NOT NULL,
+	[GameTime] DATETIME NOT NULL,
+	[Opponent] CHAR(90) NOT NULL
+)

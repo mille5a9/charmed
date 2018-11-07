@@ -1,17 +1,25 @@
 ﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using Dapper;
 
 namespace ATMBot
 {
+
+
+
     public class MyCommands
     {
-        [Command("hi")]
+        [Command("addme")]
         public async Task Hi(CommandContext ctx)
         {
-            await ctx.RespondAsync($"👋 Hi, {ctx.User.Mention}!");
+            User newguy = new User(ctx.User.Username + "#" + ctx.User.Discriminator);
+            SqlController.AddUser(newguy);
+
+            await ctx.RespondAsync($"HI, { ctx.User.Username + "#" + ctx.User.Discriminator }");
         }
     }
 
@@ -44,3 +52,24 @@ namespace ATMBot
         }
     }
 }
+
+/*
+    How to get data from website with API
+    [HttpGet]
+        public string Get()
+        {
+            HttpClient http = new HttpClient();
+            http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("APIKEY", header);
+            var data = http.GetAsync(url).Result.Content.ReadAsStringAsync().Result;
+            return data;
+        }
+
+
+        string conn = "Server=localhost;Database=ATMdb;";
+        using (IDbConnection db = new SqlConnection(conn))
+        {
+             data = db.Query<DapperTest>("select * from testTable").ToList();
+        }
+
+ 
+*/
