@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28010.2046
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATMBot", "ATMBot\ATMBot.csproj", "{B26292F8-30C3-4876-9DB7-768E0D20CAB3}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "ATMdb", "ATMdb\ATMdb.sqlproj", "{536F815B-83AD-40FB-8B62-5D1A55C3E71D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,12 @@ Global
 		{B26292F8-30C3-4876-9DB7-768E0D20CAB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B26292F8-30C3-4876-9DB7-768E0D20CAB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B26292F8-30C3-4876-9DB7-768E0D20CAB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{536F815B-83AD-40FB-8B62-5D1A55C3E71D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{536F815B-83AD-40FB-8B62-5D1A55C3E71D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{536F815B-83AD-40FB-8B62-5D1A55C3E71D}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{536F815B-83AD-40FB-8B62-5D1A55C3E71D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{536F815B-83AD-40FB-8B62-5D1A55C3E71D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{536F815B-83AD-40FB-8B62-5D1A55C3E71D}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
