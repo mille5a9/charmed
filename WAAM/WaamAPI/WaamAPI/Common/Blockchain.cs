@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Security.Cryptography;
-using System.Web;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Net.Http;

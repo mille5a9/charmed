@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace WaamAPI.Common
 {
@@ -113,34 +111,6 @@ namespace WaamAPI.Common
         {
             return GetEnumerator();
         }
-        public bool Insert(uint pos, T item)
-        {
-            try
-            {
-                if (pos > _count || pos < 0) throw new InvalidPositionException(pos, _count);
-            }
-            catch (InvalidPositionException e)
-            {
-                Console.Write(e.Message());
-                return false;
-            }
-            if (_head == null || pos == _count)
-            {
-                _head = new DoubleNode<T>(item, _head, null);
-                if (_head.GetNext() != null) _head.GetNext().SetPrev(_head);
-                _count++;
-                return true;
-            }
-            DoubleNode<T> temp = _head;
-            for (int i = 1; i < _count - pos; i++)
-            {
-                temp = temp.GetNext();
-            }
-            _count++;
-            temp.SetNext(new DoubleNode<T>(item, temp.GetNext(), temp));
-            return true;
-        }
-
         //special Blockchain method for inserting on the end of the list (at the head)
         //equivalent to Insert(Size(), item)
         public void Append(T item)
@@ -159,55 +129,6 @@ namespace WaamAPI.Common
                 temp = temp.GetNext();
             }
             return false;
-        }
-
-        public bool Remove(uint pos)
-        {
-            Console.Write("\n" + _count + "\n");
-            try
-            {
-                if (pos > _count || pos < 0) throw new InvalidPositionException(pos, _count);
-            }
-            catch (InvalidPositionException e)
-            {
-                Console.Write(e.Message());
-                return false;
-            }
-            if (pos == _count - 1)
-            {
-                _head = _head.GetNext();
-                _count--;
-                return true;
-            }
-            DoubleNode<T> temp = _head;
-            for (int i = 1; i < _count - pos; i++) temp = temp.GetNext();
-            if (temp.GetNext() != null) temp.GetNext().SetPrev(temp.GetPrev());
-            if (temp.GetPrev() != null) temp.GetPrev().SetNext(temp.GetNext());
-            _count--;
-            return true;
-        }
-
-        public bool SetItem(uint pos, T item)
-        {
-            try
-            {
-                if (pos < 0 || pos >= _count) throw new InvalidPositionException(pos, _count);
-            }
-            catch (InvalidPositionException e)
-            {
-                Console.Write(e.Message());
-                return false;
-            }
-            if (pos == _count - 1)
-            {
-                _head.SetItem(item);
-                return true;
-            }
-            DoubleNode<T> temp = _head;
-            for (int i = 1; i < _count - pos; i++) temp = temp.GetNext();
-            temp.SetItem(item);
-            temp = null;
-            return true;
         }
 
         public T GetItem(uint pos)
