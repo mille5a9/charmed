@@ -124,6 +124,11 @@ namespace ATMBot
             List<Team> list = GetTeams();
             List<string> list2 = new List<string>();
             foreach (Team x in list) list2.Add(x.Team);
+            if (list2.Contains(specifier) == false) return new Team("No", new List<Game>());
+            using (IDbConnection db = new SqlConnection(conn))
+            {
+                data = db.Query<Teamdto>("select * from Teams").ToList();
+            }
         }
 
         public static void AddUser(User user)
