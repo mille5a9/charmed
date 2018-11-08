@@ -5,6 +5,7 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using Dapper;
+using System.Collections.Generic;
 
 namespace ATMBot
 {
@@ -13,13 +14,30 @@ namespace ATMBot
 
     public class MyCommands
     {
-        [Command("addme")]
+        [Command("users-addme")]
         public async Task Hi(CommandContext ctx)
         {
             User newguy = new User(ctx.User.Username + "#" + ctx.User.Discriminator);
-            SqlController.AddUser(newguy);
+            SqlController.AddUser( new User(ctx.User.Username + "#" + ctx.User.Discriminator) );
 
-            await ctx.RespondAsync($"HI, { ctx.User.Username + "#" + ctx.User.Discriminator }");
+            await ctx.RespondAsync($"Hi, { ctx.User.Username + "#" + ctx.User.Discriminator }");
+        }
+
+        [Command("users-ls")]
+        public async Task GetUsers(CommandContext ctx, string specifier = "")
+        {
+            string output = "";
+            if (specifier == "")
+            {
+                List<User> people = SqlController.GetUsers();
+                foreach (User x in people) output += "Don't forget about " + x.GetUsername() + "!\n";
+                await ctx.RespondAsync($"Hi, { output }");
+            }
+            else
+            {
+                User person = SqlController.GetUser(specifier);
+                await ctx.RespondAsync($"Hi, { output }");
+            }
         }
     }
 
