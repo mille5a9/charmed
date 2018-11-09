@@ -1,0 +1,35 @@
+155|University of Cincinnati Men's Basketball|11/7/2018 6:00:00 PM|Ohio State
+156|University of Cincinnati Men's Basketball|11/13/2018 7:00:00 PM|North Carolina Central
+157|University of Cincinnati Men's Basketball|11/16/2018 7:00:00 PM|Milwaukee
+158|University of Cincinnati Men's Basketball|11/19/2018 7:00:00 PM|Western Michigan
+159|University of Cincinnati Men's Basketball|11/23/2018 7:00:00 PM|George Mason
+160|University of Cincinnati Men's Basketball|11/24/2018 4:00:00 PM|Baylor or Ole Miss
+161|University of Cincinnati Men's Basketball|11/27/2018 7:00:00 PM|Arkansas-Pine Bluff
+162|University of Cincinnati Men's Basketball|12/1/2018 6:00:00 PM|UNLV
+163|University of Cincinnati Men's Basketball|12/4/2018 7:00:00 PM|Northern Kentucky
+164|University of Cincinnati Men's Basketball|12/8/2018 2:00:00 PM|Xavier
+165|University of Cincinnati Men's Basketball|12/15/2018 8:30:00 PM|Mississippi State
+166|University of Cincinnati Men's Basketball|12/19/2018 9:00:00 PM|UCLA
+167|University of Cincinnati Men's Basketball|12/22/2018 2:00:00 PM|South Carolina State
+168|University of Cincinnati Men's Basketball|1/2/2019 6:30:00 PM|Tulane
+169|University of Cincinnati Men's Basketball|1/5/2019 1:00:00 PM|ECU
+170|University of Cincinnati Men's Basketball|1/10/2019 7:00:00 PM|Tulsa
+171|University of Cincinnati Men's Basketball|1/12/2019 8:00:00 PM|UCONN
+172|University of Cincinnati Men's Basketball|1/15/2019 7:00:00 PM|USF
+173|University of Cincinnati Men's Basketball|1/19/2019 2:00:00 PM|Wichita State
+174|University of Cincinnati Men's Basketball|1/24/2019 7:00:00 PM|Tulsa
+175|University of Cincinnati Men's Basketball|1/27/2019 7:00:00 PM|Temple
+176|University of Cincinnati Men's Basketball|2/2/2019 8:00:00 PM|SMU
+177|University of Cincinnati Men's Basketball|2/7/2019 7:00:00 PM|Memphis
+178|University of Cincinnati Men's Basketball|2/10/2019 4:00:00 PM|Houston
+179|University of Cincinnati Men's Basketball|2/17/2019 1:00:00 PM|Wichita State
+180|University of Cincinnati Men's Basketball|2/21/2019 7:00:00 PM|UCF
+181|University of Cincinnati Men's Basketball|2/24/2019 2:00:00 PM|UCONN
+182|University of Cincinnati Men's Basketball|2/27/2019 9:00:00 PM|SMU
+183|University of Cincinnati Men's Basketball|3/2/2019 8:00:00 PM|Memphis
+184|University of Cincinnati Men's Basketball|3/7/2019 7:00:00 PM|UCF
+185|University of Cincinnati Men's Basketball|3/10/2019 12:00:00 PM|Houston
+186|University of Cincinnati Men's Basketball|3/14/2019 12:00:00 AM|AAC First Round
+187|University of Cincinnati Men's Basketball|3/15/2019 12:00:00 AM|AAC Quarters
+188|University of Cincinnati Men's Basketball|3/16/2019 12:00:00 AM|AAC Semis
+189|University of Cincinnati Men's Basketball|3/17/2019 12:00:00 AM|AAC Finals
