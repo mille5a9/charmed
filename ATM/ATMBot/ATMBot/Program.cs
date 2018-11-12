@@ -8,16 +8,35 @@ using Dapper;
 using System.Collections.Generic;
 using DSharpPlus.Entities;
 using System.IO;
+using ATMBot.Reminder;
+using DSharpPlus.Interactivity;
 
 namespace ATMBot
 {
 
-
-
     public class MyCommands
     {
+        [Command("remind-new")]
+        [Description("Used to create a new reminder for the user")]
+        public async Task NewReminder(CommandContext ctx)
+        {
+            await ctx.TriggerTypingAsync();
+            DateTime parse = new DateTime();
+            await ctx.Channel.SendMessageAsync("Let's make a new reminder! Please type the time you want to be reminded, I'll do my best to understand it:", false);
+            InteractivityModule inter = ctx.Client.GetInteractivityModule();
+            MessageContext msg = await inter.WaitForMessageAsync(xm => xm.Author.Id == ctx.User.Id, TimeSpan.FromMinutes(3));
+            await ctx.TriggerTypingAsync();
+            if (msg != null) parse = Reminder.Reminder.ParseReminderTime(msg.Message.Content);
+            await ctx.RespondAsync("What would you like your reminder at " + parse + " to say?");
+            msg = await inter.WaitForMessageAsync(xm => xm.Author.Id == ctx.User.Id, TimeSpan.FromMinutes(3));
+            await ctx.TriggerTypingAsync();
+            Reminder.Reminder.SaveReminder(ctx, msg.Message.Content, parse);
+            await ctx.RespondAsync("Okay, I'll remind you when it's time");
+        }
+
         [Command("close")]
-        public async Task Close(CommandContext ctx, string pw)
+        [Description("Used with the appropriate password will take the bot offline")]
+        public async Task Close(CommandContext ctx, [Description("The secret code")] string pw)
         {
             if (pw == "a1b2c3d4e5")
             {
@@ -27,6 +46,7 @@ namespace ATMBot
         }
 
         [Command("helpme")]
+        [Description("Shows the raw text of the BotCmdNotes.txt file")]
         public async Task Help(CommandContext ctx)
         {
             string curr = Directory.GetCurrentDirectory();
@@ -34,6 +54,7 @@ namespace ATMBot
             DiscordMember mem = ctx.Member;
             if (mem == null)
             {
+                await ctx.TriggerTypingAsync();
                 await ctx.Channel.SendMessageAsync(output);
                 return;
             }
@@ -41,26 +62,30 @@ namespace ATMBot
         }
 
         [Command("users-addme")]
-        public async Task addme(CommandContext ctx, string adminarg = "")
+        [Description("Adds you to ATMbot's list of users")]
+        public async Task Addme(CommandContext ctx, [Description("If you're an admin, this can be anybody")] string adminarg = "")
         {
             User newguy = new User(ctx.User.Username + "#" + ctx.User.Discriminator);
             if (adminarg != "" && newguy.admin == true)
             {
+                await ctx.TriggerTypingAsync();
                 SqlController.AddUser(new User(adminarg));
                 await ctx.RespondAsync($"Hi [ADMIN], " + adminarg + " has been added!");
                 return;
             }
+            await ctx.TriggerTypingAsync();
             SqlController.AddUser(new User(ctx.User.Username + "#" + ctx.User.Discriminator));
-
             await ctx.RespondAsync($"Hi, { ctx.User.Username + "#" + ctx.User.Discriminator }! Welcome to my memories.");
         }
 
         [Command("users-removeme")]
-        public async Task removeme(CommandContext ctx, string adminarg = "")
+        [Description("Removes you from ATMbot's list of users")]
+        public async Task Removeme(CommandContext ctx, [Description("If you're an admin, this can be anybody")] string adminarg = "")
         {
             User oldguy = new User(ctx.User.Username + "#" + ctx.User.Discriminator);
             if (adminarg != "" && oldguy.admin == true)
             {
+                await ctx.TriggerTypingAsync();
                 SqlController.RemoveUser(SqlController.GetUser(adminarg));
                 await ctx.RespondAsync($"Hi [ADMIN], " + adminarg + " has been added!");
                 return;
@@ -68,6 +93,7 @@ namespace ATMBot
             List<User> list = SqlController.GetUsers();
             bool bet = false;
             foreach (User x in list) if (x.GetUsername() == oldguy.GetUsername()) bet = true;
+            await ctx.TriggerTypingAsync();
             if (!bet) await ctx.RespondAsync($"User is not registered... oh well!");
 
             SqlController.RemoveUser(new User(ctx.User.Username + "#" + ctx.User.Discriminator));
@@ -76,9 +102,11 @@ namespace ATMBot
         }
 
         [Command("users-ls")]
-        public async Task GetUsers(CommandContext ctx, string specifier = "")
+        [Description("Prints a list of all known ATMbot users")]
+        public async Task GetUsers(CommandContext ctx, [Description("Specifying a single user will print more detailed information")]  string specifier = "")
         {
             string output;
+            await ctx.TriggerTypingAsync();
             if (specifier == "")
             {
                 output = "List of all users:\n";
@@ -103,8 +131,10 @@ namespace ATMBot
         }
 
         [Command("teams-add")]
-        public async Task AddTeam(CommandContext ctx, string specifier = "")
+        [Description("Adds a given team to your ATMbot user profile")]
+        public async Task AddTeam(CommandContext ctx, [Description("The team name here, must be written_like_this [place], [sport] e.g. Ohio_State_University_Men's_Basketball")] string specifier = "")
         {
+            await ctx.TriggerTypingAsync();
             if (specifier == "")
             {
                 await ctx.RespondAsync("Please specify a team!");
@@ -117,8 +147,10 @@ namespace ATMBot
         }
 
         [Command("teams-remove")]
-        public async Task RemoveTeam(CommandContext ctx, string specifier = "")
+        [Description("Removes a given team from your ATMbot user profile")]
+        public async Task RemoveTeam(CommandContext ctx, [Description("This should be a team that you have but you don't want")] string specifier = "")
         {
+            await ctx.TriggerTypingAsync();
             if (specifier == "")
             {
                 await ctx.RespondAsync("Please specify a team!");
@@ -130,8 +162,10 @@ namespace ATMBot
         }
 
         [Command("teams-schedule")]
-        public async Task Schedule(CommandContext ctx, string specifier = "")
+        [Description("Prints the schedule of a given team if ATMbot knows about them")]
+        public async Task Schedule(CommandContext ctx, [Description("This should be the team's name if you can spell it right")] string specifier = "")
         {
+            await ctx.TriggerTypingAsync();
             if (specifier == "")
             {
                 await ctx.RespondAsync("Please specify a team!");
@@ -151,6 +185,7 @@ namespace ATMBot
     {
         static DiscordClient discord;
         static CommandsNextModule commands;
+        static InteractivityModule inter;
 
         static async Task Backup()
         {
@@ -162,9 +197,45 @@ namespace ATMBot
             }
         }
 
+        static async Task RemindLoop()
+        {
+            try
+            {
+                while (true)
+                {
+                    List<Reminderdto> list = Reminder.Reminder.GetReminders();
+                    List<Reminderdto> removeals = new List<Reminderdto>();
+                    foreach (Reminderdto x in list)
+                    {
+                        if (DateTime.Compare(x.Time, DateTime.Now) < 0)
+                        {
+                            string output = "You wanted me to remind you about this:\n";
+                            output += x.Message;
+
+                            DiscordUser user;
+                            UInt64.TryParse(x.User_Id, out ulong n);
+                            user = await discord.GetUserAsync(n);
+                            DiscordDmChannel chan = await discord.CreateDmAsync(user);
+                            await chan.TriggerTypingAsync();
+                            await chan.SendMessageAsync(output);
+                            removeals.Add(x);
+                        }
+                    }
+                    Reminder.Reminder.RemoveReminders(removeals);
+                    Console.Write("Reminders Processed, Idling...\n");
+                    await Task.Delay(10000);
+                    Console.Write("Processing Reminders...\n");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
+            }
+        }
+
         static void Main(string[] args)
         {
-            SqlController.init();
+            SqlController.Init();
             MainAsync(args).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
@@ -177,6 +248,7 @@ namespace ATMBot
                 UseInternalLogHandler = true,
                 LogLevel = LogLevel.Debug
             });
+            inter = discord.UseInteractivity(new InteractivityConfiguration());
             commands = discord.UseCommandsNext(new CommandsNextConfiguration
             {
                 StringPrefix = "@ATM "
@@ -184,6 +256,7 @@ namespace ATMBot
             commands.RegisterCommands<MyCommands>();
 
             Backup();
+            RemindLoop();
             await discord.ConnectAsync();
             await Task.Delay(-1);
         }

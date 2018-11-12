@@ -63,5 +63,6 @@
     <Build Include="Users.sql" />
     <Build Include="Teams.sql" />
     <Build Include="TeamGames.sql" />
+    <Build Include="Reminders.sql" />
   </ItemGroup>
 </Project>

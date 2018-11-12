@@ -1,23 +1,6 @@
 Note: "dto" stands for Data Transfer Object, it is used to interface the actual objects with the databases, which may have slightly different fields
 and require precisely named public properties to be casted to with the Dapper library.
 
-SQL Tables
-	Users
-	Teams
-	TeamGames
-
-Objects
-	User & Userdto
-	Team & Teamdto
-	Game & Gamedto
-
-Functions
-	GetUsers & GetUser
-	GetTeams & GetTeam
-	AddUser & RemoveUser
-	AddTeam & RemoveTeam
-	(Add/Remove Game not necessary - should be hard coded into the db)
-
 Commands (StringPrefix is "@ATM " for now, and team names use no abbreviations and underscores for spaces e.g. "University_of_Cincinnati_Bearcats_Men's_Basketball" or "Toronto_Maple_Leafs")
 
 	helpme (e.g. "@ATM helpme")
@@ -32,3 +15,6 @@ Commands (StringPrefix is "@ATM " for now, and team names use no abbreviations a
 	teams (e.g. "@ATM teams-add")
 		-add (name)
 		-remove (name)
+
+	remind
+		-remind-new (prompts for additional inputs, tries to parse a date, remembers a message to pass to you later)

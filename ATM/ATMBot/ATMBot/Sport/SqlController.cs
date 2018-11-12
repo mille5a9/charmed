@@ -1,10 +1,12 @@
-﻿using Dapper;
+﻿using ATMBot.Reminder;
+using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Web.WebPages;
 
 namespace ATMBot
 {
@@ -80,8 +82,8 @@ namespace ATMBot
 
     public class SqlController
     {
-        static readonly string conn = "Data Source=DESKTOP-53MS6TR;Initial Catalog=ATMdb;Integrated Security=True";
-        public static void init()
+        public static readonly string conn = "Data Source=DESKTOP-53MS6TR;Initial Catalog=ATMdb;Integrated Security=True";
+        public static void Init()
         {
             string curr = Directory.GetCurrentDirectory();
             string input = File.ReadAllText(curr + "../../../../TeamGames.txt");
@@ -97,10 +99,10 @@ namespace ATMBot
                     db.Execute("INSERT INTO TeamGames (TeamID, GameTime, Opponent) VALUES (@TeamID, @GameTime, @Opponent)", new { TeamID = gameargs[1], GameTime = gameargs[2], Opponent = gameargs[3] });
                 }
             }
-            initUsers();
+            InitUsers();
         }
 
-        static void initUsers()
+        static void InitUsers()
         {
 
             string curr = Directory.GetCurrentDirectory();
@@ -117,10 +119,10 @@ namespace ATMBot
                     db.Execute("INSERT INTO Users (Username) VALUES (@Username)", new { Username = userargs[1]});
                 }
             }
-            initTeams();
+            InitTeams();
         }
 
-        static void initTeams()
+        static void InitTeams()
         {
 
             string curr = Directory.GetCurrentDirectory();
@@ -137,6 +139,29 @@ namespace ATMBot
                     db.Execute("INSERT INTO Teams (UsernameID, Team) VALUES (@UsernameID, @Team)", new { UsernameID = teamargs[1], Team = teamargs[2] });
                 }
             }
+            InitReminders();
+        }
+
+        static void InitReminders()
+        {
+
+            string curr = Directory.GetCurrentDirectory();
+            string input = File.ReadAllText(curr + "../../../../Reminders.txt");
+            string[] reminders = input.Split('\n');
+            string[] reminderargs;
+            DateTime old = new DateTime();
+            using (IDbConnection db = new SqlConnection(conn))
+            {
+                db.Execute("DELETE FROM Reminders");
+                foreach (string x in reminders)
+                {
+                    if (x == "") break;
+                    reminderargs = x.Split('|');
+                    old = reminderargs[3].AsDateTime();
+                    if (DateTime.Compare(old, DateTime.Now) > 0) continue;
+                    db.Execute("INSERT INTO Reminders (User_Id, Message, Time) VALUES (@User_Id, @Message, @Time)", new { User_Id = reminderargs[1], Message = reminderargs[2], Time = reminderargs[3] });
+                }
+            }
         }
 
         public static void Write()
@@ -147,6 +172,7 @@ namespace ATMBot
                 List<Gamedto> gamedtos = db.Query<Gamedto>("SELECT * FROM TeamGames").ToList();
                 List<Teamdto> teamdtos = db.Query<Teamdto>("SELECT * FROM Teams").ToList();
                 List<Userdto> userdtos = db.Query<Userdto>("SELECT * FROM Users").ToList();
+                List<Reminderdto> reminderdtos = db.Query<Reminderdto>("SELECT * FROM Reminders").ToList();
                 string txt = "";
                 foreach (Gamedto x in gamedtos) txt += ("" + x.Id + '|' + x.TeamID + '|' + x.GameTime + '|' + x.Opponent + '\n');
                 File.WriteAllText(curr + "TeamGames.txt", txt);
@@ -156,6 +182,9 @@ namespace ATMBot
                 txt = "";
                 foreach (Userdto x in userdtos) txt += ("" + x.Id + '|' + x.Username + '\n');
                 File.WriteAllText(curr + "Users.txt", txt);
+                txt = "";
+                foreach (Reminderdto x in reminderdtos) txt += ("" + x.Id + '|' + x.User_Id + '|' + x.Message + '|' + x.Time + '\n');
+                File.WriteAllText(curr + "Reminders.txt", txt);
             }
         }
 

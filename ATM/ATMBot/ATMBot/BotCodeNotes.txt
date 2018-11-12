@@ -1,0 +1,16 @@
+ATMbot Code Layout Documentation
+
+Files:
+
+>> ATMbot/
+	Program.cs : The main async function and command Task functions
+	SqlController.cs : Contains the objects relating to ATMbot's sports team schedule reminder technology, and the database-interaction functions therein
+
+	>> Reminder/
+		Reminder.cs : Contains the objects and logic code relating to the reminder functionality of ATMbot.
+
+Todo:
+	>> Leveling system for user time spent doing activities
+	>> Some way to link up streams for hockey/basketball/whatever
+	>> Integrate Waamcoin somehow
+	>> 
