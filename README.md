@@ -1,10 +1,12 @@
 # charmed
 
-Collection of C++ code written independently by a
-Computer Engineering student. Currently a 3rd-year
-undergraduate at the University of Cincinnati.
+Collection of code written by me (Andrew Miller) during
+my time as an undergraduate student at the University
+of Cincinnati.
 
-Inspiration drawn by documentation provided by wikipedia.
+Inspiration drawn by wikipedia documentation, my
+Computer Engineering coursework, and my professional
+experience as a co-op web developer at Fortech LLC.
 
 ## Current contents:
 
@@ -20,6 +22,14 @@ The mille5a9lib project is a C# implementation of the
 types in this folder. They were written during my time
 studying for Microsoft's Exam 70-483 for certification
 in C#.
+
+### ATM
+
+A C# Console Application that utilizes the DSharpPlus
+library to create a bot for the popular communication
+service Discord. The bot has numerous capabilities
+that are taken advantage of by friends who are also
+on the platform.
 
 ### BYTEPAIR
 
@@ -46,7 +56,15 @@ other activities. May be continued at a later date.
 
 ### REACT
 
-A collection of JSX files containing React.js components.
+A collection of JSX files containing React.js components
+for interactive web applications.
+
+### WAAM
+
+An infantile cryptocurrency called Waamcoin, which has
+fallen by the wayside because there is no server to
+host it. Waamcoin utilizes the SHA256 hashing algorithm
+for its security.
 
 ## Planned additions:
 
