@@ -9,8 +9,10 @@ Files:
 	>> Reminder/
 		Reminder.cs : Contains the objects and logic code relating to the reminder functionality of ATMbot.
 
+	>> Waam/
+		Blockchain.cs : Contains the objects and logic code relating to the Waamcoin currency.
+
 Todo:
 	>> Leveling system for user time spent doing activities
-	>> Some way to link up streams for hockey/basketball/whatever
 	>> Integrate Waamcoin somehow
-	>> 
+	>> User-created lists *accessibility controlled

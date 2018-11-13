@@ -1,12 +1,13 @@
-﻿using ATMBot.Reminder;
-using Dapper;
+﻿using Dapper;
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.IO;
+using System.Data;
 using System.Linq;
 using System.Web.WebPages;
+using System.Data.SqlClient;
+using System.Collections.Generic;
+using ATMBot.Reminder;
+using ATMBot.Waam;
 
 namespace ATMBot
 {
@@ -162,6 +163,63 @@ namespace ATMBot
                     db.Execute("INSERT INTO Reminders (User_Id, Message, Time) VALUES (@User_Id, @Message, @Time)", new { User_Id = reminderargs[1], Message = reminderargs[2], Time = reminderargs[3] });
                 }
             }
+            InitBlocks();
+        }
+
+        static void InitBlocks()
+        {
+            string curr = Directory.GetCurrentDirectory();
+            string input = File.ReadAllText(curr + "../../../../Blocks.txt");
+            string[] blocks = input.Split('\n');
+            string[] blockargs;
+            using (IDbConnection db = new SqlConnection(conn))
+            {
+                db.Execute("DELETE FROM Blocks");
+                foreach (string x in blocks)
+                {
+                    if (x == "") break;
+                    blockargs = x.Split('|');
+                    db.Execute("INSERT INTO Blocks (Timestamp, Proof, PreviousHash) VALUES (@Timestamp, @Proof, @PreviousHash)", new { Timestamp = blockargs[1], Proof = blockargs[2], PreviousHash = blockargs[3] });
+                }
+            }
+            InitTransactions();
+        }
+
+        static void InitTransactions()
+        {
+            string curr = Directory.GetCurrentDirectory();
+            string input = File.ReadAllText(curr + "../../../../Transactions.txt");
+            string[] transactions = input.Split('\n');
+            string[] transactionargs;
+            using (IDbConnection db = new SqlConnection(conn))
+            {
+                db.Execute("DELETE FROM Transactions");
+                foreach (string x in transactions)
+                {
+                    if (x == "") break;
+                    transactionargs = x.Split('|');
+                    db.Execute("INSERT INTO Transactions (Block_Id, Sender, Recipient, Amount) VALUES (@Block_Id, @Sender, @Recipient, @Amount)", new { Block_Id = transactionargs[1], Sender = transactionargs[2], Recipient = transactionargs[3], Amount = transactionargs[4] });
+                }
+            }
+            InitWallets();
+        }
+
+        static void InitWallets()
+        {
+            string curr = Directory.GetCurrentDirectory();
+            string input = File.ReadAllText(curr + "../../../../Wallets.txt");
+            string[] wallets = input.Split('\n');
+            string[] walletargs;
+            using (IDbConnection db = new SqlConnection(conn))
+            {
+                db.Execute("DELETE FROM Wallets");
+                foreach (string x in wallets)
+                {
+                    if (x == "") break;
+                    walletargs = x.Split('|');
+                    db.Execute("INSERT INTO Wallets (User_Id, Balance) VALUES (@User_Id, @Balance)", new { User_Id = walletargs[1], Balance = walletargs[2] });
+                }
+            }
         }
 
         public static void Write()
@@ -173,6 +231,10 @@ namespace ATMBot
                 List<Teamdto> teamdtos = db.Query<Teamdto>("SELECT * FROM Teams").ToList();
                 List<Userdto> userdtos = db.Query<Userdto>("SELECT * FROM Users").ToList();
                 List<Reminderdto> reminderdtos = db.Query<Reminderdto>("SELECT * FROM Reminders").ToList();
+                List<Blockdto> blockdtos = db.Query<Blockdto>("SELECT * FROM Blocks").ToList();
+                List<Transactiondto> transactiondtos = db.Query<Transactiondto>("SELECT * FROM Transactions").ToList();
+                List<Walletdto> walletdtos = db.Query<Walletdto>("SELECT * FROM Wallets").ToList();
+
                 string txt = "";
                 foreach (Gamedto x in gamedtos) txt += ("" + x.Id + '|' + x.TeamID + '|' + x.GameTime + '|' + x.Opponent + '\n');
                 File.WriteAllText(curr + "TeamGames.txt", txt);
@@ -185,6 +247,15 @@ namespace ATMBot
                 txt = "";
                 foreach (Reminderdto x in reminderdtos) txt += ("" + x.Id + '|' + x.User_Id + '|' + x.Message + '|' + x.Time + '\n');
                 File.WriteAllText(curr + "Reminders.txt", txt);
+                txt = "";
+                foreach (Blockdto x in blockdtos) txt += ("" + x.Id + '|' + x.Timestamp + '|' + x.Proof + '|' + x.PreviousHash + '\n');
+                File.WriteAllText(curr + "Blocks.txt", txt);
+                txt = "";
+                foreach (Transactiondto x in transactiondtos) txt += ("" + x.Id + '|' + x.Block_Id + '|' + x.Sender + '|' + x.Recipient + '|' + x.Amount + '\n');
+                File.WriteAllText(curr + "Transactions.txt", txt);
+                txt = "";
+                foreach (Walletdto x in walletdtos) txt += ("" + x.Id + '|' + x.User_Id + '|' + x.Balance + '\n');
+                File.WriteAllText(curr + "Wallets.txt", txt);
             }
         }
 

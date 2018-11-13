@@ -1,37 +1,99 @@
 ﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using DSharpPlus;
-using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
-using Dapper;
-using System.Collections.Generic;
-using DSharpPlus.Entities;
 using System.IO;
-using ATMBot.Reminder;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using DSharpPlus;
+using DSharpPlus.Entities;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.Interactivity;
+using DSharpPlus.CommandsNext.Attributes;
+using ATMBot.Reminder;
+using ATMBot.Waam;
 
 namespace ATMBot
 {
 
     public class MyCommands
     {
-        [Command("remind-new")]
-        [Description("Used to create a new reminder for the user")]
-        public async Task NewReminder(CommandContext ctx)
+        public static Blockchain Coin = new Blockchain();
+
+        [Command("coin-bal")]
+        public async Task CoinBalance(CommandContext ctx)
+        {
+
+        }
+
+        [Command("coin-pay")]
+        public async Task CoinPay(CommandContext ctx)
+        {
+
+        }
+
+        [Command("coin-mine")]
+        public async Task CoinMine(CommandContext ctx)
+        {
+            if (ctx.Channel is DiscordDmChannel)
+            {
+                if (await Coin.ProofOfWork(ctx, Coin.LastBlock().GetPreviousHash()))
+                {
+                    //gib coin
+                    decimal amt = Coin.BlockReward();
+                    Coin.NewTransaction(new Transaction(0, ctx.User.Id, amt));
+                    await ctx.RespondAsync("Success! You've been awarded with " + amt + " Waamcoin!");
+                }
+                else
+                {
+                    await ctx.RespondAsync("That, was an incorrect answer.");
+                }
+            }
+            else
+            {
+                DiscordDmChannel x = await ctx.Member.CreateDmChannelAsync();
+                await x.SendMessageAsync("You must mine in a DM, to prevent spam.");
+            }
+        }
+
+        [Command("remind-ls")]
+        [Description("Produces a list containing every reminder you have pending")]
+        public async Task ListReminders(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-            DateTime parse = new DateTime();
-            await ctx.Channel.SendMessageAsync("Let's make a new reminder! Please type the time you want to be reminded, I'll do my best to understand it:", false);
-            InteractivityModule inter = ctx.Client.GetInteractivityModule();
-            MessageContext msg = await inter.WaitForMessageAsync(xm => xm.Author.Id == ctx.User.Id, TimeSpan.FromMinutes(3));
+            List<Reminderdto> list = ReminderModule.GetReminders(ctx.User.Id.ToString());
+            string output = "Reminders for " + ctx.User.Mention + ":\n";
+            foreach (Reminderdto x in list)
+            {
+                output += "\t" + x.Time + "\n\t\t" + x.Message;
+            }
+            await ctx.RespondAsync(output);
+        }
+
+        [Command("remind-new")]
+        [Description("Used to create a new reminder for the user")]
+        public async Task NewReminder(CommandContext ctx,
+            [Description("Extra arg for one-line reminding: separate time and message with '>'")] string elaboration = "")
+        {
             await ctx.TriggerTypingAsync();
-            if (msg != null) parse = Reminder.Reminder.ParseReminderTime(msg.Message.Content);
-            await ctx.RespondAsync("What would you like your reminder at " + parse + " to say?");
-            msg = await inter.WaitForMessageAsync(xm => xm.Author.Id == ctx.User.Id, TimeSpan.FromMinutes(3));
-            await ctx.TriggerTypingAsync();
-            Reminder.Reminder.SaveReminder(ctx, msg.Message.Content, parse);
-            await ctx.RespondAsync("Okay, I'll remind you when it's time");
+
+            if (elaboration != "")
+            {
+                string[] command = elaboration.Split('>');
+                DateTime parse = ReminderModule.ParseReminderTime(command[0]);
+                ReminderModule.SaveReminder(ctx, command[1], parse);
+            }
+            else
+            {
+                DateTime parse = new DateTime();
+                await ctx.Channel.SendMessageAsync("Let's make a new reminder! Please type the time you want to be reminded, I'll do my best to understand it:", false);
+                InteractivityModule inter = ctx.Client.GetInteractivityModule();
+                MessageContext msg = await inter.WaitForMessageAsync(xm => xm.Author.Id == ctx.User.Id, TimeSpan.FromMinutes(3));
+                await ctx.TriggerTypingAsync();
+                if (msg != null) parse = ReminderModule.ParseReminderTime(msg.Message.Content);
+                await ctx.RespondAsync("What would you like your reminder at " + parse + " to say?");
+                msg = await inter.WaitForMessageAsync(xm => xm.Author.Id == ctx.User.Id, TimeSpan.FromMinutes(3));
+                await ctx.TriggerTypingAsync();
+                ReminderModule.SaveReminder(ctx, msg.Message.Content, parse);
+                await ctx.RespondAsync("Okay, I'll remind you when it's time");
+            }
         }
 
         [Command("close")]
@@ -41,6 +103,7 @@ namespace ATMBot
             if (pw == "a1b2c3d4e5")
             {
                 SqlController.Write();
+                await Task.Delay(1);
                 Environment.Exit(0);
             }
         }
@@ -203,7 +266,7 @@ namespace ATMBot
             {
                 while (true)
                 {
-                    List<Reminderdto> list = Reminder.Reminder.GetReminders();
+                    List<Reminderdto> list = ReminderModule.GetReminders();
                     List<Reminderdto> removeals = new List<Reminderdto>();
                     foreach (Reminderdto x in list)
                     {
@@ -221,7 +284,7 @@ namespace ATMBot
                             removeals.Add(x);
                         }
                     }
-                    Reminder.Reminder.RemoveReminders(removeals);
+                    ReminderModule.RemoveReminders(removeals);
                     Console.Write("Reminders Processed, Idling...\n");
                     await Task.Delay(10000);
                     Console.Write("Processing Reminders...\n");

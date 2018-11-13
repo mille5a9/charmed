@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Dapper;
+using System;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 using System.Web.WebPages;
-using ATMBot.Reminder;
-using Dapper;
+using System.Data.SqlClient;
+using System.Collections.Generic;
 using DSharpPlus.CommandsNext;
 
 namespace ATMBot.Reminder
@@ -19,7 +17,7 @@ namespace ATMBot.Reminder
         public DateTime Time { get; set; }
     }
 
-    class Reminder
+    class ReminderModule
     {
         public static DateTime ParseReminderTime(string input)
         {
@@ -36,12 +34,15 @@ namespace ATMBot.Reminder
             }
         }
 
-        public static List<Reminderdto> GetReminders()
+        public static List<Reminderdto> GetReminders(string optionaluser = "")
         {
             List<Reminderdto> list = new List<Reminderdto>();
             using (IDbConnection db = new SqlConnection(SqlController.conn))
             {
-                list = db.Query<Reminderdto>("SELECT * FROM Reminders").ToList();
+                if (optionaluser == "")
+                    list = db.Query<Reminderdto>("SELECT * FROM Reminders").ToList();
+                else
+                    list = db.Query<Reminderdto>("SELECT * FROM Reminders WHERE User_Id=@optionaluser", new { optionaluser }).ToList();
             }
             return list;
         }
