@@ -1,0 +1,23 @@
+Commands (StringPrefix is "@ATM " for now, and team names use no abbreviations and underscores for spaces e.g. "University_of_Cincinnati_Men's_Basketball" or "Toronto_Maple_Leafs")
+
+	helpme (e.g. "@ATM helpme")
+
+	close (passcode) (passcode is a visible string in the source, so developers should know how to safely turn off the bot, but he auto-backups anyway)
+
+	users (e.g. "@ATM users-ls")
+		-ls (optional string name arg)
+		-addme (optional string name arg, only for admins to add non-self users)
+		-removeme (optional string name arg, only for admins to remove non-self users)
+
+	teams (e.g. "@ATM teams-add")
+		-add (name)
+		-remove (name)
+
+	remind
+		-remind-new (prompts for additional inputs, tries to parse a date, remembers a message to pass to you later)
+		-remind-ls (produces a list containing every reminder you have pending)
+
+	coin
+		-mine (performs coin mining, requires user to complete gauntlet of addition problems, creates a wallet if you dont have one - so do this first)
+		-bal (shows your balance if you have a wallet)
+		-pay [string]Person [decimal]Amount (pays the given Person a given Amount, only works if Person has a wallet and you're richer than Amount)

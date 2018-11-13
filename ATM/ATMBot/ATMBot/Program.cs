@@ -7,8 +7,10 @@ using DSharpPlus.Entities;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Interactivity;
 using DSharpPlus.CommandsNext.Attributes;
+using Ofl.Twitch.V5;
 using ATMBot.Reminder;
 using ATMBot.Waam;
+using System.Net.Http;
 
 namespace ATMBot
 {
@@ -20,13 +22,21 @@ namespace ATMBot
         [Command("coin-bal")]
         public async Task CoinBalance(CommandContext ctx)
         {
-
+            Walletdto userwallet = Wallet.GetWallet(ctx.User.Id, (ctx.User.Username + "#" + ctx.User.Discriminator));
+            decimal output = userwallet.Balance;
+            await ctx.RespondAsync("Your balance is " + output + " Waamcoins");
         }
 
         [Command("coin-pay")]
-        public async Task CoinPay(CommandContext ctx)
+        public async Task CoinPay(CommandContext ctx, [Description("Name#Number of destination user")] string username, [Description("Number of Waamcoins to send")] decimal amt)
         {
-
+            Walletdto sender = Wallet.GetWallet(ctx.User.Id, (ctx.User.Username + "#" + ctx.User.Discriminator)), recipient = Wallet.GetWallet(username);
+            if (recipient == null) await ctx.RespondAsync("That recipient does not have a wallet! They need to use coin-mine to earn their first stake in Waamcoin.");
+            else
+            {
+                if (Wallet.Transfer(ctx, Coin, sender, recipient, amt)) await ctx.RespondAsync("Transfer Complete!");
+                else await ctx.RespondAsync("Transfer Unsuccessful. Make sure the recipient has a wallet and you have enough Waamcoin!");
+            }
         }
 
         [Command("coin-mine")]
@@ -38,13 +48,13 @@ namespace ATMBot
                 {
                     //gib coin
                     decimal amt = Coin.BlockReward();
-                    Coin.NewTransaction(new Transaction(0, ctx.User.Id, amt));
-                    await ctx.RespondAsync("Success! You've been awarded with " + amt + " Waamcoin!");
+                    Walletdto sender = Wallet.GetWallet(0, "root");
+                    Walletdto recipient = Wallet.GetWallet(ctx.User.Id, (ctx.User.Username + "#" + ctx.User.Discriminator));
+                    bool success = Wallet.Transfer(ctx, Coin, sender, recipient, amt);
+                    if (success) await ctx.RespondAsync("Success! You've been awarded with " + amt + " Waamcoin!");
+                    else await ctx.RespondAsync("You did good, but something went wrong.");
                 }
-                else
-                {
-                    await ctx.RespondAsync("That, was an incorrect answer.");
-                }
+                else await ctx.RespondAsync("That, was an incorrect answer.");
             }
             else
             {
@@ -70,15 +80,17 @@ namespace ATMBot
         [Command("remind-new")]
         [Description("Used to create a new reminder for the user")]
         public async Task NewReminder(CommandContext ctx,
-            [Description("Extra arg for one-line reminding: separate time and message with '>'")] string elaboration = "")
+            [RemainingText, Description("Extra arg for one-line reminding: separate time and message with '>'")] string elaboration = null)
         {
             await ctx.TriggerTypingAsync();
 
-            if (elaboration != "")
+            if (elaboration != null)
             {
                 string[] command = elaboration.Split('>');
                 DateTime parse = ReminderModule.ParseReminderTime(command[0]);
                 ReminderModule.SaveReminder(ctx, command[1], parse);
+                DiscordDmChannel x = await ctx.Member.CreateDmChannelAsync();
+                await x.SendMessageAsync("" + parse + " Reminder Created at " + DateTime.Now);
             }
             else
             {
@@ -90,7 +102,6 @@ namespace ATMBot
                 if (msg != null) parse = ReminderModule.ParseReminderTime(msg.Message.Content);
                 await ctx.RespondAsync("What would you like your reminder at " + parse + " to say?");
                 msg = await inter.WaitForMessageAsync(xm => xm.Author.Id == ctx.User.Id, TimeSpan.FromMinutes(3));
-                await ctx.TriggerTypingAsync();
                 ReminderModule.SaveReminder(ctx, msg.Message.Content, parse);
                 await ctx.RespondAsync("Okay, I'll remind you when it's time");
             }
@@ -113,7 +124,7 @@ namespace ATMBot
         public async Task Help(CommandContext ctx)
         {
             string curr = Directory.GetCurrentDirectory();
-            string output = File.ReadAllText(curr + "../../../../BotCmdNotes.txt");
+            string output = File.ReadAllText(curr + "../../../../SqlBackups/BotCmdNotes.txt");
             DiscordMember mem = ctx.Member;
             if (mem == null)
             {

@@ -87,7 +87,7 @@ namespace ATMBot
         public static void Init()
         {
             string curr = Directory.GetCurrentDirectory();
-            string input = File.ReadAllText(curr + "../../../../TeamGames.txt");
+            string input = File.ReadAllText(curr + "../../../../SqlBackups/TeamGames.txt");
             string[] games = input.Split('\n');
             string[] gameargs;
             using (IDbConnection db = new SqlConnection(conn))
@@ -107,7 +107,7 @@ namespace ATMBot
         {
 
             string curr = Directory.GetCurrentDirectory();
-            string input = File.ReadAllText(curr + "../../../../Users.txt");
+            string input = File.ReadAllText(curr + "../../../../SqlBackups/Users.txt");
             string[] users = input.Split('\n');
             string[] userargs;
             using (IDbConnection db = new SqlConnection(conn))
@@ -127,7 +127,7 @@ namespace ATMBot
         {
 
             string curr = Directory.GetCurrentDirectory();
-            string input = File.ReadAllText(curr + "../../../../Teams.txt");
+            string input = File.ReadAllText(curr + "../../../../SqlBackups/Teams.txt");
             string[] teams = input.Split('\n');
             string[] teamargs;
             using (IDbConnection db = new SqlConnection(conn))
@@ -147,7 +147,7 @@ namespace ATMBot
         {
 
             string curr = Directory.GetCurrentDirectory();
-            string input = File.ReadAllText(curr + "../../../../Reminders.txt");
+            string input = File.ReadAllText(curr + "../../../../SqlBackups/Reminders.txt");
             string[] reminders = input.Split('\n');
             string[] reminderargs;
             DateTime old = new DateTime();
@@ -169,7 +169,7 @@ namespace ATMBot
         static void InitBlocks()
         {
             string curr = Directory.GetCurrentDirectory();
-            string input = File.ReadAllText(curr + "../../../../Blocks.txt");
+            string input = File.ReadAllText(curr + "../../../../SqlBackups/Blocks.txt");
             string[] blocks = input.Split('\n');
             string[] blockargs;
             using (IDbConnection db = new SqlConnection(conn))
@@ -188,7 +188,7 @@ namespace ATMBot
         static void InitTransactions()
         {
             string curr = Directory.GetCurrentDirectory();
-            string input = File.ReadAllText(curr + "../../../../Transactions.txt");
+            string input = File.ReadAllText(curr + "../../../../SqlBackups/Transactions.txt");
             string[] transactions = input.Split('\n');
             string[] transactionargs;
             using (IDbConnection db = new SqlConnection(conn))
@@ -207,7 +207,7 @@ namespace ATMBot
         static void InitWallets()
         {
             string curr = Directory.GetCurrentDirectory();
-            string input = File.ReadAllText(curr + "../../../../Wallets.txt");
+            string input = File.ReadAllText(curr + "../../../../SqlBackups/Wallets.txt");
             string[] wallets = input.Split('\n');
             string[] walletargs;
             using (IDbConnection db = new SqlConnection(conn))
@@ -217,7 +217,7 @@ namespace ATMBot
                 {
                     if (x == "") break;
                     walletargs = x.Split('|');
-                    db.Execute("INSERT INTO Wallets (User_Id, Balance) VALUES (@User_Id, @Balance)", new { User_Id = walletargs[1], Balance = walletargs[2] });
+                    db.Execute("INSERT INTO Wallets (User_Id, Username, Balance) VALUES (@User_Id, @Username, @Balance)", new { User_Id = walletargs[1], Username = walletargs[2], Balance = walletargs[3] });
                 }
             }
         }
@@ -237,25 +237,25 @@ namespace ATMBot
 
                 string txt = "";
                 foreach (Gamedto x in gamedtos) txt += ("" + x.Id + '|' + x.TeamID + '|' + x.GameTime + '|' + x.Opponent + '\n');
-                File.WriteAllText(curr + "TeamGames.txt", txt);
+                File.WriteAllText(curr + "SqlBackups/TeamGames.txt", txt);
                 txt = "";
                 foreach (Teamdto x in teamdtos) txt += ("" + x.Id + '|' + x.UsernameID + '|' + x.Team + '\n');
-                File.WriteAllText(curr + "Teams.txt", txt);
+                File.WriteAllText(curr + "SqlBackups/Teams.txt", txt);
                 txt = "";
                 foreach (Userdto x in userdtos) txt += ("" + x.Id + '|' + x.Username + '\n');
-                File.WriteAllText(curr + "Users.txt", txt);
+                File.WriteAllText(curr + "SqlBackups/Users.txt", txt);
                 txt = "";
                 foreach (Reminderdto x in reminderdtos) txt += ("" + x.Id + '|' + x.User_Id + '|' + x.Message + '|' + x.Time + '\n');
-                File.WriteAllText(curr + "Reminders.txt", txt);
+                File.WriteAllText(curr + "SqlBackups/Reminders.txt", txt);
                 txt = "";
                 foreach (Blockdto x in blockdtos) txt += ("" + x.Id + '|' + x.Timestamp + '|' + x.Proof + '|' + x.PreviousHash + '\n');
-                File.WriteAllText(curr + "Blocks.txt", txt);
+                File.WriteAllText(curr + "SqlBackups/Blocks.txt", txt);
                 txt = "";
                 foreach (Transactiondto x in transactiondtos) txt += ("" + x.Id + '|' + x.Block_Id + '|' + x.Sender + '|' + x.Recipient + '|' + x.Amount + '\n');
-                File.WriteAllText(curr + "Transactions.txt", txt);
+                File.WriteAllText(curr + "SqlBackups/Transactions.txt", txt);
                 txt = "";
-                foreach (Walletdto x in walletdtos) txt += ("" + x.Id + '|' + x.User_Id + '|' + x.Balance + '\n');
-                File.WriteAllText(curr + "Wallets.txt", txt);
+                foreach (Walletdto x in walletdtos) txt += ("" + x.Id + '|' + x.User_Id + '|' + x.Username + '|' + x.Balance + '\n');
+                File.WriteAllText(curr + "SqlBackups/Wallets.txt", txt);
             }
         }
 

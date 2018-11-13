@@ -4,5 +4,5 @@
 	[Block_Id] INT NOT NULL,
 	[Sender] NVARCHAR(40),
 	[Recipient] NVARCHAR(40),
-	[Amount] DECIMAL 
+	[Amount] DECIMAL(38, 19) 
 )
