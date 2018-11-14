@@ -16,4 +16,4 @@ Todo:
 	>> Leveling system for user time spent doing activities
 	>> Integrate Waamcoin somehow
 	>> User-created lists *accessibility controlled
-	>> Test Github webhook to atmbot webhook channel in waam
+	>> Test Github webhook to atmbot webhook channel in waam.
