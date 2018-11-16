@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Windows.Automation;
+using System.Linq;
 
 namespace BIND
 {
@@ -22,6 +24,7 @@ namespace BIND
                 parts[1] = Directory.GetCurrentDirectory() + @"\" + parts[1];
                 output.Add(new Macro(parts[0], parts[1], parts[2], (parts[3] == "true"), (parts[4] == "true"), (parts[5] == "true")));
             }
+            output.Add(new Macro("Space", true, true, true));
             return output;
         }
 
@@ -45,6 +48,46 @@ namespace BIND
                 }
             };
         }
+
+        public Macro(string keyname, bool alt, bool ctrl, bool shift) //hardcoded features for non-launching macros
+        {
+            _keyname = keyname;
+            _alt = alt;
+            _ctrl = ctrl;
+            _shift = shift;
+            _action = (a, r, alt_, ctrl_, shift_, currentalt, currentctrl, currentshift) =>
+            {
+                if (alt_ == currentalt && ctrl_ == currentctrl && shift_ == currentshift)
+                {
+
+                    Process[] fromprocess = Process.GetProcessesByName("chrome");
+                    Process dummy = new Process();
+                    var fromelement = AutomationElement.FromHandle(dummy.MainWindowHandle);
+                    foreach (Process chrome in fromprocess)
+                    {
+                        // the chrome process must have a window
+                        if (chrome.MainWindowHandle == IntPtr.Zero)
+                        {
+                            fromelement = AutomationElement.FromHandle(chrome.MainWindowHandle);
+                            continue;
+                        }
+                    }
+                    SendKeys.Send("{F6}");
+                    SendKeys.Send("^C");
+                    Process[] process = Process.GetProcessesByName("Discord");
+                    AutomationElement element = AutomationElement.FromHandle(process[2].MainWindowHandle);
+                    if (element != null)
+                    {
+                        element.SetFocus();
+                        SendKeys.Send("^V");
+                        SendKeys.Send("{ENTER}");
+                    }
+                    fromelement.SetFocus();
+
+                }
+            };
+        }
+
         public void Trigger(bool currentalt, bool currentctrl, bool currentshift) { _action.Invoke(_a, _r, _alt, _ctrl, _shift, currentalt, currentctrl, currentshift); }
         public string GetKeyname() { return _keyname; }
         private readonly string _keyname;
@@ -62,6 +105,7 @@ namespace BIND
         private const int WM_KEYUP = 0x0101;
         private const int WM_SYSKEYDOWN = 0x0104;
         private const int WM_SYSKEYUP = 0x0105;
+        private const int WM_MBUTTONDOWN = 0x0207;
         public static bool alt;
         public static bool ctrl;
         public static bool shift;
@@ -92,7 +136,7 @@ namespace BIND
 
         private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            if (nCode >= 0 && (wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN))
+            if (nCode >= 0 && (wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN || wParam == (IntPtr)WM_MBUTTONDOWN))
             {
                 int vkCode = Marshal.ReadInt32(lParam);
                 if (vkCode == 164) alt = true;
@@ -128,5 +172,4 @@ namespace BIND
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr GetModuleHandle(string lpModuleName);
     }
-
 }
