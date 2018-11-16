@@ -11,6 +11,8 @@ using Ofl.Twitch.V5;
 using ATMBot.Reminder;
 using ATMBot.Waam;
 using System.Net.Http;
+using System.Web.Mvc;
+using DSharpPlus.EventArgs;
 
 namespace ATMBot
 {
