@@ -15,30 +15,43 @@ namespace BIND
             List<Macro> output = new List<Macro>();
             string macrolist = File.ReadAllText(@"C:\Macros.txt");
             string[] macrolines = macrolist.Split('\n');
+            Directory.SetCurrentDirectory(@"C:\BINDshortcuts");
             foreach (string x in macrolines)
             {
                 string[] parts = x.Split('|');
-                output.Add(new Macro(parts[0], parts[1], parts[2]));
+                parts[1] = Directory.GetCurrentDirectory() + @"\" + parts[1];
+                output.Add(new Macro(parts[0], parts[1], parts[2], (parts[3] == "true"), (parts[4] == "true"), (parts[5] == "true")));
             }
             return output;
         }
 
-        public Macro(string keyname, string appname, string runarg)
+        public Macro(string keyname, string appname, string runarg, bool alt, bool ctrl, bool shift)
         {
             _keyname = keyname;
             _a = appname;
             _r = runarg;
-            _action = (a, r) =>
+            _alt = alt;
+            _ctrl = ctrl;
+            _shift = shift;
+            _action = (a, r, alt_, ctrl_, shift_, currentalt, currentctrl, currentshift) =>
             {
-                Process.Start(a, r);
+                if (alt_ == currentalt && ctrl_ == currentctrl && shift_ == currentshift)
+                {
+                    Process process = new Process();
+                    process.StartInfo.FileName = a;
+                    process.StartInfo.Arguments = r;
+                    process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                    process.Start();
+                }
             };
         }
-        public void Trigger() { _action.Invoke(_a, _r); }
+        public void Trigger(bool currentalt, bool currentctrl, bool currentshift) { _action.Invoke(_a, _r, _alt, _ctrl, _shift, currentalt, currentctrl, currentshift); }
         public string GetKeyname() { return _keyname; }
         private readonly string _keyname;
         private readonly string _a;
         private readonly string _r;
-        private readonly Action<string, string> _action;
+        private readonly bool _alt, _ctrl, _shift;
+        private readonly Action<string, string, bool, bool, bool, bool, bool, bool> _action;
     }
 
 
@@ -46,6 +59,12 @@ namespace BIND
     {
         private const int WH_KEYBOARD_LL = 13;
         private const int WM_KEYDOWN = 0x0100;
+        private const int WM_KEYUP = 0x0101;
+        private const int WM_SYSKEYDOWN = 0x0104;
+        private const int WM_SYSKEYUP = 0x0105;
+        public static bool alt;
+        public static bool ctrl;
+        public static bool shift;
         private static LowLevelKeyboardProc _proc = HookCallback;
         private static IntPtr _hookID = IntPtr.Zero;
         private static List<Macro> macros;
@@ -73,11 +92,24 @@ namespace BIND
 
         private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN)
+            if (nCode >= 0 && (wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN))
             {
                 int vkCode = Marshal.ReadInt32(lParam);
-                Console.WriteLine((Keys)vkCode);
-                foreach (Macro x in macros) { if (((Keys)vkCode).ToString() == x.GetKeyname()) x.Trigger(); }
+                if (vkCode == 164) alt = true;
+                else if (vkCode == 160) shift = true;
+                else if (vkCode == 162) ctrl = true;
+                else
+                {
+                    Console.WriteLine((Keys)vkCode);
+                    foreach (Macro x in macros) { if (((Keys)vkCode).ToString() == x.GetKeyname()) x.Trigger(alt, shift, ctrl); }
+                }
+            }
+            else if (nCode >= 0 && (wParam == (IntPtr)WM_KEYUP || wParam == (IntPtr)WM_SYSKEYUP))
+            {
+                int vkCode = Marshal.ReadInt32(lParam);
+                if (vkCode == 14) alt = false;
+                else if (vkCode == 10) shift = false;
+                else if (vkCode == 12) ctrl = false;
             }
 
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
