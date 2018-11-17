@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Windows.Automation;
 using System.Linq;
+using System.Threading.Tasks;
+using WindowsInput;
 
 namespace BIND
 {
@@ -24,7 +26,7 @@ namespace BIND
                 parts[1] = Directory.GetCurrentDirectory() + @"\" + parts[1];
                 output.Add(new Macro(parts[0], parts[1], parts[2], (parts[3] == "true"), (parts[4] == "true"), (parts[5] == "true")));
             }
-            output.Add(new Macro("Space", true, true, true));
+            output.Add(new Macro("Z", true, false, false));
             return output;
         }
 
@@ -60,30 +62,27 @@ namespace BIND
                 if (alt_ == currentalt && ctrl_ == currentctrl && shift_ == currentshift)
                 {
 
-                    Process[] fromprocess = Process.GetProcessesByName("chrome");
-                    Process dummy = new Process();
-                    var fromelement = AutomationElement.FromHandle(dummy.MainWindowHandle);
-                    foreach (Process chrome in fromprocess)
-                    {
-                        // the chrome process must have a window
-                        if (chrome.MainWindowHandle == IntPtr.Zero)
-                        {
-                            fromelement = AutomationElement.FromHandle(chrome.MainWindowHandle);
-                            continue;
-                        }
-                    }
-                    SendKeys.Send("{F6}");
-                    SendKeys.Send("^C");
-                    Process[] process = Process.GetProcessesByName("Discord");
-                    AutomationElement element = AutomationElement.FromHandle(process[2].MainWindowHandle);
-                    if (element != null)
-                    {
-                        element.SetFocus();
-                        SendKeys.Send("^V");
-                        SendKeys.Send("{ENTER}");
-                    }
-                    fromelement.SetFocus();
-
+                    IntPtr hwnd = InterceptKeys.GetForegroundWindow();
+                    InterceptKeys.GetWindowThreadProcessId(hwnd, out uint pid);
+                    Process ogprocess = Process.GetProcessById((int)pid);
+                    AutomationElement ogelement = AutomationElement.FromHandle(ogprocess.MainWindowHandle);
+                    Task.Delay(1000);
+                    InterceptKeys.SetForegroundWindow(hwnd);
+                    InputSimulator sim = new InputSimulator();
+                    sim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.MENU);
+                    sim.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.CONTROL);
+                    sim.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.VK_C);
+                    sim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.CONTROL);
+                    //Process process = Process.GetProcessesByName("Discord").FirstOrDefault((x) => { return (x.MainWindowHandle != (IntPtr)0); });
+                    //AutomationElement element = AutomationElement.FromHandle(process.MainWindowHandle);
+                    //if (element != null)
+                    //{
+                    //    element.SetFocus();
+                    //    SendKeys.SendWait("{TAB}");
+                    //    SendKeys.SendWait("^V");
+                    //    SendKeys.SendWait("{ENTER}");
+                    //    //ogelement.SetFocus();
+                    //}
                 }
             };
         }
@@ -145,15 +144,15 @@ namespace BIND
                 else
                 {
                     Console.WriteLine((Keys)vkCode);
-                    foreach (Macro x in macros) { if (((Keys)vkCode).ToString() == x.GetKeyname()) x.Trigger(alt, shift, ctrl); }
+                    foreach (Macro x in macros) { if (((Keys)vkCode).ToString() == x.GetKeyname()) x.Trigger(alt, ctrl, shift); }
                 }
             }
             else if (nCode >= 0 && (wParam == (IntPtr)WM_KEYUP || wParam == (IntPtr)WM_SYSKEYUP))
             {
                 int vkCode = Marshal.ReadInt32(lParam);
-                if (vkCode == 14) alt = false;
-                else if (vkCode == 10) shift = false;
-                else if (vkCode == 12) ctrl = false;
+                if (vkCode == 164) alt = false;
+                else if (vkCode == 160) shift = false;
+                else if (vkCode == 162) ctrl = false;
             }
 
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
@@ -171,5 +170,14 @@ namespace BIND
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr GetModuleHandle(string lpModuleName);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetWindowThreadProcessId(IntPtr hWnd, out uint ProcessId);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
     }
 }
