@@ -4,11 +4,6 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Windows.Automation;
-using System.Linq;
-using System.Threading.Tasks;
-using WindowsInput;
 
 namespace BIND
 {
@@ -26,7 +21,6 @@ namespace BIND
                 parts[1] = Directory.GetCurrentDirectory() + @"\" + parts[1];
                 output.Add(new Macro(parts[0], parts[1], parts[2], (parts[3] == "true"), (parts[4] == "true"), (parts[5] == "true")));
             }
-            output.Add(new Macro("Z", true, false, false));
             return output;
         }
 
@@ -47,42 +41,6 @@ namespace BIND
                     process.StartInfo.Arguments = r;
                     process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                     process.Start();
-                }
-            };
-        }
-
-        public Macro(string keyname, bool alt, bool ctrl, bool shift) //hardcoded features for non-launching macros
-        {
-            _keyname = keyname;
-            _alt = alt;
-            _ctrl = ctrl;
-            _shift = shift;
-            _action = (a, r, alt_, ctrl_, shift_, currentalt, currentctrl, currentshift) =>
-            {
-                if (alt_ == currentalt && ctrl_ == currentctrl && shift_ == currentshift)
-                {
-
-                    IntPtr hwnd = InterceptKeys.GetForegroundWindow();
-                    InterceptKeys.GetWindowThreadProcessId(hwnd, out uint pid);
-                    Process ogprocess = Process.GetProcessById((int)pid);
-                    AutomationElement ogelement = AutomationElement.FromHandle(ogprocess.MainWindowHandle);
-                    Task.Delay(1000);
-                    InterceptKeys.SetForegroundWindow(hwnd);
-                    InputSimulator sim = new InputSimulator();
-                    sim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.MENU);
-                    sim.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.CONTROL);
-                    sim.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.VK_C);
-                    sim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.CONTROL);
-                    //Process process = Process.GetProcessesByName("Discord").FirstOrDefault((x) => { return (x.MainWindowHandle != (IntPtr)0); });
-                    //AutomationElement element = AutomationElement.FromHandle(process.MainWindowHandle);
-                    //if (element != null)
-                    //{
-                    //    element.SetFocus();
-                    //    SendKeys.SendWait("{TAB}");
-                    //    SendKeys.SendWait("^V");
-                    //    SendKeys.SendWait("{ENTER}");
-                    //    //ogelement.SetFocus();
-                    //}
                 }
             };
         }
@@ -170,14 +128,5 @@ namespace BIND
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr GetModuleHandle(string lpModuleName);
-
-        [DllImport("user32.dll")]
-        public static extern IntPtr GetWindowThreadProcessId(IntPtr hWnd, out uint ProcessId);
-
-        [DllImport("user32.dll")]
-        public static extern IntPtr GetForegroundWindow();
-
-        [DllImport("user32.dll")]
-        public static extern bool SetForegroundWindow(IntPtr hWnd);
     }
 }
