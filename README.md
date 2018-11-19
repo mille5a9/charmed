@@ -19,9 +19,9 @@ this directory are copied into other projects in this
 repository as needed.
 
 The mille5a9lib project is a C# implementation of the
-types in this folder. They were written during my time
-studying for Microsoft's Exam 70-483 for certification
-in C#.
+types in this folder. They were written for the purpose
+of studying for Microsoft's Exam 70-483 for
+certification in C#.
 
 ### ATM
 
@@ -39,6 +39,16 @@ and compresses the bytes using byte-pair encoding.
 Displays the new compressed number of bytes and the
 compression ratio.
 
+### HASH
+
+Small C# Console Application that uses Microsoft\'s
+System.Security.Cryptography Namespace to detect
+the usage of one of five different hash functions.
+The user inputs a string and the hash result that
+came from the string, and the program informs the
+user of which function the hash came from.
+
+
 ### MAZE
 
 New attempt of Lab 3 from a Data Structures course. Lab 3
@@ -47,12 +57,13 @@ with knowledge of graphs, a shortest path function
 with breadthfirstsearch methodology proves very useful
 to better solve mazes.
 
-### MD5
+### NUM
 
-MD5 historic cryptographic hashing algorithm. A very old
-algorithm used to turn strings of undefined length into
-a 128-bit number. Project has been sidelined in favor of
-other activities. May be continued at a later date.
+Contains multiple attempts to implement a natural
+language processor specifically for spelling out
+numbers and recognizing numbers that are spelled out.
+The C++ and Python implementations are poor, and the
+new C# project to accomplish this is still in infancy.
 
 ### REACT
 
@@ -64,7 +75,8 @@ for interactive web applications.
 An infantile cryptocurrency called Waamcoin, which has
 fallen by the wayside because there is no server to
 host it. Waamcoin utilizes the SHA256 hashing algorithm
-for its security.
+for its security. Waamcoin is also used in the ATM
+project with heavy modifications to it\'s functionality.
 
 ## Planned additions:
 
