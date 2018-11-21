@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace BYTEPAIR
@@ -7,7 +6,7 @@ namespace BYTEPAIR
 
     public class BytePair
     {
-        public BytePair(int quantity = 10000)
+        public BytePair(int quantity = 5000)
         {
             Random x = new Random();
             byte[] bytes = new byte[quantity];
@@ -23,7 +22,6 @@ namespace BYTEPAIR
             List<Tuple<byte, byte>> bitsets = new List<Tuple<byte, byte>>();
             List<Tuple<byte, byte>> uniquebitsets = new List<Tuple<byte, byte>>();
             List<int> occurences = new List<int>();
-            int initialsize = _bytes.Length;
             int maxindex = 0;
             do
             {
@@ -50,19 +48,25 @@ namespace BYTEPAIR
 
                 int freebyte = 0;
                 bool stay = true;
-                for (; stay; freebyte++)
+                //for (; stay; freebyte++)
+                //{
+                //    for (int i = 0; i < _bytes.Length; i++)
+                //    {
+                //        if (freebyte == _bytes[i]) break;
+                //        else if (i == _bytes.Length - 1) return; //if all bytes are used
+                //        stay = false;
+                //    }
+                //}
+                List<byte> bytelist = new List<byte>(_bytes);
+                while (bytelist.Contains((byte)freebyte))
                 {
-                    for (int i = 0; i < _bytes.Length; i++)
-                    {
-                        if (freebyte == _bytes[i]) break;
-                        else if (i == _bytes.Length - 1) return; //if all bytes are used
-                        stay = false;
-                    }
+                    freebyte++;
+                    if (freebyte == 256) return;
                 }
-                freebyte--; //now freebyte is the int value of a sequence of 8 bits that does not appear in _bits
+                byte convertbyte = (byte)freebyte;
+                //now freebyte is the int value of a sequence of 8 bits that does not appear in _bits
                 byte first = uniquebitsets[maxindex].Item1;
                 byte second = uniquebitsets[maxindex].Item2;
-                byte convertbyte = (byte)freebyte;
                 _key.Push(new Tuple<byte, byte, byte>(convertbyte, first, second));
 
 
@@ -87,17 +91,29 @@ namespace BYTEPAIR
                 _bytes = new_bytes.ToArray();
                 Console.Write(".");
 
-                } while (occurences[maxindex] > 3);
-            float compercent = (1 - _bytes.Length / (float)initialsize) * 100;
-            Console.WriteLine("\nCompression Complete!\n");
-            Console.WriteLine("The data is now of length " + _bytes.Length + "!\n");
-            Console.WriteLine("I mean... it WAS a whopping " + initialsize + "...\n");
-            Console.WriteLine("It was compressed by " + compercent + "%!\n");
+                } while (occurences[maxindex] > 8);
         }
 
         public void Depress()
         {
-
+            while (_key.Count > 0)
+            {
+                Tuple<byte, byte, byte> here = _key.Pop();
+                List<byte> bytelist = new List<byte>();
+                for (int i = 0; i < _bytes.Length; i++)
+                {
+                    if (_bytes[i] == here.Item1)
+                    {
+                        bytelist.Add(here.Item2);
+                        bytelist.Add(here.Item3);
+                    }
+                    else
+                    {
+                        bytelist.Add(_bytes[i]);
+                    }
+                }
+                _bytes = bytelist.ToArray();
+            }
         }
 
         public byte[] GetBytes() { return _bytes; }
@@ -110,9 +126,17 @@ namespace BYTEPAIR
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
             BytePair x = new BytePair();
+            int initialsize = x.GetBytes().Length;
             x.Compress();
+            float compercent = (1 - x.GetBytes().Length / (float)initialsize) * 100;
+            Console.WriteLine("\nCompression Complete!\n");
+            Console.WriteLine("The data is now of length " + x.GetBytes().Length + "!");
+            Console.WriteLine("I mean... it WAS a whopping " + initialsize + "...");
+            Console.WriteLine("It was compressed by " + compercent + "%!");
+            Console.WriteLine("Now Depressing the data back to original size...");
+            x.Depress();
+            Console.WriteLine("The data has returned to " + x.GetBytes().Length + " bytes");
             Console.ReadLine();
         }
     }
