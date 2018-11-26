@@ -31,6 +31,13 @@ service Discord. The bot has numerous capabilities
 that are taken advantage of by friends who are also
 on the platform.
 
+### BIND
+
+A C# Console Application that implements a very
+barebones keylogger, and checks a local configuration
+file for settings. Can be configured to execute
+programs with custom keybinds.
+
 ### BYTEPAIR
 
 Implementation of the Byte-Pair Encoding concept. Takes an
@@ -70,13 +77,21 @@ new C# project to accomplish this is still in infancy.
 A collection of JSX files containing React.js components
 for interactive web applications.
 
+### SCRAPE
+
+An initial setup for a web-scraping system using
+HtmlAgilityPack. Currently has functions to support
+scraping Links from a google search results page, and
+such a function has been implemented into the ATMBot
+discord bot.
+
 ### WAAM
 
 An infantile cryptocurrency called Waamcoin, which has
 fallen by the wayside because there is no server to
 host it. Waamcoin utilizes the SHA256 hashing algorithm
 for its security. Waamcoin is also used in the ATM
-project with heavy modifications to it\'s functionality.
+project with heavy modifications to its functionality.
 
 ## Planned additions:
 
