@@ -7,12 +7,9 @@ using DSharpPlus.Entities;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Interactivity;
 using DSharpPlus.CommandsNext.Attributes;
-using Ofl.Twitch.V5;
-using ATMBot.Reminder;
 using ATMBot.Waam;
-using System.Net.Http;
-using System.Web.Mvc;
-using DSharpPlus.EventArgs;
+using ATMBot.Reminder;
+using ATMBot.Scrape;
 
 namespace ATMBot
 {
@@ -20,6 +17,37 @@ namespace ATMBot
     public class MyCommands
     {
         public static Blockchain Coin = new Blockchain();
+
+        [Command("search")]
+        public async Task Search(CommandContext ctx, [RemainingText, Description("Search Query")] string query)
+        {
+            string result = SearchSync(query);
+            string[] curatedresult = result.Split('\n');
+            for (int i = 0; i < 4; i++) await ctx.RespondAsync(curatedresult[i]);
+        }
+
+        public string SearchSync(string query)
+        {
+            string[] terms = query.Split(" ");
+            string url = "https://www.google.com/search?q=" + terms[0];
+            for (int i = 1; i < terms.Length; i++)
+            {
+                url += "+" + terms[i];
+            }
+            try
+            {
+                GooglePage page = new GooglePage(url);
+                string[] links = page.GetRoot().GoogleSearchResultsLinks();
+                string response = "Here are the links from your search:\n\t";
+                foreach (string x in links) response += x + "\n\t";
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return "";
+            }
+        }
 
         [Command("coin-bal")]
         public async Task CoinBalance(CommandContext ctx)
