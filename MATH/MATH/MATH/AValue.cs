@@ -6,7 +6,9 @@ namespace MATH
 {
     public class AValue
     {
-        double Value { get; set; }
+        double? Value { get; set; }
+        public int Start { get; set; }
+        public int End { get; set; }
 
         #region Binary Operators
         public static AValue operator +(AValue one, AValue two) //addition
@@ -130,7 +132,7 @@ namespace MATH
         public static AValue Exponentiation(AValue one, AValue two) //exponentiation
         {
             two.Value--;
-            double baseval = one.Value;
+            double? baseval = one.Value;
             while (two.Value > 1)
             {
                 one.Value *= baseval;
@@ -144,7 +146,7 @@ namespace MATH
         }
         public static AValue Factorial(AValue one) //exponentiation
         {
-            double i = Math.Floor(one.Value);
+            double? i = (int)one.Value;
             while (one.Value > 1) one.Value *= i--;
             if (one is Variable) return new Variable(((Variable)one).Name, one.Value);
             else return new Constant(one.Value);
@@ -154,21 +156,26 @@ namespace MATH
 
     public class Constant : AValue
     {
-        public Constant(double value)
+        public Constant(double? value)
         {
             Value = value;
         }
-        double Value { get; set; }
+        double? Value { get; set; }
     }
 
     public class Variable : AValue
     {
-        public Variable(string name, double value)
+        public Variable(string name, double? value)
         {
             Name = name;
             Value = value;
         }
+        public Variable(string name)
+        {
+            Name = name;
+            Value = null;
+        }
         public string Name { get; set; }
-        double Value { get; set; }
+        double? Value { get; set; }
     }
 }
