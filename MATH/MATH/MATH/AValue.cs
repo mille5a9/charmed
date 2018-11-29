@@ -6,7 +6,7 @@ namespace MATH
 {
     public class AValue
     {
-        double? Value { get; set; }
+        public double? Value { get; set; }
         public int Start { get; set; }
         public int End { get; set; }
 
@@ -127,7 +127,16 @@ namespace MATH
             return (one.Value >= two.Value);
         }
         #endregion
-
+        #region Casting
+        public static bool operator true(AValue one)
+        {
+            return one.Value > 0;
+        }
+        public static bool operator false(AValue one)
+        {
+            return one.Value <= 0;
+        }
+        #endregion
         #region Function Operations
         public static AValue Exponentiation(AValue one, AValue two) //exponentiation
         {
@@ -160,7 +169,7 @@ namespace MATH
         {
             Value = value;
         }
-        double? Value { get; set; }
+        public double? Value { get; set; }
     }
 
     public class Variable : AValue
@@ -176,6 +185,6 @@ namespace MATH
             Value = null;
         }
         public string Name { get; set; }
-        double? Value { get; set; }
+        public double? Value { get; set; }
     }
 }
