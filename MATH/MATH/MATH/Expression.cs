@@ -130,19 +130,18 @@ namespace MATH
             {
                 processing = temp;
                 temp = new List<object>();
+                current = processing[0];
+                processing.Add("end");
                 foreach (object o in processing)
                 {
-                    object pass = o;
-                    if (current == null)
+                    if (o is string && (string)o == "end")
                     {
-                        current = o;
-                        continue;
+                        temp.Add(current);
+                        break;
                     }
-                    if (last == null)
-                    {
-                        last = o;
-                        continue;
-                    }
+
+                    object pass = current;
+                    if (current == o) continue;
 
                     //NOTE: an AValue obj casted as a string is always null
 
@@ -150,7 +149,7 @@ namespace MATH
                     {
                         #region Unary
                         case 0: // Satisfy Unary Operators (Find them first)
-                            if (current is string)
+                            if (current is string && last is string)
                             {
                                 switch ((string)current) // use operator on o which should be AValue
                                 {
@@ -207,6 +206,7 @@ namespace MATH
                             if (current is string && (string)current == "^^")
                             {
                                 pass = AValue.Exponentiation((AValue)last, (AValue)o);
+                                temp.RemoveAt(temp.Count - 1);
                             }
                             break;
                         #endregion
@@ -218,12 +218,15 @@ namespace MATH
                                 {
                                     case "*":
                                         pass = (AValue)last * (AValue)o;
+                                        temp.RemoveAt(temp.Count - 1);
                                         break;
                                     case "/":
                                         pass = (AValue)last / (AValue)o;
+                                        temp.RemoveAt(temp.Count - 1);
                                         break;
                                     case "%":
                                         pass = (AValue)last % (AValue)o;
+                                        temp.RemoveAt(temp.Count - 1);
                                         break;
                                 }
                             }
@@ -237,9 +240,11 @@ namespace MATH
                                 {
                                     case "+":
                                         pass = (AValue)last + (AValue)o;
+                                        temp.RemoveAt(temp.Count - 1);
                                         break;
                                     case "-":
                                         pass = (AValue)last - (AValue)o;
+                                        temp.RemoveAt(temp.Count - 1);
                                         break;
                                 }
                             }
@@ -253,15 +258,19 @@ namespace MATH
                                 {
                                     case ">=":
                                         pass = (AValue)last >= (AValue)o;
+                                        temp.RemoveAt(temp.Count - 1);
                                         break;
                                     case "<=":
                                         pass = (AValue)last <= (AValue)o;
+                                        temp.RemoveAt(temp.Count - 1);
                                         break;
                                     case ">":
                                         pass = (AValue)last > (AValue)o;
+                                        temp.RemoveAt(temp.Count - 1);
                                         break;
                                     case "<":
                                         pass = (AValue)last < (AValue)o;
+                                        temp.RemoveAt(temp.Count - 1);
                                         break;
                                 }
                             }
@@ -275,9 +284,11 @@ namespace MATH
                                 {
                                     case "==":
                                         pass = (AValue)last == (AValue)o;
+                                        temp.RemoveAt(temp.Count - 1);
                                         break;
                                     case "!=":
                                         pass = (AValue)last != (AValue)o;
+                                        temp.RemoveAt(temp.Count - 1);
                                         break;
                                 }
                             }
@@ -290,6 +301,7 @@ namespace MATH
                                 if ((string)current == "&")
                                 {
                                     pass = (AValue)last & (AValue)o;
+                                    temp.RemoveAt(temp.Count - 1);
                                 }
                             }
                             break;
@@ -301,6 +313,7 @@ namespace MATH
                                 if ((string)current == "^")
                                 {
                                     pass = (AValue)last ^ (AValue)o;
+                                    temp.RemoveAt(temp.Count - 1);
                                 }
                             }
                             break;
@@ -312,6 +325,7 @@ namespace MATH
                                 if ((string)current == "|")
                                 {
                                     pass = (AValue)last | (AValue)o;
+                                    temp.RemoveAt(temp.Count - 1);
                                 }
                             }
                             break;
@@ -323,6 +337,7 @@ namespace MATH
                                 if ((string)current == "&&")
                                 {
                                     pass = (AValue)last && (AValue)o;
+                                    temp.RemoveAt(temp.Count - 1);
                                 }
                             }
                             break;
@@ -334,6 +349,7 @@ namespace MATH
                                 if ((string)current == "||")
                                 {
                                     pass = (AValue)last && (AValue)o;
+                                    temp.RemoveAt(temp.Count - 1);
                                 }
                             }
                             break;
