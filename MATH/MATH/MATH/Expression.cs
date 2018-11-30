@@ -129,13 +129,13 @@ namespace MATH
             for (int m = 0; m < 11; m++) // PEMDAS minus the P
             {
                 processing = temp;
+                temp = new List<object>();
                 foreach (object o in processing)
                 {
                     object pass = o;
-                    temp = new List<object>();
                     if (current == null)
                     {
-                        current = 0;
+                        current = o;
                         continue;
                     }
                     if (last == null)

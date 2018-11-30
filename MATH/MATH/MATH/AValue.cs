@@ -4,11 +4,9 @@ using System.Text;
 
 namespace MATH
 {
-    public class AValue
+    public abstract class AValue
     {
-        public double? Value { get; set; }
-        public int Start { get; set; }
-        public int End { get; set; }
+        public abstract double? Value { get; set; }
 
         #region Binary Operators
         public static AValue operator +(AValue one, AValue two) //addition
@@ -69,7 +67,6 @@ namespace MATH
             else return new Constant((int)one.Value | (int)two.Value);
         }
         #endregion
-
         #region Unary Operators
         public static AValue operator +(AValue one) //what is unary plus for anyway
         {
@@ -100,7 +97,6 @@ namespace MATH
             else return new Constant(--one.Value);
         }
         #endregion
-
         #region Relational Operators
         public static bool operator ==(AValue one, AValue two)
         {
@@ -169,7 +165,7 @@ namespace MATH
         {
             Value = value;
         }
-        public double? Value { get; set; }
+        public override double? Value { get; set; }
     }
 
     public class Variable : AValue
@@ -185,6 +181,6 @@ namespace MATH
             Value = null;
         }
         public string Name { get; set; }
-        public double? Value { get; set; }
+        public override double? Value { get; set; }
     }
 }
