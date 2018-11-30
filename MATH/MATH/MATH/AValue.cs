@@ -39,7 +39,7 @@ namespace MATH
         }
         public static AValue operator %(AValue one, AValue two) //modulo
         {
-            while (one.Value > two.Value) one.Value -= two.Value;
+            while (one.Value >= two.Value) one.Value -= two.Value;
             if (one is Variable && two is Variable) return new Variable(((Variable)one).Name, one.Value);
             if (one is Variable && two is Constant) return new Variable(((Variable)one).Name, one.Value);
             if (one is Constant && two is Variable) return new Variable(((Variable)two).Name, one.Value);
@@ -136,14 +136,13 @@ namespace MATH
         #region Function Operations
         public static AValue Exponentiation(AValue one, AValue two) //exponentiation
         {
-            two.Value--;
             double? baseval = one.Value;
             while (two.Value > 1)
             {
                 one.Value *= baseval;
                 two.Value--;
             }
-            one.Value += (baseval * two.Value);
+            one.Value += (baseval * --two.Value);
             if (one is Variable && two is Variable) return new Variable(((Variable)one).Name, one.Value);
             if (one is Variable && two is Constant) return new Variable(((Variable)one).Name, one.Value);
             if (one is Constant && two is Variable) return new Variable(((Variable)two).Name, one.Value);
@@ -152,7 +151,7 @@ namespace MATH
         public static AValue Factorial(AValue one) //exponentiation
         {
             double? i = (int)one.Value;
-            while (one.Value > 1) one.Value *= i--;
+            while (i > 1) one.Value *= --i;
             if (one is Variable) return new Variable(((Variable)one).Name, one.Value);
             else return new Constant(one.Value);
         }

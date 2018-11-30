@@ -29,6 +29,13 @@ namespace MATH
                 }
                 if (needsnewline) _expression = _expression.Insert(i, "\n");
                 needsnewline = false;
+                while (i < _expression.Length && ( _expression.ElementAt(i) == '(' || _expression.ElementAt(i) == ')'))
+                {
+                    i++;
+                    needsnewline = true;
+                }
+                if (needsnewline) _expression = _expression.Insert(i, "\n");
+                needsnewline = false;
                 while (i < _expression.Length && letters.Contains(_expression[i]))
                 {
                     i++;
@@ -106,10 +113,10 @@ namespace MATH
                 {
                     for (int j = 0; j < contents.Count; j++)
                     {
-                        if (contents[j] is string && (string)contents[j] == ")") end = j;
+                        if (contents[j] is string && (string)contents[j] == ")") end = j - i - 1;
                     }
-                    processing.Add((Constant)SolveHelper(contents.GetRange(i, end)));
-                    processing.Add(contents.GetRange(end, contents.Count - end));
+                    processing.Add((Variable)SolveHelper(contents.GetRange(i + 1, end)));
+                    i += (end + 1);
                 }
                 else
                 {
@@ -123,246 +130,310 @@ namespace MATH
             //time to cover all of the cases of how the operators could be called against
             //the constants and variables. Also all variable have valid values, as guaranteed
             //by the try/catch in the original Solve()
-            object last = null, current = null;
             Variable result = new Variable("ans", 0);
-            List<object> temp = processing;
-            for (int m = 0; m < 11; m++) // PEMDAS minus the P
-            {
-                processing = temp;
-                temp = new List<object>();
-                current = processing[0];
-                processing.Add("end");
-                foreach (object o in processing)
-                {
-                    if (o is string && (string)o == "end")
-                    {
-                        temp.Add(current);
-                        break;
-                    }
-
-                    object pass = current;
-                    if (current == o) continue;
-
-                    //NOTE: an AValue obj casted as a string is always null
-
-                    switch (m)
-                    {
-                        #region Unary
-                        case 0: // Satisfy Unary Operators (Find them first)
-                            if (current is string && last is string)
-                            {
-                                switch ((string)current) // use operator on o which should be AValue
-                                {
-                                    case "+":
-                                        if (o is Variable) pass = +(Variable)o;
-                                        else pass = +(Constant)o;
-                                        break;
-                                    case "-":
-                                        if (o is Variable) pass = new Variable(((Variable)o).Name, -((Variable)o).Value);
-                                        else pass = new Constant(-((Constant)o).Value);
-                                        break;
-                                    case "!":
-                                        if (o is Variable) pass = !(Variable)o;
-                                        else pass = !(Constant)o;
-                                        break;
-                                    case "~":
-                                        if (o is Variable) pass = ~(Variable)o;
-                                        else pass = ~(Constant)o;
-                                        break;
-                                    case "!!":
-                                        if (o is Variable) pass = AValue.Factorial((Variable)o);
-                                        else pass = AValue.Factorial((Constant)o);
-                                        break;
-                                    case "++":
-                                        if (o is Variable)
-                                        {
-                                            AValue x = (Variable)o;
-                                            pass = x++;
-                                        }
-                                        else
-                                        {
-                                            AValue x = (Constant)o;
-                                            pass = x++;
-                                        }
-                                        break;
-                                    case "--":
-                                        if (o is Variable)
-                                        {
-                                            AValue x = (Variable)o;
-                                            pass = x--;
-                                        }
-                                        else
-                                        {
-                                            AValue x = (Constant)o;
-                                            pass = x--;
-                                        }
-                                        break;
-                                }
-                            }
-                            break;
-                        #endregion
-                        #region Exponentiation
-                        case 1: // Calls for Exponentiation
-                            if (current is string && (string)current == "^^")
-                            {
-                                pass = AValue.Exponentiation((AValue)last, (AValue)o);
-                                temp.RemoveAt(temp.Count - 1);
-                            }
-                            break;
-                        #endregion
-                        #region Multiplication, Division, Modulo
-                        case 2: // Multiplication, Division, and Modulo
-                            if (current is string)
-                            {
-                                switch ((string)current)
-                                {
-                                    case "*":
-                                        pass = (AValue)last * (AValue)o;
-                                        temp.RemoveAt(temp.Count - 1);
-                                        break;
-                                    case "/":
-                                        pass = (AValue)last / (AValue)o;
-                                        temp.RemoveAt(temp.Count - 1);
-                                        break;
-                                    case "%":
-                                        pass = (AValue)last % (AValue)o;
-                                        temp.RemoveAt(temp.Count - 1);
-                                        break;
-                                }
-                            }
-                            break;
-                        #endregion
-                        #region Addition and Subtraction
-                        case 3: // Addition and Subtraction
-                            if (current is string)
-                            {
-                                switch ((string)current)
-                                {
-                                    case "+":
-                                        pass = (AValue)last + (AValue)o;
-                                        temp.RemoveAt(temp.Count - 1);
-                                        break;
-                                    case "-":
-                                        pass = (AValue)last - (AValue)o;
-                                        temp.RemoveAt(temp.Count - 1);
-                                        break;
-                                }
-                            }
-                            break;
-                        #endregion
-                        #region Inequality Comparisons
-                        case 4: // Inequality Comparisons
-                            if (current is string)
-                            {
-                                switch ((string)current)
-                                {
-                                    case ">=":
-                                        pass = (AValue)last >= (AValue)o;
-                                        temp.RemoveAt(temp.Count - 1);
-                                        break;
-                                    case "<=":
-                                        pass = (AValue)last <= (AValue)o;
-                                        temp.RemoveAt(temp.Count - 1);
-                                        break;
-                                    case ">":
-                                        pass = (AValue)last > (AValue)o;
-                                        temp.RemoveAt(temp.Count - 1);
-                                        break;
-                                    case "<":
-                                        pass = (AValue)last < (AValue)o;
-                                        temp.RemoveAt(temp.Count - 1);
-                                        break;
-                                }
-                            }
-                            break;
-                        #endregion
-                        #region Equality Comparisons
-                        case 5: // Equality Comparisons
-                            if (current is string)
-                            {
-                                switch ((string)current)
-                                {
-                                    case "==":
-                                        pass = (AValue)last == (AValue)o;
-                                        temp.RemoveAt(temp.Count - 1);
-                                        break;
-                                    case "!=":
-                                        pass = (AValue)last != (AValue)o;
-                                        temp.RemoveAt(temp.Count - 1);
-                                        break;
-                                }
-                            }
-                            break;
-                        #endregion
-                        #region Bitwise AND
-                        case 6: // Bitwise AND
-                            if (current is string)
-                            {
-                                if ((string)current == "&")
-                                {
-                                    pass = (AValue)last & (AValue)o;
-                                    temp.RemoveAt(temp.Count - 1);
-                                }
-                            }
-                            break;
-                        #endregion
-                        #region Bitwise XOR
-                        case 7: // Bitwise XOR
-                            if (current is string)
-                            {
-                                if ((string)current == "^")
-                                {
-                                    pass = (AValue)last ^ (AValue)o;
-                                    temp.RemoveAt(temp.Count - 1);
-                                }
-                            }
-                            break;
-                        #endregion
-                        #region Bitwise OR
-                        case 8: // Bitwise OR
-                            if (current is string)
-                            {
-                                if ((string)current == "|")
-                                {
-                                    pass = (AValue)last | (AValue)o;
-                                    temp.RemoveAt(temp.Count - 1);
-                                }
-                            }
-                            break;
-                        #endregion
-                        #region Boolean AND
-                        case 9: // Boolean AND
-                            if (current is string)
-                            {
-                                if ((string)current == "&&")
-                                {
-                                    pass = (AValue)last && (AValue)o;
-                                    temp.RemoveAt(temp.Count - 1);
-                                }
-                            }
-                            break;
-                        #endregion
-                        #region Boolean OR
-                        case 10:// Boolean OR
-                            if (current is string)
-                            {
-                                if ((string)current == "||")
-                                {
-                                    pass = (AValue)last && (AValue)o;
-                                    temp.RemoveAt(temp.Count - 1);
-                                }
-                            }
-                            break;
-                        #endregion
-                    }
-
-                    last = current;
-                    current = o;
-                    temp.Add(pass);
-                }
-            }
+            List<object> temp = UseOperators(processing, 0);
             result.Value = ((AValue)temp[0]).Value;
             return result;
+        }
+
+        public static List<object> UseOperators(List<object> temp, int m)
+        {
+            List<object> processing = temp;
+            if (m > 10 || temp.Count == 1) return processing;
+            temp = new List<object>();
+            processing.Add("end");
+            bool binaryoperated = false;
+            for (int i = 0; i < processing.Count; i++)
+            {
+                if (processing[i] is string && (string)processing[i] == "end") break;
+                if (processing[i + 1] is string && (string)processing[i + 1] == "end")
+                {
+                    if (!binaryoperated) temp.Add(processing[i]);
+                    break;
+                }
+                if (processing[i] == processing[i + 1]) continue;
+
+                switch (m)
+                {
+                    #region Unary
+                    case 0: // Satisfy Unary Operators (Find them first)
+                        if (processing[i] is string && (i == 0 || processing[i - 1] is string))
+                        {
+                            switch ((string)processing[i]) // use operator on o which should be AValue
+                            {
+                                case "+":
+                                    if (processing[i + 1] is Variable) processing[i] = +(Variable)processing[i + 1];
+                                    else processing[i] = +(Constant)processing[i + 1];
+                                    break;
+                                case "-":
+                                    if (processing[i + 1] is Variable) processing[i] = new Variable(((Variable)processing[i + 1]).Name, -((Variable)processing[i + 1]).Value);
+                                    else processing[i] = new Constant(-((Constant)processing[i + 1]).Value);
+                                    break;
+                                case "!":
+                                    if (processing[i + 1] is Variable) processing[i] = !(Variable)processing[i + 1];
+                                    else processing[i] = !(Constant)processing[i + 1];
+                                    break;
+                                case "~":
+                                    if (processing[i + 1] is Variable) processing[i] = ~(Variable)processing[i + 1];
+                                    else processing[i] = ~(Constant)processing[i + 1];
+                                    break;
+                                case "!!":
+                                    if (processing[i + 1] is Variable) processing[i] = AValue.Factorial((Variable)processing[i + 1]);
+                                    else processing[i] = AValue.Factorial((Constant)processing[i + 1]);
+                                    break;
+                                case "++":
+                                    if (processing[i + 1] is Variable)
+                                    {
+                                        AValue x = (Variable)processing[i + 1];
+                                        processing[i] = x++;
+                                    }
+                                    else
+                                    {
+                                        AValue x = (Constant)processing[i + 1];
+                                        processing[i] = x++;
+                                    }
+                                    break;
+                                case "--":
+                                    if (processing[i + 1] is Variable)
+                                    {
+                                        AValue x = (Variable)processing[i + 1];
+                                        processing[i] = x--;
+                                    }
+                                    else
+                                    {
+                                        AValue x = (Constant)processing[i + 1];
+                                        processing[i] = x--;
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
+                    #endregion
+                    #region Exponentiation
+                    case 1: // Calls for Exponentiation
+                        if (processing[i] is string && (string)processing[i] == "^^")
+                        {
+                            processing[i] = AValue.Exponentiation((AValue)processing[i - 1], (AValue)processing[i + 1]);
+                            processing.RemoveAt(i - 1);
+                            processing.RemoveAt(i);
+                            i--;
+                            temp.RemoveAt(temp.Count - 1);
+                            binaryoperated = true;
+                        }
+                        break;
+                    #endregion
+                    #region Multiplication, Division, Modulo
+                    case 2: // Multiplication, Division, and Modulo
+                        if (processing[i] is string)
+                        {
+                            switch ((string)processing[i])
+                            {
+                                case "*":
+                                    processing[i] = (AValue)processing[i - 1] * (AValue)processing[i + 1];
+                                    processing.RemoveAt(i - 1);
+                                    processing.RemoveAt(i);
+                                    i--;
+                                    temp.RemoveAt(temp.Count - 1);
+                                    binaryoperated = true;
+                                    break;
+                                case "/":
+                                    processing[i] = (AValue)processing[i - 1] / (AValue)processing[i + 1];
+                                    processing.RemoveAt(i - 1);
+                                    processing.RemoveAt(i);
+                                    i--;
+                                    temp.RemoveAt(temp.Count - 1);
+                                    binaryoperated = true;
+                                    break;
+                                case "%":
+                                    processing[i] = (AValue)processing[i - 1] % (AValue)processing[i + 1];
+                                    processing.RemoveAt(i - 1);
+                                    processing.RemoveAt(i);
+                                    i--;
+                                    temp.RemoveAt(temp.Count - 1);
+                                    binaryoperated = true;
+                                    break;
+                            }
+                        }
+                        break;
+                    #endregion
+                    #region Addition and Subtraction
+                    case 3: // Addition and Subtraction
+                        if (processing[i] is string)
+                        {
+                            switch ((string)processing[i])
+                            {
+                                case "+":
+                                    processing[i] = (AValue)processing[i - 1] + (AValue)processing[i + 1];
+                                    processing.RemoveAt(i - 1);
+                                    processing.RemoveAt(i);
+                                    i--;
+                                    temp.RemoveAt(temp.Count - 1);
+                                    binaryoperated = true;
+                                    break;
+                                case "-":
+                                    processing[i] = (AValue)processing[i - 1] - (AValue)processing[i + 1];
+                                    processing.RemoveAt(i - 1);
+                                    processing.RemoveAt(i);
+                                    i--;
+                                    temp.RemoveAt(temp.Count - 1);
+                                    binaryoperated = true;
+                                    break;
+                            }
+                        }
+                        break;
+                    #endregion
+                    #region Inequality Comparisons
+                    case 4: // Inequality Comparisons
+                        if (processing[i] is string)
+                        {
+                            switch ((string)processing[i])
+                            {
+                                case ">=":
+                                    processing[i] = (AValue)processing[i - 1] >= (AValue)processing[i + 1];
+                                    processing.RemoveAt(i - 1);
+                                    processing.RemoveAt(i);
+                                    i--;
+                                    temp.RemoveAt(temp.Count - 1);
+                                    binaryoperated = true;
+                                    break;
+                                case "<=":
+                                    processing[i] = (AValue)processing[i - 1] <= (AValue)processing[i + 1];
+                                    processing.RemoveAt(i - 1);
+                                    processing.RemoveAt(i);
+                                    i--;
+                                    temp.RemoveAt(temp.Count - 1);
+                                    binaryoperated = true;
+                                    break;
+                                case ">":
+                                    processing[i] = (AValue)processing[i - 1] > (AValue)processing[i + 1];
+                                    processing.RemoveAt(i - 1);
+                                    processing.RemoveAt(i);
+                                    i--;
+                                    temp.RemoveAt(temp.Count - 1);
+                                    binaryoperated = true;
+                                    break;
+                                case "<":
+                                    processing[i] = (AValue)processing[i - 1] < (AValue)processing[i + 1];
+                                    processing.RemoveAt(i - 1);
+                                    processing.RemoveAt(i);
+                                    i--;
+                                    temp.RemoveAt(temp.Count - 1);
+                                    binaryoperated = true;
+                                    break;
+                            }
+                        }
+                        break;
+                    #endregion
+                    #region Equality Comparisons
+                    case 5: // Equality Comparisons
+                        if (processing[i] is string)
+                        {
+                            switch ((string)processing[i])
+                            {
+                                case "==":
+                                    processing[i] = (AValue)processing[i - 1] == (AValue)processing[i + 1];
+                                    processing.RemoveAt(i - 1);
+                                    processing.RemoveAt(i);
+                                    i--;
+                                    temp.RemoveAt(temp.Count - 1);
+                                    binaryoperated = true;
+                                    break;
+                                case "!=":
+                                    processing[i] = (AValue)processing[i - 1] != (AValue)processing[i + 1];
+                                    processing.RemoveAt(i - 1);
+                                    processing.RemoveAt(i);
+                                    i--;
+                                    temp.RemoveAt(temp.Count - 1);
+                                    binaryoperated = true;
+                                    break;
+                            }
+                        }
+                        break;
+                    #endregion
+                    #region Bitwise AND
+                    case 6: // Bitwise AND
+                        if (processing[i] is string)
+                        {
+                            if ((string)processing[i] == "&")
+                            {
+                                processing[i] = (AValue)processing[i - 1] & (AValue)processing[i + 1];
+                                processing.RemoveAt(i - 1);
+                                processing.RemoveAt(i);
+                                i--;
+                                temp.RemoveAt(temp.Count - 1);
+                                binaryoperated = true;
+                            }
+                        }
+                        break;
+                    #endregion
+                    #region Bitwise XOR
+                    case 7: // Bitwise XOR
+                        if (processing[i] is string)
+                        {
+                            if ((string)processing[i] == "^")
+                            {
+                                processing[i] = (AValue)processing[i - 1] ^ (AValue)processing[i + 1];
+                                processing.RemoveAt(i - 1);
+                                processing.RemoveAt(i);
+                                i--;
+                                temp.RemoveAt(temp.Count - 1);
+                                binaryoperated = true;
+                            }
+                        }
+                        break;
+                    #endregion
+                    #region Bitwise OR
+                    case 8: // Bitwise OR
+                        if (processing[i] is string)
+                        {
+                            if ((string)processing[i] == "|")
+                            {
+                                processing[i] = (AValue)processing[i - 1] | (AValue)processing[i + 1];
+                                processing.RemoveAt(i - 1);
+                                processing.RemoveAt(i);
+                                i--;
+                                temp.RemoveAt(temp.Count - 1);
+                                binaryoperated = true;
+                            }
+                        }
+                        break;
+                    #endregion
+                    #region Boolean AND
+                    case 9: // Boolean AND
+                        if (processing[i] is string)
+                        {
+                            if ((string)processing[i] == "&&")
+                            {
+                                processing[i] = (AValue)processing[i - 1] && (AValue)processing[i + 1];
+                                processing.RemoveAt(i - 1);
+                                processing.RemoveAt(i);
+                                i--;
+                                temp.RemoveAt(temp.Count - 1);
+                                binaryoperated = true;
+                            }
+                        }
+                        break;
+                    #endregion
+                    #region Boolean OR
+                    case 10:// Boolean OR
+                        if (processing[i] is string)
+                        {
+                            if ((string)processing[i] == "||")
+                            {
+                                processing[i] = (AValue)processing[i - 1] && (AValue)processing[i + 1];
+                                processing.RemoveAt(i - 1);
+                                processing.RemoveAt(i);
+                                i--;
+                                temp.RemoveAt(temp.Count - 1);
+                                binaryoperated = true;
+                            }
+                        }
+                        break;
+                        #endregion
+                }
+                temp.Add(processing[i]);
+            }
+            return UseOperators(temp, ++m);
         }
 
         public static string RemoveWhitespace(string input)
@@ -380,7 +451,7 @@ namespace MATH
             Unary: + - ! ~ !!(Factorial()) ++ --
             Relational: == != > < <= >=
               */
-        private static readonly string symbols = "()-+/*><|&^%~!="; //careful of double-char operators
+        private static readonly string symbols = "-+/*><|&^%~!="; //careful of double-char operators
         private static readonly string numbers = "1234.567890";
         private static readonly string letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private static readonly string PEMDAS = "All Unary, ^^, */%, +-, <>, ==!=, &, ^, |, &&, ||";
