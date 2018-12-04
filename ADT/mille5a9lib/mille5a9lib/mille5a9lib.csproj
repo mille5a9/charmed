@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Heap.cs" />
     <Compile Include="List.cs" />
+    <Compile Include="Miscellaneous\DataManager.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Queue.cs" />
     <Compile Include="Stack.cs" />
