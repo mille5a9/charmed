@@ -1,17 +1,12 @@
 # ADT Folder
 
+## C++ Summer 2018
+
 This folder houses the abstract data types that I have created in my
 Engineering Data Structures class. The data types have been put in
 a namespace that is named after my student email @mail.uc.edu so as
 not to conflict with any other similarly named structures. Any base
 classes that were constructed in the course have not been included.
-
-The filename structure is designed to associate similar types when
-sorted alphabetically, so all of the files begin with the name of
-the data type and then the subsequent identifiers that make it
-unique (ex. treebinarysearch.h). The actual ADTs in the files
-follow a naming structure of full Capitalization and proper word
-ordering (ex. BinarySearchTree or ArrayList).
 
 Currently included:  
 stackarray.h  
@@ -27,3 +22,11 @@ treeavl.h
 heapmin.h  
 graph.h  
 hashtable.h  
+
+## mille5a9lib
+
+This folder houses the .NET Library Project I created while studying
+for Microsoft\'s \"Programming in C#\" Exam 70-483. It contains all
+the same data structures that were designed in my C++ based class
+from Summer 2018, but with additional considerations brought about
+by my newfound knowledge and understanding of best coding practices.
