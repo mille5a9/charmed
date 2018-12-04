@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace mille5a9lib
 {
-    class InvalidPositionException : Exception
+    public class InvalidPositionException : Exception
     {
         public InvalidPositionException(int pos, int count)
         {
@@ -129,7 +129,7 @@ namespace mille5a9lib
         {
             try
             {
-                if (pos > _count || pos < 0) throw new InvalidPositionException(pos, _count);
+                if (pos > _count || pos < 0 || _count == _maxsize) throw new InvalidPositionException(pos, _count);
             }
             catch (InvalidPositionException e)
             {
@@ -165,9 +165,13 @@ namespace mille5a9lib
                 Console.Write(e.Message());
                 return false;
             }
-            for (int i = pos; i < _count; i++)
+            if (_count == 1) { _items[0] = default(T); }
+            else
             {
-                _items[i] = _items[i + 1];
+                for (int i = pos; i < _count; i++)
+                {
+                    _items[i] = _items[i + 1];
+                }
             }
             _count--;
             return true;
@@ -190,15 +194,15 @@ namespace mille5a9lib
 
         public T GetItem(int pos)
         {
-            try
-            {
+            //try
+            //{
                 if (pos < 0 || pos >= _count) throw new InvalidPositionException(pos, _count);
-            }
-            catch (InvalidPositionException e)
-            {
-                Console.Write(e.Message());
-                return default(T);
-            }
+            //}
+            //catch (InvalidPositionException e)
+            //{
+            //    Console.Write(e.Message());
+            //    return default(T);
+            //}
             return _items[pos];
         }
 
@@ -365,15 +369,15 @@ namespace mille5a9lib
 
         public T GetItem(int pos)
         {
-            try
-            {
+            //try
+            //{
                 if (pos < 0 || pos >= _count) throw new InvalidPositionException(pos, _count);
-            }
-            catch (InvalidPositionException e)
-            {
-                Console.Write(e.Message());
-                return default(T);
-            }
+            //}
+            //catch (InvalidPositionException e)
+            //{
+            //    Console.Write(e.Message());
+            //    return default(T);
+            //}
             if (pos == _count - 1) return _head.Get();
             DoubleNode<T> temp = _head;
             for (int i = 1; i < _count - pos; i++) temp = temp.GetNext();

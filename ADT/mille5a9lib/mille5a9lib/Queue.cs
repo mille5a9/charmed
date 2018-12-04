@@ -60,7 +60,7 @@ namespace mille5a9lib
 
         public T Dequeue()
         {
-            if (_front == -1 || _front == _rear + 1) return default(T);
+            if (_front == -1 || _front == _rear + 1) throw new StackOverflowException("Cannot Dequeue from an empty Queue");
             T temp = _items[_front];
             _front++;
             if (_front == -1 || _front == _rear + 1)
@@ -74,7 +74,7 @@ namespace mille5a9lib
 
         public T Peek()
         {
-            if (_front == -1 || _front == _rear + 1) return default(T);
+            if (_front == -1 || _front == _rear + 1) throw new StackOverflowException("Cannot Peek into an empty Queue");
             return _items[_front];
         }
 
@@ -99,7 +99,7 @@ namespace mille5a9lib
 
         public T Dequeue()
         {
-            if (_front == null) return default(T);
+            if (_front == null) throw new StackOverflowException("Cannot Dequeue from an empty Queue");
             SingleNode<T> temp = _front;
             T data = temp.Get();
 
@@ -120,7 +120,7 @@ namespace mille5a9lib
 
         public T Peek()
         {
-            if (_front == null) return default(T);
+            if (_front == null) throw new StackOverflowException("Cannot Peek into an empty Queue");
             return _front.Get();
         }
 

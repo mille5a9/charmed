@@ -58,25 +58,33 @@ namespace mille5a9lib
 
         public T Pop()
         {
-            try
-            {
+            //try
+            //{
                 if (_top == -1)
                 {
                     throw new StackOverflowException("Error: Stack Empty, Cannot Pop");
                 }
-            }
-            catch (StackOverflowException e)
-            {
-                Console.Write(e.Message);
-                return default(T);
-            }
+            //}
+            //catch (StackOverflowException e)
+            //{
+            //    Console.Write(e.Message);
+            //    return default(T);
+            //}
 
             _top--;
             _size--;
             return _items[_top + 1];
         }
 
-        public T Peek() { return _items[_top]; }
+        public T Peek()
+        {
+            //try
+            //{
+                if (_top < 0) throw new StackOverflowException("Error: Cannot Peek an Empty Stack");
+            //}
+            //catch (StackOverflowException) { return default(T); }
+            return _items[_top];
+        }
 
         public int Size() { return _size; }
 
@@ -96,18 +104,18 @@ namespace mille5a9lib
 
         public T Pop()
         {
-            try
-            {
+            //try
+            //{
                 if (_top == null)
                 {
                     throw new StackOverflowException("Error: Stack Empty, Cannot Pop");
                 }
-            }
-            catch (StackOverflowException e)
-            {
-                Console.Write(e.Message);
-                return default(T);
-            }
+            //}
+            //catch (StackOverflowException e)
+            //{
+            //    Console.Write(e.Message);
+            //    return default(T);
+            //}
 
             T temp = _top.Get();
             if (_top.GetNext() == null)
@@ -126,18 +134,18 @@ namespace mille5a9lib
 
         public T Peek()
         {
-            try
-            {
+            //try
+            //{
                 if (_top == null)
                 {
                     throw new StackOverflowException("Error: Stack Empty, Cannot Peek");
                 }
-            }
-            catch (StackOverflowException e)
-            {
-                Console.Write(e.Message);
-                return default(T);
-            }
+            //}
+            //catch (StackOverflowException e)
+            //{
+            //    Console.Write(e.Message);
+            //    return default(T);
+            //}
 
             return _top.Get();
         }
