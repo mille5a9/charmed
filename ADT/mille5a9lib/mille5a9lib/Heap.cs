@@ -9,12 +9,12 @@ namespace mille5a9lib
 
     public interface IHeap<T> where T : IComparable
     {
-        bool Insert(T item, BinaryNode<T> temp, BinaryNode<T> parent);
+        bool Insert(T item, BinaryNode<T> temp, BinaryNode<T> parent = null);
         bool Contains(T item, BinaryNode<T> temp);
-        T Extract(BinaryNode<T> temp, BinaryNode<T> parent);
+        T Extract(BinaryNode<T> temp, BinaryNode<T> parent = null);
         int GetMinHeight(BinaryNode<T> temp);
         int GetMaxHeight(BinaryNode<T> temp);
-        int GetDepth(BinaryNode<T> temp, BinaryNode<T> subject);
+        int GetDepth(BinaryNode<T> temp, BinaryNode<T> subject = null);
         LinkedList<T> GetPreorder();
         LinkedList<T> GetInorder();
         LinkedList<T> GetPostorder();
@@ -25,7 +25,7 @@ namespace mille5a9lib
 
     public class MinHeap<T> : IHeap<T> where T : IComparable
     {
-        public bool Insert(T item, BinaryNode<T> temp, BinaryNode<T> parent)
+        public bool Insert(T item, BinaryNode<T> temp, BinaryNode<T> parent = null)
         {
             if (Contains(item, _root)) return false;
             if (_root == null)
@@ -69,7 +69,7 @@ namespace mille5a9lib
             if (item.CompareTo(temp.Get()) == 0) return true;
             return (Contains(item, temp.GetLeft()) || Contains(item, temp.GetRight()));
         }
-        public T Extract(BinaryNode<T> temp, BinaryNode<T> parent)
+        public T Extract(BinaryNode<T> temp, BinaryNode<T> parent = null)
         {
             if (_root == null)
             {
@@ -104,7 +104,7 @@ namespace mille5a9lib
             }
             return output;
         }
-        public int GetMinHeight(BinaryNode<T> temp)
+        public int GetMinHeight(BinaryNode<T> temp = null)
         {
             int size = 0;
             if (temp != null) size++;
@@ -115,7 +115,7 @@ namespace mille5a9lib
             else size += right;
             return size;
         }
-        public int GetMaxHeight(BinaryNode<T> temp)
+        public int GetMaxHeight(BinaryNode<T> temp = null)
         {
             int size = 0;
             if (temp != null) size++;
@@ -126,7 +126,7 @@ namespace mille5a9lib
             else size += right;
             return size;
         }
-        public int GetDepth(BinaryNode<T> temp, BinaryNode<T> subject)
+        public int GetDepth(BinaryNode<T> temp = null, BinaryNode<T> subject = null)
         {
             int depth = 0;
             if (temp == null) return 0;
@@ -202,7 +202,7 @@ namespace mille5a9lib
 
     public class MaxHeap<T> : IHeap<T> where T : IComparable
     {
-        public bool Insert(T item, BinaryNode<T> temp, BinaryNode<T> parent)
+        public bool Insert(T item, BinaryNode<T> temp, BinaryNode<T> parent = null)
         {
             if (Contains(item, _root)) return false;
             if (_root == null)
@@ -246,7 +246,7 @@ namespace mille5a9lib
             if (item.CompareTo(temp.Get()) == 0) return true;
             return (Contains(item, temp.GetLeft()) || Contains(item, temp.GetRight()));
         }
-        public T Extract(BinaryNode<T> temp, BinaryNode<T> parent)
+        public T Extract(BinaryNode<T> temp, BinaryNode<T> parent = null)
         {
             if (_root == null)
             {
@@ -281,7 +281,7 @@ namespace mille5a9lib
             }
             return output;
         }
-        public int GetMinHeight(BinaryNode<T> temp)
+        public int GetMinHeight(BinaryNode<T> temp = null)
         {
             int size = 0;
             if (temp != null) size++;
@@ -292,7 +292,7 @@ namespace mille5a9lib
             else size += right;
             return size;
         }
-        public int GetMaxHeight(BinaryNode<T> temp)
+        public int GetMaxHeight(BinaryNode<T> temp = null)
         {
             int size = 0;
             if (temp != null) size++;
@@ -303,7 +303,7 @@ namespace mille5a9lib
             else size += right;
             return size;
         }
-        public int GetDepth(BinaryNode<T> temp, BinaryNode<T> subject)
+        public int GetDepth(BinaryNode<T> temp, BinaryNode<T> subject = null)
         {
             int depth = 0;
             if (temp == null) return 0;
@@ -332,21 +332,21 @@ namespace mille5a9lib
             PostorderTraversal(_root);
             return _postorder;
         }
-        private void PreorderTraversal(BinaryNode<T> temp)
+        private void PreorderTraversal(BinaryNode<T> temp = null)
         {
             if (temp == null) return;
             _preorder.Insert(_preorder.Size(), temp.Get());
             PreorderTraversal(temp.GetLeft());
             PreorderTraversal(temp.GetRight());
         }
-        private void InorderTraversal(BinaryNode<T> temp)
+        private void InorderTraversal(BinaryNode<T> temp = null)
         {
             if (temp == null) return;
             InorderTraversal(temp.GetLeft());
             _inorder.Insert(_inorder.Size(), temp.Get());
             InorderTraversal(temp.GetRight());
         }
-        private void PostorderTraversal(BinaryNode<T> temp)
+        private void PostorderTraversal(BinaryNode<T> temp = null)
         {
             if (temp == null) return;
             PostorderTraversal(temp.GetLeft());

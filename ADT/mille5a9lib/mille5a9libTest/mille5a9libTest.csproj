@@ -54,6 +54,10 @@
     <Compile Include="StackTest.cs" />
     <Compile Include="QueueTest.cs" />
     <Compile Include="ListTest.cs" />
+    <Compile Include="HeapTest.cs" />
+    <Compile Include="TreeTest.cs" />
+    <Compile Include="GraphTest.cs" />
+    <Compile Include="HashTableTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

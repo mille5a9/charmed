@@ -24,6 +24,7 @@ namespace mille5a9lib
     public interface IList<T>
     {
         bool Insert(int pos, T item);
+        bool Append(T item);
         bool Remove(int pos);
         bool SetItem(int pos, T item);
         T GetItem(int pos);
@@ -152,6 +153,11 @@ namespace mille5a9lib
                 _count++;
                 return true;
             }
+        }
+
+        public bool Append(T item)
+        {
+            return Insert(_count, item);
         }
 
         public bool Remove(int pos)
@@ -316,6 +322,11 @@ namespace mille5a9lib
             _count++;
             temp.SetNext(new DoubleNode<T>(item, temp.GetNext(), temp));
             return true;
+        }
+
+        public bool Append(T item)
+        {
+            return Insert(_count, item);
         }
 
         public bool Remove(int pos)

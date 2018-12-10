@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graph.cs" />
+    <Compile Include="HashTable.cs" />
     <Compile Include="Heap.cs" />
     <Compile Include="List.cs" />
     <Compile Include="Miscellaneous\DataManager.cs" />

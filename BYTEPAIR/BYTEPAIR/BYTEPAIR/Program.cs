@@ -7,7 +7,7 @@ namespace BYTEPAIR
 
     public class BytePair
     {
-        public BytePair(int quantity = 10000, int range = 24, int aggression = 8)
+        public BytePair(int quantity = 1000, int range = 8, int aggression = 8)
         {
             Random x = new Random();
             byte?[] bytes = new byte?[quantity];
