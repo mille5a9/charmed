@@ -41,16 +41,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graph.cs" />
-    <Compile Include="HashTable.cs" />
-    <Compile Include="Heap.cs" />
-    <Compile Include="List.cs" />
+    <Compile Include="Common\Graph.cs" />
+    <Compile Include="Common\HashTable.cs" />
+    <Compile Include="Common\Heap.cs" />
+    <Compile Include="Common\List.cs" />
     <Compile Include="Miscellaneous\DataManager.cs" />
-    <Compile Include="Node.cs" />
-    <Compile Include="Queue.cs" />
-    <Compile Include="Stack.cs" />
+    <Compile Include="Common\Node.cs" />
+    <Compile Include="Common\Queue.cs" />
+    <Compile Include="Common\Stack.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tree.cs" />
+    <Compile Include="Common\Tree.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
