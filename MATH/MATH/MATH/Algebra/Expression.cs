@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace MATH
 {
-    class Expression
+    public class Expression
     {
         public Expression(string expression)
         {
@@ -33,8 +33,8 @@ namespace MATH
                 {
                     i++;
                     needsnewline = true;
+                    if (needsnewline) _expression = _expression.Insert(i, "\n");
                 }
-                if (needsnewline) _expression = _expression.Insert(i, "\n");
                 needsnewline = false;
                 while (i < _expression.Length && letters.Contains(_expression[i]))
                 {
@@ -107,13 +107,24 @@ namespace MATH
             List<object> processing = new List<object>();
 
             #region Parenthesis Solving
+            int layers = 0;
             for (int i = 0; i < contents.Count; i++)
             {
                 if (contents[i] is string && (string)contents[i] == "(")
                 {
-                    for (int j = 0; j < contents.Count; j++)
+                    layers++;
+                    for (int j = i + 1; j < contents.Count; j++)
                     {
-                        if (contents[j] is string && (string)contents[j] == ")") end = j - i - 1;
+                        if (contents[j] is string && (string)contents[j] == "(") layers++;
+                        if (contents[j] is string && (string)contents[j] == ")")
+                        {
+                            layers--;
+                            if (layers == 0)
+                            {
+                                end = j - i - 1;
+                                break;
+                            }
+                        }
                     }
                     processing.Add((Variable)SolveHelper(contents.GetRange(i + 1, end)));
                     i += (end + 1);
@@ -132,6 +143,7 @@ namespace MATH
             //by the try/catch in the original Solve()
             Variable result = new Variable("ans", 0);
             List<object> temp = UseOperators(processing, 0);
+            if (temp.Count == 0) return result;
             result.Value = ((AValue)temp[0]).Value;
             return result;
         }

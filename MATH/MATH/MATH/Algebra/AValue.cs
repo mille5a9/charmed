@@ -136,13 +136,14 @@ namespace MATH
         #region Function Operations
         public static AValue Exponentiation(AValue one, AValue two) //exponentiation
         {
-            double? baseval = one.Value;
-            while (two.Value > 1)
-            {
-                one.Value *= baseval;
-                two.Value--;
-            }
-            one.Value += (baseval * --two.Value);
+            //double? baseval = one.Value;
+            //while (two.Value > 1)
+            //{
+            //    one.Value *= baseval;
+            //    two.Value--;
+            //}
+            //one.Value += (baseval * --two.Value);
+            one.Value = Math.Pow((double)one.Value, (double)two.Value);
             if (one is Variable && two is Variable) return new Variable(((Variable)one).Name, one.Value);
             if (one is Variable && two is Constant) return new Variable(((Variable)one).Name, one.Value);
             if (one is Constant && two is Variable) return new Variable(((Variable)two).Name, one.Value);
