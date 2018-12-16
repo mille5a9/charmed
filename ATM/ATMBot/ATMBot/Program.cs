@@ -347,7 +347,7 @@ namespace ATMBot
         {
             discord = new DiscordClient(new DiscordConfiguration
             {
-                Token = "NTA5NzIzNzgyMTk4MzI5MzQ1.DsR9pg.KBGVl5aiAGO7iIYdZrpt51gdYws",
+                Token = "Place the actual token here",
                 TokenType = TokenType.Bot,
                 UseInternalLogHandler = true,
                 LogLevel = LogLevel.Debug
