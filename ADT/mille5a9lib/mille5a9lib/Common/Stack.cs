@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace mille5a9lib
 {
+    //Interface for Array/Linked Stacks
     public interface IStack<T>
     {
         bool Push(T item);
@@ -14,8 +11,11 @@ namespace mille5a9lib
         int Size();
     }
 
+    //Base Stack class used to create Stacks
     public class Stack<T>
     {
+        //Create is overloaded to make a Linked stack when there are no args
+        //and an Array stack when a size arg is supplied
         public static IStack<T> Create()
         {
             return new LinkedStack<T>();
@@ -58,18 +58,11 @@ namespace mille5a9lib
 
         public T Pop()
         {
-            //try
-            //{
-                if (_top == -1)
-                {
-                    throw new StackOverflowException("Error: Stack Empty, Cannot Pop");
-                }
-            //}
-            //catch (StackOverflowException e)
-            //{
-            //    Console.Write(e.Message);
-            //    return default(T);
-            //}
+            if (_top == -1)
+            {
+                throw new StackOverflowException("Error: Stack Empty, Cannot Pop");
+                //Technically an Underflow, but StackOverflow at least describes that the contents of the stack present a problem for popping
+            }
 
             _top--;
             _size--;
@@ -78,11 +71,8 @@ namespace mille5a9lib
 
         public T Peek()
         {
-            //try
-            //{
-                if (_top < 0) throw new StackOverflowException("Error: Cannot Peek an Empty Stack");
-            //}
-            //catch (StackOverflowException) { return default(T); }
+            if (_top < 0) throw new StackOverflowException("Error: Cannot Peek an Empty Stack");
+            //See Pop() comment
             return _items[_top];
         }
 
@@ -104,18 +94,11 @@ namespace mille5a9lib
 
         public T Pop()
         {
-            //try
-            //{
-                if (_top == null)
-                {
-                    throw new StackOverflowException("Error: Stack Empty, Cannot Pop");
-                }
-            //}
-            //catch (StackOverflowException e)
-            //{
-            //    Console.Write(e.Message);
-            //    return default(T);
-            //}
+            if (_top == null)
+            {
+                throw new StackOverflowException("Error: Stack Empty, Cannot Pop");
+                //Technically an Underflow, but StackOverflow at least describes that the contents of the stack present a problem for popping
+            }
 
             T temp = _top.Get();
             if (_top.GetNext() == null)
@@ -134,18 +117,11 @@ namespace mille5a9lib
 
         public T Peek()
         {
-            //try
-            //{
-                if (_top == null)
-                {
-                    throw new StackOverflowException("Error: Stack Empty, Cannot Peek");
-                }
-            //}
-            //catch (StackOverflowException e)
-            //{
-            //    Console.Write(e.Message);
-            //    return default(T);
-            //}
+            if (_top == null)
+            {
+                throw new StackOverflowException("Error: Stack Empty, Cannot Peek");
+                //See Pop() comment
+            }
 
             return _top.Get();
         }

@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace mille5a9lib
 {
+    //Interface for Array/Linked queues
     public interface IQueue<T>
     {
         bool Enqueue(T item);
@@ -14,6 +11,7 @@ namespace mille5a9lib
         int Size();
     }
 
+    //Works like the base Stack class, if there is an integer argument its an ArrayQueue with that size array
     public class Queue<T>
     {
         public static IQueue<T> Create()

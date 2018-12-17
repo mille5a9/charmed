@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace mille5a9lib
 {
-
+    //Interface to define MinHeap / MaxHeap behavior
     public interface IHeap<T> where T : IComparable
     {
         bool Insert(T item, BinaryNode<T> temp, BinaryNode<T> parent = null);

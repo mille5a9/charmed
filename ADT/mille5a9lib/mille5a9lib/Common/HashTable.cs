@@ -2,6 +2,9 @@
 
 namespace mille5a9lib
 {
+    //Hashes values and stores them in a table
+
+    //table has size of int used in constructor
     public class HashTable<X> where X : IComparable
     {
         public HashTable(int Z) //Z is the size of the table

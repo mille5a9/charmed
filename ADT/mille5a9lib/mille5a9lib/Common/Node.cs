@@ -2,6 +2,7 @@
 
 namespace mille5a9lib
 {
+    //Generic Node with one data value
     public class SingleNode<T>
     {
         public SingleNode(T item, SingleNode<T> next)
@@ -16,7 +17,8 @@ namespace mille5a9lib
         private readonly T _item;
         private readonly SingleNode<T> _next;
     }
-
+    
+    //Generic Node with one data point and an available link in two directions
     public class DoubleNode<T>
     {
         public DoubleNode(T item, DoubleNode<T> next, DoubleNode<T> prev)
@@ -38,6 +40,7 @@ namespace mille5a9lib
         private DoubleNode<T> _prev;
     }
 
+    //Generic Node with one data point and a link to two different children
     public class BinaryNode<T> where T : IComparable
     {
         public BinaryNode(T item) { _item = item; }

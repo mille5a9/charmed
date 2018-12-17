@@ -6,7 +6,8 @@ using System.Security.Cryptography;
 
 namespace mille5a9lib
 {
-    public class DataManager
+    //Provides functions for encrypting and decrypting data and storing it in an external file.
+    public static class DataManager
     {
         public static bool Write<T>(T item, string path)
         {

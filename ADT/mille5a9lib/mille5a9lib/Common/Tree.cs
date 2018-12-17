@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace mille5a9lib
 {
+    //Interface to define Tree behavior
     public interface ITree<T> where T : IComparable
     {
         int Size(BinaryNode<T> temp);

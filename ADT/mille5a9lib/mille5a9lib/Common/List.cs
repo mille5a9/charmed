@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace mille5a9lib
 {
@@ -21,6 +18,7 @@ namespace mille5a9lib
         private readonly int _position, _count;
     }
 
+    //Interface for Array/Linked stacks
     public interface IList<T>
     {
         bool Insert(int pos, T item);
@@ -44,6 +42,8 @@ namespace mille5a9lib
             return new ArrayList<T>(maxsize);
         }
     }
+
+    #region IEnumerable ArrayList Support
 
     public class ArrayListEnum<T> : IEnumerator<T>
     {
@@ -106,6 +106,8 @@ namespace mille5a9lib
         #endregion
     }
 
+    #endregion
+
     public class ArrayList<T> : IList<T>, IEnumerable<T>
     {
         public ArrayListEnum<T> GetEnumerator()
@@ -155,6 +157,7 @@ namespace mille5a9lib
             }
         }
 
+        //Inserts at the end of the list, analogous to "Add" in the System.Collections.Generic List class
         public bool Append(T item)
         {
             return Insert(_count, item);
@@ -200,15 +203,7 @@ namespace mille5a9lib
 
         public T GetItem(int pos)
         {
-            //try
-            //{
-                if (pos < 0 || pos >= _count) throw new InvalidPositionException(pos, _count);
-            //}
-            //catch (InvalidPositionException e)
-            //{
-            //    Console.Write(e.Message());
-            //    return default(T);
-            //}
+            if (pos < 0 || pos >= _count) throw new InvalidPositionException(pos, _count);
             return _items[pos];
         }
 
@@ -220,6 +215,8 @@ namespace mille5a9lib
         private T[] _items;
         private int _count = 0;
     }
+
+    #region LinkedList IEnumerable Support
 
     public class LinkedListEnum<T> : IEnumerator<T>
     {
@@ -282,6 +279,8 @@ namespace mille5a9lib
         #endregion
     }
 
+    #endregion
+
     public class LinkedList<T> : IList<T>, IEnumerable<T>
     {
         public LinkedListEnum<T> GetEnumerator()
@@ -324,6 +323,7 @@ namespace mille5a9lib
             return true;
         }
 
+        //Inserts at the end of the list, analogous to "Add" in the System.Collections.Generic List class
         public bool Append(T item)
         {
             return Insert(_count, item);
@@ -380,15 +380,7 @@ namespace mille5a9lib
 
         public T GetItem(int pos)
         {
-            //try
-            //{
-                if (pos < 0 || pos >= _count) throw new InvalidPositionException(pos, _count);
-            //}
-            //catch (InvalidPositionException e)
-            //{
-            //    Console.Write(e.Message());
-            //    return default(T);
-            //}
+            if (pos < 0 || pos >= _count) throw new InvalidPositionException(pos, _count);
             if (pos == _count - 1) return _head.Get();
             DoubleNode<T> temp = _head;
             for (int i = 1; i < _count - pos; i++) temp = temp.GetNext();

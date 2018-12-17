@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace mille5a9lib
 {
+    //Graph that stores vertices and edges in separate lists
     public class Graph<T> where T : IComparable
     {
         public bool HasVertex(T item)
