@@ -15,6 +15,8 @@ namespace PASS
         public FormPASS()
         {
             InitializeComponent();
+            btnAccess.Click += new EventHandler(btnAccess_Click);
+            btnFile.Click += new EventHandler(btnFile_Click);
         }
     }
 }

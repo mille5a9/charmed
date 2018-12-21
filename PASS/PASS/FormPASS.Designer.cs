@@ -1,4 +1,8 @@
-﻿namespace PASS
+﻿using System;
+using System.IO;
+using System.Windows.Forms;
+
+namespace PASS
 {
     partial class FormPASS
     {
@@ -40,6 +44,11 @@
             this.lblOut = new System.Windows.Forms.Label();
             this.pnlOut = new System.Windows.Forms.Panel();
             this.lblOutText = new System.Windows.Forms.Label();
+            this.lblFile = new System.Windows.Forms.Label();
+            this.txtFile = new System.Windows.Forms.TextBox();
+            this.btnFile = new System.Windows.Forms.Button();
+            this.dlgFile = new System.Windows.Forms.OpenFileDialog();
+            this.cboAccess = new System.Windows.Forms.ComboBox();
             this.pnlOut.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -56,7 +65,7 @@
             // lblAccess
             // 
             this.lblAccess.AutoSize = true;
-            this.lblAccess.Location = new System.Drawing.Point(12, 18);
+            this.lblAccess.Location = new System.Drawing.Point(12, 90);
             this.lblAccess.Name = "lblAccess";
             this.lblAccess.Size = new System.Drawing.Size(73, 13);
             this.lblAccess.TabIndex = 1;
@@ -64,14 +73,14 @@
             // 
             // txtAccess
             // 
-            this.txtAccess.Location = new System.Drawing.Point(15, 35);
+            this.txtAccess.Location = new System.Drawing.Point(15, 107);
             this.txtAccess.Name = "txtAccess";
             this.txtAccess.Size = new System.Drawing.Size(365, 20);
             this.txtAccess.TabIndex = 2;
             // 
             // btnAccess
             // 
-            this.btnAccess.Location = new System.Drawing.Point(15, 61);
+            this.btnAccess.Location = new System.Drawing.Point(15, 133);
             this.btnAccess.Name = "btnAccess";
             this.btnAccess.Size = new System.Drawing.Size(136, 23);
             this.btnAccess.TabIndex = 3;
@@ -81,7 +90,7 @@
             // lblSave
             // 
             this.lblSave.AutoSize = true;
-            this.lblSave.Location = new System.Drawing.Point(12, 107);
+            this.lblSave.Location = new System.Drawing.Point(12, 186);
             this.lblSave.Name = "lblSave";
             this.lblSave.Size = new System.Drawing.Size(104, 13);
             this.lblSave.TabIndex = 4;
@@ -89,14 +98,14 @@
             // 
             // txtSave
             // 
-            this.txtSave.Location = new System.Drawing.Point(15, 124);
+            this.txtSave.Location = new System.Drawing.Point(15, 203);
             this.txtSave.Name = "txtSave";
             this.txtSave.Size = new System.Drawing.Size(362, 20);
             this.txtSave.TabIndex = 5;
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(15, 178);
+            this.btnSave.Location = new System.Drawing.Point(15, 257);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(133, 23);
             this.btnSave.TabIndex = 6;
@@ -105,7 +114,7 @@
             // 
             // btnRandomize
             // 
-            this.btnRandomize.Location = new System.Drawing.Point(237, 149);
+            this.btnRandomize.Location = new System.Drawing.Point(237, 228);
             this.btnRandomize.Name = "btnRandomize";
             this.btnRandomize.Size = new System.Drawing.Size(140, 23);
             this.btnRandomize.TabIndex = 7;
@@ -115,7 +124,13 @@
             // cboSaveHash
             // 
             this.cboSaveHash.FormattingEnabled = true;
-            this.cboSaveHash.Location = new System.Drawing.Point(15, 151);
+            this.cboSaveHash.Items.AddRange(new object[] {
+            "MD5",
+            "SHA1",
+            "SHA256",
+            "SHA384",
+            "SHA512"});
+            this.cboSaveHash.Location = new System.Drawing.Point(15, 230);
             this.cboSaveHash.Name = "cboSaveHash";
             this.cboSaveHash.Size = new System.Drawing.Size(133, 21);
             this.cboSaveHash.TabIndex = 8;
@@ -124,7 +139,7 @@
             // lblOut
             // 
             this.lblOut.AutoSize = true;
-            this.lblOut.Location = new System.Drawing.Point(12, 221);
+            this.lblOut.Location = new System.Drawing.Point(12, 289);
             this.lblOut.Name = "lblOut";
             this.lblOut.Size = new System.Drawing.Size(76, 13);
             this.lblOut.TabIndex = 9;
@@ -133,9 +148,9 @@
             // pnlOut
             // 
             this.pnlOut.Controls.Add(this.lblOutText);
-            this.pnlOut.Location = new System.Drawing.Point(15, 237);
+            this.pnlOut.Location = new System.Drawing.Point(15, 305);
             this.pnlOut.Name = "pnlOut";
-            this.pnlOut.Size = new System.Drawing.Size(359, 439);
+            this.pnlOut.Size = new System.Drawing.Size(359, 371);
             this.pnlOut.TabIndex = 10;
             // 
             // lblOutText
@@ -146,11 +161,60 @@
             this.lblOutText.TabIndex = 0;
             this.lblOutText.Text = "Welcome to the PASS utility!";
             // 
+            // lblFile
+            // 
+            this.lblFile.AutoSize = true;
+            this.lblFile.Location = new System.Drawing.Point(12, 18);
+            this.lblFile.Name = "lblFile";
+            this.lblFile.Size = new System.Drawing.Size(26, 13);
+            this.lblFile.TabIndex = 11;
+            this.lblFile.Text = "File:";
+            // 
+            // txtFile
+            // 
+            this.txtFile.Location = new System.Drawing.Point(15, 34);
+            this.txtFile.Name = "txtFile";
+            this.txtFile.Size = new System.Drawing.Size(269, 20);
+            this.txtFile.TabIndex = 12;
+            // 
+            // btnFile
+            // 
+            this.btnFile.Location = new System.Drawing.Point(290, 32);
+            this.btnFile.Name = "btnFile";
+            this.btnFile.Size = new System.Drawing.Size(90, 23);
+            this.btnFile.TabIndex = 13;
+            this.btnFile.Text = "Browse...";
+            this.btnFile.UseVisualStyleBackColor = true;
+            // 
+            // dlgFile
+            // 
+            this.dlgFile.FileName = "dlgFile";
+            this.dlgFile.Title = "Browse for File...";
+            // 
+            // cboAccess
+            // 
+            this.cboAccess.FormattingEnabled = true;
+            this.cboAccess.Items.AddRange(new object[] {
+            "MD5",
+            "SHA1",
+            "SHA256",
+            "SHA384",
+            "SHA512"});
+            this.cboAccess.Location = new System.Drawing.Point(15, 60);
+            this.cboAccess.Name = "cboAccess";
+            this.cboAccess.Size = new System.Drawing.Size(133, 21);
+            this.cboAccess.TabIndex = 14;
+            this.cboAccess.Text = "Select Hash Function...";
+            // 
             // FormPASS
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1195, 688);
+            this.Controls.Add(this.cboAccess);
+            this.Controls.Add(this.btnFile);
+            this.Controls.Add(this.txtFile);
+            this.Controls.Add(this.lblFile);
             this.Controls.Add(this.pnlOut);
             this.Controls.Add(this.lblOut);
             this.Controls.Add(this.cboSaveHash);
@@ -172,18 +236,52 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox txtMain;
-        private System.Windows.Forms.Label lblAccess;
-        private System.Windows.Forms.TextBox txtAccess;
-        private System.Windows.Forms.Button btnAccess;
-        private System.Windows.Forms.Label lblSave;
-        private System.Windows.Forms.TextBox txtSave;
-        private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.Button btnRandomize;
-        private System.Windows.Forms.ComboBox cboSaveHash;
-        private System.Windows.Forms.Label lblOut;
-        private System.Windows.Forms.Panel pnlOut;
-        private System.Windows.Forms.Label lblOutText;
+        private TextBox txtMain;
+        private Label lblAccess;
+        private TextBox txtAccess;
+        private Button btnAccess;
+        private ComboBox cboAccess;
+        private Label lblSave;
+        private TextBox txtSave;
+        private Button btnSave;
+        private Button btnRandomize;
+        private ComboBox cboSaveHash;
+        private Label lblOut;
+        private Panel pnlOut;
+        private Label lblOutText;
+        private Label lblFile;
+        private TextBox txtFile;
+        private Button btnFile;
+        private OpenFileDialog dlgFile;
+        private FileStream ConcernedFile;
+
+
+        private void btnAccess_Click(object sender, System.EventArgs e)
+        {
+            //take txtAccess and try to open PASS.dat
+            DataManager Attempt = new DataManager(txtAccess.Text, (string)cboAccess.SelectedItem);
+            txtMain.Text = Attempt.Read<string>(txtFile.Text);
+        }
+
+        private void btnFile_Click(object sender, System.EventArgs e)
+        {
+            dlgFile.InitialDirectory = Directory.GetCurrentDirectory();
+            DialogResult result = dlgFile.ShowDialog(); // Show the dialog.
+            if (result == DialogResult.OK) // Test result.
+            {
+                string file = dlgFile.FileName;
+                txtFile.Text = file;
+                try
+                {
+                    ConcernedFile = File.Open(file, (FileMode)4);
+                }
+                catch (IOException)
+                {
+                }
+            }
+            Console.WriteLine(result); // <-- For debugging use.
+        }
+
     }
 }
 
