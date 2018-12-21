@@ -55,6 +55,16 @@ The user inputs a string and the hash result that
 came from the string, and the program informs the
 user of which function the hash came from.
 
+### MATH
+
+Algebra Expression Solver. Original intention was to
+support using variables, but the current state of
+this project only supports solving numeric expressions.
+Parenthesis parsing works, sometimes operators are a
+bit fuzzy - especially when it comes to mistaking
+binary operators for unary ones. This project includes
+some extra functions that act as shortcuts for common
+formulas used in the world of Finance.
 
 ### MAZE
 
