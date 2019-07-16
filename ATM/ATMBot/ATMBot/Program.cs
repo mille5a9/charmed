@@ -16,138 +16,138 @@ namespace ATMBot
 
     public class MyCommands
     {
-        public static Blockchain Coin = new Blockchain();
+        //public static Blockchain Coin = new Blockchain();
 
-        [Command("search")]
-        public async Task Search(CommandContext ctx, [RemainingText, Description("Search Query")] string query)
-        {
-            string result = SearchSync(query);
-            string[] curatedresult = result.Split('\n');
-            for (int i = 0; i < 4; i++) await ctx.RespondAsync(curatedresult[i]);
-        }
+        //[Command("search")]
+        //public async Task Search(CommandContext ctx, [RemainingText, Description("Search Query")] string query)
+        //{
+        //    string result = SearchSync(query);
+        //    string[] curatedresult = result.Split('\n');
+        //    for (int i = 0; i < 4; i++) await ctx.RespondAsync(curatedresult[i]);
+        //}
 
-        public string SearchSync(string query)
-        {
-            string[] terms = query.Split(" ");
-            string url = "https://www.google.com/search?q=" + terms[0];
-            for (int i = 1; i < terms.Length; i++)
-            {
-                url += "+" + terms[i];
-            }
-            try
-            {
-                GooglePage page = new GooglePage(url);
-                string[] links = page.GetRoot().GoogleSearchResultsLinks();
-                string response = "Here are the links from your search:\n\t";
-                foreach (string x in links) response += x + "\n\t";
-                return response;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return "";
-            }
-        }
+        //public string SearchSync(string query)
+        //{
+        //    string[] terms = query.Split(" ");
+        //    string url = "https://www.google.com/search?q=" + terms[0];
+        //    for (int i = 1; i < terms.Length; i++)
+        //    {
+        //        url += "+" + terms[i];
+        //    }
+        //    try
+        //    {
+        //        GooglePage page = new GooglePage(url);
+        //        string[] links = page.GetRoot().GoogleSearchResultsLinks();
+        //        string response = "Here are the links from your search:\n\t";
+        //        foreach (string x in links) response += x + "\n\t";
+        //        return response;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //        return "";
+        //    }
+        //}
 
-        [Command("coin-bal")]
-        public async Task CoinBalance(CommandContext ctx)
-        {
-            Walletdto userwallet = Wallet.GetWallet(ctx.User.Id, (ctx.User.Username + "#" + ctx.User.Discriminator));
-            decimal output = userwallet.Balance;
-            await ctx.RespondAsync("Your balance is " + output + " Waamcoins");
-        }
+        //[Command("coin-bal")]
+        //public async Task CoinBalance(CommandContext ctx)
+        //{
+        //    Walletdto userwallet = Wallet.GetWallet(ctx.User.Id, (ctx.User.Username + "#" + ctx.User.Discriminator));
+        //    decimal output = userwallet.Balance;
+        //    await ctx.RespondAsync("Your balance is " + output + " Waamcoins");
+        //}
 
-        [Command("coin-pay")]
-        public async Task CoinPay(CommandContext ctx, [Description("Name#Number of destination user")] string username, [Description("Number of Waamcoins to send")] decimal amt)
-        {
-            Walletdto sender = Wallet.GetWallet(ctx.User.Id, (ctx.User.Username + "#" + ctx.User.Discriminator)), recipient = Wallet.GetWallet(username);
-            if (recipient == null) await ctx.RespondAsync("That recipient does not have a wallet! They need to use coin-mine to earn their first stake in Waamcoin.");
-            else
-            {
-                if (Wallet.Transfer(ctx, Coin, sender, recipient, amt)) await ctx.RespondAsync("Transfer Complete!");
-                else await ctx.RespondAsync("Transfer Unsuccessful. Make sure the recipient has a wallet and you have enough Waamcoin!");
-            }
-        }
+        //[Command("coin-pay")]
+        //public async Task CoinPay(CommandContext ctx, [Description("Name#Number of destination user")] string username, [Description("Number of Waamcoins to send")] decimal amt)
+        //{
+        //    Walletdto sender = Wallet.GetWallet(ctx.User.Id, (ctx.User.Username + "#" + ctx.User.Discriminator)), recipient = Wallet.GetWallet(username);
+        //    if (recipient == null) await ctx.RespondAsync("That recipient does not have a wallet! They need to use coin-mine to earn their first stake in Waamcoin.");
+        //    else
+        //    {
+        //        if (Wallet.Transfer(ctx, Coin, sender, recipient, amt)) await ctx.RespondAsync("Transfer Complete!");
+        //        else await ctx.RespondAsync("Transfer Unsuccessful. Make sure the recipient has a wallet and you have enough Waamcoin!");
+        //    }
+        //}
 
-        [Command("coin-mine")]
-        public async Task CoinMine(CommandContext ctx)
-        {
-            if (ctx.Channel is DiscordDmChannel)
-            {
-                if (await Coin.ProofOfWork(ctx, Coin.LastBlock().GetPreviousHash()))
-                {
-                    //gib coin
-                    decimal amt = Coin.BlockReward();
-                    Walletdto sender = Wallet.GetWallet(0, "root");
-                    Walletdto recipient = Wallet.GetWallet(ctx.User.Id, (ctx.User.Username + "#" + ctx.User.Discriminator));
-                    bool success = Wallet.Transfer(ctx, Coin, sender, recipient, amt);
-                    if (success) await ctx.RespondAsync("Success! You've been awarded with " + amt + " Waamcoin!");
-                    else await ctx.RespondAsync("You did good, but something went wrong.");
-                }
-                else await ctx.RespondAsync("That, was an incorrect answer.");
-            }
-            else
-            {
-                DiscordDmChannel x = await ctx.Member.CreateDmChannelAsync();
-                await x.SendMessageAsync("You must mine in a DM, to prevent spam.");
-            }
-        }
+        //[Command("coin-mine")]
+        //public async Task CoinMine(CommandContext ctx)
+        //{
+        //    if (ctx.Channel is DiscordDmChannel)
+        //    {
+        //        if (await Coin.ProofOfWork(ctx, Coin.LastBlock().GetPreviousHash()))
+        //        {
+        //            //gib coin
+        //            decimal amt = Coin.BlockReward();
+        //            Walletdto sender = Wallet.GetWallet(0, "root");
+        //            Walletdto recipient = Wallet.GetWallet(ctx.User.Id, (ctx.User.Username + "#" + ctx.User.Discriminator));
+        //            bool success = Wallet.Transfer(ctx, Coin, sender, recipient, amt);
+        //            if (success) await ctx.RespondAsync("Success! You've been awarded with " + amt + " Waamcoin!");
+        //            else await ctx.RespondAsync("You did good, but something went wrong.");
+        //        }
+        //        else await ctx.RespondAsync("That, was an incorrect answer.");
+        //    }
+        //    else
+        //    {
+        //        DiscordDmChannel x = await ctx.Member.CreateDmChannelAsync();
+        //        await x.SendMessageAsync("You must mine in a DM, to prevent spam.");
+        //    }
+        //}
 
-        [Command("remind-ls")]
-        [Description("Produces a list containing every reminder you have pending")]
-        public async Task ListReminders(CommandContext ctx)
-        {
-            await ctx.TriggerTypingAsync();
-            List<Reminderdto> list = ReminderModule.GetReminders(ctx.User.Id.ToString());
-            string output = "Reminders for " + ctx.User.Mention + ":\n";
-            foreach (Reminderdto x in list)
-            {
-                output += "\t" + x.Time + "\n\t\t" + x.Message;
-            }
-            await ctx.RespondAsync(output);
-        }
+        //[Command("remind-ls")]
+        //[Description("Produces a list containing every reminder you have pending")]
+        //public async Task ListReminders(CommandContext ctx)
+        //{
+        //    await ctx.TriggerTypingAsync();
+        //    List<Reminderdto> list = ReminderModule.GetReminders(ctx.User.Id.ToString());
+        //    string output = "Reminders for " + ctx.User.Mention + ":\n";
+        //    foreach (Reminderdto x in list)
+        //    {
+        //        output += "\t" + x.Time + "\n\t\t" + x.Message;
+        //    }
+        //    await ctx.RespondAsync(output);
+        //}
 
-        [Command("remind-new")]
-        [Description("Used to create a new reminder for the user")]
-        public async Task NewReminder(CommandContext ctx,
-            [RemainingText, Description("Extra arg for one-line reminding: separate time and message with '>'")] string elaboration = null)
-        {
-            await ctx.TriggerTypingAsync();
+        //[Command("remind-new")]
+        //[Description("Used to create a new reminder for the user")]
+        //public async Task NewReminder(CommandContext ctx,
+        //    [RemainingText, Description("Extra arg for one-line reminding: separate time and message with '>'")] string elaboration = null)
+        //{
+        //    await ctx.TriggerTypingAsync();
 
-            if (elaboration != null)
-            {
-                string[] command = elaboration.Split('>');
-                DateTime parse = ReminderModule.ParseReminderTime(command[0]);
-                ReminderModule.SaveReminder(ctx, command[1], parse);
-                DiscordDmChannel x = await ctx.Member.CreateDmChannelAsync();
-                await x.SendMessageAsync("" + parse + " Reminder Created at " + DateTime.Now);
-            }
-            else
-            {
-                DateTime parse = new DateTime();
-                await ctx.Channel.SendMessageAsync("Let's make a new reminder! Please type the time you want to be reminded, I'll do my best to understand it:", false);
-                InteractivityModule inter = ctx.Client.GetInteractivityModule();
-                MessageContext msg = await inter.WaitForMessageAsync(xm => xm.Author.Id == ctx.User.Id, TimeSpan.FromMinutes(3));
-                await ctx.TriggerTypingAsync();
-                if (msg != null) parse = ReminderModule.ParseReminderTime(msg.Message.Content);
-                await ctx.RespondAsync("What would you like your reminder at " + parse + " to say?");
-                msg = await inter.WaitForMessageAsync(xm => xm.Author.Id == ctx.User.Id, TimeSpan.FromMinutes(3));
-                ReminderModule.SaveReminder(ctx, msg.Message.Content, parse);
-                await ctx.RespondAsync("Okay, I'll remind you when it's time");
-            }
-        }
+        //    if (elaboration != null)
+        //    {
+        //        string[] command = elaboration.Split('>');
+        //        DateTime parse = ReminderModule.ParseReminderTime(command[0]);
+        //        ReminderModule.SaveReminder(ctx, command[1], parse);
+        //        DiscordDmChannel x = await ctx.Member.CreateDmChannelAsync();
+        //        await x.SendMessageAsync("" + parse + " Reminder Created at " + DateTime.Now);
+        //    }
+        //    else
+        //    {
+        //        DateTime parse = new DateTime();
+        //        await ctx.Channel.SendMessageAsync("Let's make a new reminder! Please type the time you want to be reminded, I'll do my best to understand it:", false);
+        //        InteractivityModule inter = ctx.Client.GetInteractivityModule();
+        //        MessageContext msg = await inter.WaitForMessageAsync(xm => xm.Author.Id == ctx.User.Id, TimeSpan.FromMinutes(3));
+        //        await ctx.TriggerTypingAsync();
+        //        if (msg != null) parse = ReminderModule.ParseReminderTime(msg.Message.Content);
+        //        await ctx.RespondAsync("What would you like your reminder at " + parse + " to say?");
+        //        msg = await inter.WaitForMessageAsync(xm => xm.Author.Id == ctx.User.Id, TimeSpan.FromMinutes(3));
+        //        ReminderModule.SaveReminder(ctx, msg.Message.Content, parse);
+        //        await ctx.RespondAsync("Okay, I'll remind you when it's time");
+        //    }
+        //}
 
-        [Command("close")]
-        [Description("Used with the appropriate password will take the bot offline")]
-        public async Task Close(CommandContext ctx, [Description("The secret code")] string pw)
-        {
-            if (pw == "a1b2c3d4e5")
-            {
-                SqlController.Write();
-                await Task.Delay(1);
-                Environment.Exit(0);
-            }
-        }
+        //[Command("close")]
+        //[Description("Used with the appropriate password will take the bot offline")]
+        //public async Task Close(CommandContext ctx, [Description("The secret code")] string pw)
+        //{
+        //    if (pw == "a1b2c3d4e5")
+        //    {
+        //        SqlController.Write();
+        //        await Task.Delay(1);
+        //        Environment.Exit(0);
+        //    }
+        //}
 
         [Command("helpme")]
         [Description("Shows the raw text of the BotCmdNotes.txt file")]
@@ -165,124 +165,124 @@ namespace ATMBot
             await mem.SendMessageAsync(output);
         }
 
-        [Command("users-addme")]
-        [Description("Adds you to ATMbot's list of users")]
-        public async Task Addme(CommandContext ctx, [Description("If you're an admin, this can be anybody")] string adminarg = "")
-        {
-            User newguy = new User(ctx.User.Username + "#" + ctx.User.Discriminator);
-            if (adminarg != "" && newguy.admin == true)
-            {
-                await ctx.TriggerTypingAsync();
-                SqlController.AddUser(new User(adminarg));
-                await ctx.RespondAsync($"Hi [ADMIN], " + adminarg + " has been added!");
-                return;
-            }
-            await ctx.TriggerTypingAsync();
-            SqlController.AddUser(new User(ctx.User.Username + "#" + ctx.User.Discriminator));
-            await ctx.RespondAsync($"Hi, { ctx.User.Username + "#" + ctx.User.Discriminator }! Welcome to my memories.");
-        }
+        //[Command("users-addme")]
+        //[Description("Adds you to ATMbot's list of users")]
+        //public async Task Addme(CommandContext ctx, [Description("If you're an admin, this can be anybody")] string adminarg = "")
+        //{
+        //    User newguy = new User(ctx.User.Username + "#" + ctx.User.Discriminator);
+        //    if (adminarg != "" && newguy.admin == true)
+        //    {
+        //        await ctx.TriggerTypingAsync();
+        //        SqlController.AddUser(new User(adminarg));
+        //        await ctx.RespondAsync($"Hi [ADMIN], " + adminarg + " has been added!");
+        //        return;
+        //    }
+        //    await ctx.TriggerTypingAsync();
+        //    SqlController.AddUser(new User(ctx.User.Username + "#" + ctx.User.Discriminator));
+        //    await ctx.RespondAsync($"Hi, { ctx.User.Username + "#" + ctx.User.Discriminator }! Welcome to my memories.");
+        //}
 
-        [Command("users-removeme")]
-        [Description("Removes you from ATMbot's list of users")]
-        public async Task Removeme(CommandContext ctx, [Description("If you're an admin, this can be anybody")] string adminarg = "")
-        {
-            User oldguy = new User(ctx.User.Username + "#" + ctx.User.Discriminator);
-            if (adminarg != "" && oldguy.admin == true)
-            {
-                await ctx.TriggerTypingAsync();
-                SqlController.RemoveUser(SqlController.GetUser(adminarg));
-                await ctx.RespondAsync($"Hi [ADMIN], " + adminarg + " has been added!");
-                return;
-            }
-            List<User> list = SqlController.GetUsers();
-            bool bet = false;
-            foreach (User x in list) if (x.GetUsername() == oldguy.GetUsername()) bet = true;
-            await ctx.TriggerTypingAsync();
-            if (!bet) await ctx.RespondAsync($"User is not registered... oh well!");
+        //[Command("users-removeme")]
+        //[Description("Removes you from ATMbot's list of users")]
+        //public async Task Removeme(CommandContext ctx, [Description("If you're an admin, this can be anybody")] string adminarg = "")
+        //{
+        //    User oldguy = new User(ctx.User.Username + "#" + ctx.User.Discriminator);
+        //    if (adminarg != "" && oldguy.admin == true)
+        //    {
+        //        await ctx.TriggerTypingAsync();
+        //        SqlController.RemoveUser(SqlController.GetUser(adminarg));
+        //        await ctx.RespondAsync($"Hi [ADMIN], " + adminarg + " has been added!");
+        //        return;
+        //    }
+        //    List<User> list = SqlController.GetUsers();
+        //    bool bet = false;
+        //    foreach (User x in list) if (x.GetUsername() == oldguy.GetUsername()) bet = true;
+        //    await ctx.TriggerTypingAsync();
+        //    if (!bet) await ctx.RespondAsync($"User is not registered... oh well!");
 
-            SqlController.RemoveUser(new User(ctx.User.Username + "#" + ctx.User.Discriminator));
+        //    SqlController.RemoveUser(new User(ctx.User.Username + "#" + ctx.User.Discriminator));
 
-            await ctx.RespondAsync($"{ ctx.User.Username + "#" + ctx.User.Discriminator } has been removed!");
-        }
+        //    await ctx.RespondAsync($"{ ctx.User.Username + "#" + ctx.User.Discriminator } has been removed!");
+        //}
 
-        [Command("users-ls")]
-        [Description("Prints a list of all known ATMbot users")]
-        public async Task GetUsers(CommandContext ctx, [Description("Specifying a single user will print more detailed information")]  string specifier = "")
-        {
-            string output;
-            await ctx.TriggerTypingAsync();
-            if (specifier == "")
-            {
-                output = "List of all users:\n";
-                List<User> people = SqlController.GetUsers();
-                foreach (User x in people) output += x.GetUsername() + "\n";
-                await ctx.RespondAsync($"{ output }");
-            }
-            else
-            {
-                output = "Check it out:\n";
-                User person = SqlController.GetUser(specifier);
-                if (person.GetUsername() == "NO")
-                {
-                    await ctx.RespondAsync($"User is not registered.");
-                }
-                output += "Name: " + person.GetUsername() + "\n";
-                if (person.admin) output += "User is an admin\n";
-                output += "Registered Teams:\n";
-                foreach (Team x in person.GetTeams()) output += "    " + x.GetName() + "\n";
-                await ctx.RespondAsync($"{ output }");
-            }
-        }
+        //[Command("users-ls")]
+        //[Description("Prints a list of all known ATMbot users")]
+        //public async Task GetUsers(CommandContext ctx, [Description("Specifying a single user will print more detailed information")]  string specifier = "")
+        //{
+        //    string output;
+        //    await ctx.TriggerTypingAsync();
+        //    if (specifier == "")
+        //    {
+        //        output = "List of all users:\n";
+        //        List<User> people = SqlController.GetUsers();
+        //        foreach (User x in people) output += x.GetUsername() + "\n";
+        //        await ctx.RespondAsync($"{ output }");
+        //    }
+        //    else
+        //    {
+        //        output = "Check it out:\n";
+        //        User person = SqlController.GetUser(specifier);
+        //        if (person.GetUsername() == "NO")
+        //        {
+        //            await ctx.RespondAsync($"User is not registered.");
+        //        }
+        //        output += "Name: " + person.GetUsername() + "\n";
+        //        if (person.admin) output += "User is an admin\n";
+        //        output += "Registered Teams:\n";
+        //        foreach (Team x in person.GetTeams()) output += "    " + x.GetName() + "\n";
+        //        await ctx.RespondAsync($"{ output }");
+        //    }
+        //}
 
-        [Command("teams-add")]
-        [Description("Adds a given team to your ATMbot user profile")]
-        public async Task AddTeam(CommandContext ctx, [Description("The team name here, must be written_like_this [place], [sport] e.g. Ohio_State_University_Men's_Basketball")] string specifier = "")
-        {
-            await ctx.TriggerTypingAsync();
-            if (specifier == "")
-            {
-                await ctx.RespondAsync("Please specify a team!");
-                return;
-            }
-            User jim = SqlController.GetUser(ctx.User.Username + "#" + ctx.User.Discriminator);
-            specifier = specifier.Replace('_', ' ');
-            SqlController.AddTeam(jim, specifier);
-            await ctx.RespondAsync("Team added!");
-        }
+        //[Command("teams-add")]
+        //[Description("Adds a given team to your ATMbot user profile")]
+        //public async Task AddTeam(CommandContext ctx, [Description("The team name here, must be written_like_this [place], [sport] e.g. Ohio_State_University_Men's_Basketball")] string specifier = "")
+        //{
+        //    await ctx.TriggerTypingAsync();
+        //    if (specifier == "")
+        //    {
+        //        await ctx.RespondAsync("Please specify a team!");
+        //        return;
+        //    }
+        //    User jim = SqlController.GetUser(ctx.User.Username + "#" + ctx.User.Discriminator);
+        //    specifier = specifier.Replace('_', ' ');
+        //    SqlController.AddTeam(jim, specifier);
+        //    await ctx.RespondAsync("Team added!");
+        //}
 
-        [Command("teams-remove")]
-        [Description("Removes a given team from your ATMbot user profile")]
-        public async Task RemoveTeam(CommandContext ctx, [Description("This should be a team that you have but you don't want")] string specifier = "")
-        {
-            await ctx.TriggerTypingAsync();
-            if (specifier == "")
-            {
-                await ctx.RespondAsync("Please specify a team!");
-                return;
-            }
-            User jim = SqlController.GetUser(ctx.User.Username + "#" + ctx.User.Discriminator);
-            SqlController.RemoveTeam(jim, specifier);
-            await ctx.RespondAsync("Team removed!");
-        }
+        //[Command("teams-remove")]
+        //[Description("Removes a given team from your ATMbot user profile")]
+        //public async Task RemoveTeam(CommandContext ctx, [Description("This should be a team that you have but you don't want")] string specifier = "")
+        //{
+        //    await ctx.TriggerTypingAsync();
+        //    if (specifier == "")
+        //    {
+        //        await ctx.RespondAsync("Please specify a team!");
+        //        return;
+        //    }
+        //    User jim = SqlController.GetUser(ctx.User.Username + "#" + ctx.User.Discriminator);
+        //    SqlController.RemoveTeam(jim, specifier);
+        //    await ctx.RespondAsync("Team removed!");
+        //}
 
-        [Command("teams-schedule")]
-        [Description("Prints the schedule of a given team if ATMbot knows about them")]
-        public async Task Schedule(CommandContext ctx, [Description("This should be the team's name if you can spell it right")] string specifier = "")
-        {
-            await ctx.TriggerTypingAsync();
-            if (specifier == "")
-            {
-                await ctx.RespondAsync("Please specify a team!");
-                return;
-            }
-            specifier = specifier.Replace('_', ' ');
-            Team ted = SqlController.GetTeam(specifier);
-            List<Game> games = ted.GetGames();
-            string output = ted.GetName() + " Schedule:\n";
-            foreach(Game x in games) output += x.GetTime() + " against " + x.GetOpp() + "\n";
-            await ctx.RespondAsync(output);
+        //[Command("teams-schedule")]
+        //[Description("Prints the schedule of a given team if ATMbot knows about them")]
+        //public async Task Schedule(CommandContext ctx, [Description("This should be the team's name if you can spell it right")] string specifier = "")
+        //{
+        //    await ctx.TriggerTypingAsync();
+        //    if (specifier == "")
+        //    {
+        //        await ctx.RespondAsync("Please specify a team!");
+        //        return;
+        //    }
+        //    specifier = specifier.Replace('_', ' ');
+        //    Team ted = SqlController.GetTeam(specifier);
+        //    List<Game> games = ted.GetGames();
+        //    string output = ted.GetName() + " Schedule:\n";
+        //    foreach(Game x in games) output += x.GetTime() + " against " + x.GetOpp() + "\n";
+        //    await ctx.RespondAsync(output);
 
-        }
+        //}
     }
 
     class Program
