@@ -18,19 +18,18 @@ namespace SNAKE
                 { break; }
             }
 
-            int speed = 500;
+            int speed = 10;
             Queue<Tuple<int, int>> snakespots = new Queue<Tuple<int, int>>();
             snakespots.Enqueue(new Tuple<int, int>(5, 3));
             Tuple<int, int> snakespotsback = new Tuple<int, int>(5, 3);
             int direction = 1; //1 is east, 2 is north, 3 is west, 4 is south
-            char[,] board = new char[10, 10];
+            char[,] board = new char[90, 90];
             bool needsnewreward = true;
 
 
             //Start Game
             while (true)
             {
-                Console.Clear();
                 direction = CheckControls(direction);
 
                 foreach (Tuple<int, int>z in snakespots)
@@ -42,8 +41,8 @@ namespace SNAKE
                 {
                     while (true)
                     {
-                        int rewardx = RandomNumber(1, 9);
-                        int rewardy = RandomNumber(1, 9);
+                        int rewardx = RandomNumber(1, 89);
+                        int rewardy = RandomNumber(1, 29);
                         if (snakespots.Contains(new Tuple<int, int>(rewardx, rewardy))) continue;
                         else
                         {
@@ -54,19 +53,20 @@ namespace SNAKE
                 }
                 needsnewreward = true;
 
+                Console.Clear();
                 //construct graphics
-                Console.WriteLine("----------");
-                for (int y = 1; y < 9; y++)
+                Console.WriteLine("------------------------------------------------------------------------------------------");
+                for (int y = 1; y < 29; y++)
                 {
                     string nextline = "|";
-                    for (int x = 1; x < 9; x++)
+                    for (int x = 1; x < 89; x++)
                     {
                         nextline += board[x, y].ToString();
                     }
                     nextline += "|";
                     Console.WriteLine(nextline);
                 }
-                Console.WriteLine("----------");
+                Console.WriteLine("------------------------------------------------------------------------------------------");
                 Thread.Sleep(speed);
                 
                 //if (Console.KeyAvailable)
@@ -93,7 +93,7 @@ namespace SNAKE
                 {
                     case 1:
                         snakespotsback = new Tuple<int, int>(snakespotsback.Item1 + 1, snakespotsback.Item2);
-                        if (snakespotsback.Item1 < 1 || snakespotsback.Item1 > 9 || snakespotsback.Item2 < 1 || snakespotsback.Item2 > 9) Environment.Exit(0);
+                        if (snakespotsback.Item1 < 1 || snakespotsback.Item1 > 89 || snakespotsback.Item2 < 1 || snakespotsback.Item2 > 29) Environment.Exit(0);
                         if (snakespots.Contains(snakespotsback)) Environment.Exit(0);
                         snakespots.Enqueue(snakespotsback);
                         if (board[snakespotsback.Item1, snakespotsback.Item2] != '*')
@@ -106,7 +106,7 @@ namespace SNAKE
                         break;
                     case 2:
                         snakespotsback = new Tuple<int, int>(snakespotsback.Item1, snakespotsback.Item2 - 1);
-                        if (snakespotsback.Item1 < 1 || snakespotsback.Item1 > 9 || snakespotsback.Item2 < 1 || snakespotsback.Item2 > 9) Environment.Exit(0);
+                        if (snakespotsback.Item1 < 1 || snakespotsback.Item1 > 89 || snakespotsback.Item2 < 1 || snakespotsback.Item2 > 29) Environment.Exit(0);
                         if (snakespots.Contains(snakespotsback)) Environment.Exit(0);
                         snakespots.Enqueue(snakespotsback);
                         if (board[snakespotsback.Item1, snakespotsback.Item2] != '*')
@@ -119,7 +119,7 @@ namespace SNAKE
                         break;
                     case 3:
                         snakespotsback = new Tuple<int, int>(snakespotsback.Item1 - 1, snakespotsback.Item2);
-                        if (snakespotsback.Item1 < 1 || snakespotsback.Item1 > 9 || snakespotsback.Item2 < 1 || snakespotsback.Item2 > 9) Environment.Exit(0);
+                        if (snakespotsback.Item1 < 1 || snakespotsback.Item1 > 89 || snakespotsback.Item2 < 1 || snakespotsback.Item2 > 29) Environment.Exit(0);
                         if (snakespots.Contains(snakespotsback)) Environment.Exit(0);
                         snakespots.Enqueue(snakespotsback);
                         if (board[snakespotsback.Item1, snakespotsback.Item2] != '*')
@@ -132,7 +132,7 @@ namespace SNAKE
                         break;
                     case 4:
                         snakespotsback = new Tuple<int, int>(snakespotsback.Item1, snakespotsback.Item2 + 1);
-                        if (snakespotsback.Item1 < 1 || snakespotsback.Item1 > 9 || snakespotsback.Item2 < 1 || snakespotsback.Item2 > 9) Environment.Exit(0);
+                        if (snakespotsback.Item1 < 1 || snakespotsback.Item1 > 89 || snakespotsback.Item2 < 1 || snakespotsback.Item2 > 29) Environment.Exit(0);
                         if (snakespots.Contains(snakespotsback)) Environment.Exit(0);
                         snakespots.Enqueue(snakespotsback);
                         if (board[snakespotsback.Item1, snakespotsback.Item2] != '*')
@@ -145,7 +145,7 @@ namespace SNAKE
                         break;
                 }
 
-                if (snakespotsback.Item1 < 1 || snakespotsback.Item1 > 9 || snakespotsback.Item2 < 1 || snakespotsback.Item2 > 9) break;
+                if (snakespotsback.Item1 < 1 || snakespotsback.Item1 > 89 || snakespotsback.Item2 < 1 || snakespotsback.Item2 > 29) break;
             }
         }
 
